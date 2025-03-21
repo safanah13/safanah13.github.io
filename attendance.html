@@ -360,21 +360,13 @@ function showInstructions() {
     }
 
     // حفظ البيانات
-    function saveToLocalStorage() {
-        localStorage.setItem('teachersData', JSON.stringify(teachers));
-        localStorage.setItem('counter', counter);
-    }
-
-    // تحميل البيانات
-    function loadFromLocalStorage() {
-        const savedTeachers = localStorage.getItem('teachersData');
-        const savedCounter = localStorage.getItem('counter');
-        if (savedTeachers) {
-            teachers = JSON.parse(savedTeachers);
-            counter = parseInt(savedCounter) || 1;
-            updateTable();
-        }
-    }
+    fetch('data/teachers-data.json')
+  .then(response => response.json())
+  .then(data => {
+    teachers = data; // تخزين البيانات في متغير teachers
+    updateTable(); // تحديث الجدول بالبيانات الجديدة
+  })
+  .catch(error => console.error('حدث خطأ:', error));
 // أضف هذه الدالة في قسم JavaScript
 function deleteAllData() {
     if (confirm('هل أنت متأكد من حذف جميع البيانات؟ لا يمكن التراجع عن هذا الإجراء.')) {
