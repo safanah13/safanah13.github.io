@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>كشف المواد المسندة للمعلمين</title>
+    <link rel="icon" type="image/png" href="شعار_وزارة_التعليم.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .school-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        
+        .main-table th, .main-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: right;
+        }
+        
+        .main-table th {
+            background-color: #f2f2f2;
+        }
+        
+        select {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .teacher-row { background-color: #e8f5e9; }
+        .subject-row td { background-color: #fff3e0; }
+        .total-row { 
+            background-color: #ffecb3!important;
+            font-weight: bold;
+            display: table-row!important;
+        }
+        
+        .add-teacher-btn {
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .add-subject-btn {
+            background-color: #2196F3;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+        
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .footer-section {
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .buttons-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .save-btn, .print-btn, .home-btn {
+            padding: 10px 25px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+.save-btn, .print-btn, .home-btn, .export-btn, .import-btn, .stats-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.save-btn { background-color: #4CAF50; }
+.print-btn { background-color: #2196F3; }
+.home-btn { background-color: #607D8B; }
+.export-btn { background-color: #9C27B0; }
+.import-btn { background-color: #FF9800; }
+.stats-btn { background-color: #673AB7; }
+
+.save-btn:hover, .print-btn:hover, .home-btn:hover, 
+.export-btn:hover, .import-btn:hover, .stats-btn:hover {
+    opacity: 0.9;
+}
+
+        
+        .director-signature {
+            margin: 40px auto 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 15px;
+            width: 300px;
+            line-height: 1.8;
+        }
+        .export-btn { background-color: #9C27B0; color: white; }
+        .import-btn { background-color: #FF9800; color: white; }
+
+        .total-row td {
+            padding: 12px!important;
+            text-align: center!important;
+            border: 2px solid #333!important;
+            font-size: 14px!important;
+        }
+.stats-btn {
+    background-color: #673AB7;
+    color: white;
+    padding: 10px 25px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stats-btn:hover {
+    background-color: #5e35b1;
+}
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>كشف المواد المسندة للمعلمين</h1>
+    </div>
+    
+    <div class="school-info">
+        <h3>المملكة العربية السعودية</h3>
+        <h3>وزارة التعليم</h3>
+        <h3>الإدارة العامة للتعليم بمنطقة المدينة المنورة</h3>
+        <h3>ابتدائية الإمام محمد بن علي القشيري لتحفيظ القرآن</h3>
+        <h4>الفصل الدراسي الثالث - العام الدراسي 1446هـ</h4>
+    </div>
+
+    <button id="addTeacherBtn" class="add-teacher-btn">إضافة معلم جديد</button>
+<button id="importFromMainBtn" class="add-teacher-btn" style="background-color: #800000; margin-right: 10px;">
+    استيراد المعلمين من الصفحة الرئيسية
+</button>
+<button class="save-btn" onclick="saveData()" style="margin-right: 10px;">حفظ البيانات</button>
+<button class="print-btn" onclick="window.print()" style="margin-right: 10px;">طباعة</button>
+<button class="stats-btn" onclick="printStats()" style="margin-right: 10px;">طباعة الإحصائيات</button>
+<a href="main.html" class="home-btn" style="margin-right: 10px; display: inline-block;">العودة للرئيسية</a>
+<button class="export-btn" onclick="exportData()" style="margin-right: 10px;">تصدير البيانات</button>
+<input type="file" id="importFile" accept=".json" hidden>
+<button class="import-btn" onclick="document.getElementById('importFile').click()" style="margin-right: 10px;">استيراد بيانات</button>
+
+
+    <table class="main-table" id="teachersTable">
+        <thead>
+            <tr>
+    <th>اسم المعلم</th>
+    <th>اسم المدرسة</th> <!-- العمود الجديد -->
+    <th>المادة</th>
+    <th>الصف</th>
+    <th>الفصل</th>
+    <th>الحصص</th>
+    <th>الإجراءات</th>
+</tr>
+        </thead>
+        <tbody id="teachersTableBody">
+        </tbody>
+    </table>
+
+    <div class="footer-section">
+        <div class="buttons-container">
+    <button class="save-btn" onclick="saveData()">حفظ البيانات</button>
+    <button class="print-btn" onclick="window.print()">طباعة</button>
+    <button class="stats-btn" onclick="printStats()">طباعة الإحصائيات</button> <!-- الزر الجديد -->
+    <a href="main.html" class="home-btn">العودة للرئيسية</a>
+    <button class="export-btn" onclick="exportData()">تصدير البيانات</button>
+    <input type="file" id="importFile" accept=".json" hidden>
+    <button class="import-btn" onclick="document.getElementById('importFile').click()">استيراد بيانات</button>
+</div>
+        
+        <div class="director-signature">
+            اسم مدير المدرسة<br>
+            محمد حسين منصور حوذان<br>
+            التوقيع<br>
+            <hr style="width: 200px; margin: 10px auto; border-top: 1px solid black;">
+        </div>
+    </div>
+
+    <script>
+const schools = [
+    'مدرسة سعيد القرشي',
+    'مدرسة الامام القشيري',
+    'مدرسة الامام ورش'
+];
+
+        const subjects = [
+    'القرآن الكريم والدراسات الإسلامية',
+    'اللغة العربية',
+    'اللغة الإنجليزية',
+    'الرياضيات',
+    'العلوم',
+    'المهارات الحياتية والأسرية',
+    'التربية البدنية',
+    'التربية الفنية',
+    'المهارات الرقمية',
+    'الدراسات الاجتماعية'
+];
+
+const grades = [
+    'الأول الابتدائي',
+    'الثاني الابتدائي',
+    'الثالث الابتدائي',
+    'الرابع الابتدائي',
+    'الخامس الابتدائي',
+    'السادس الابتدائي'
+];
+
+const classes = ['1', '2', '3', '4'];
+const periods = Array.from({length: 30}, (_, i) => i + 1);
+
+function createSelectElement(options, defaultValue = '') {
+    const select = document.createElement('select');
+    options.forEach(option => {
+        const optElement = document.createElement('option');
+        optElement.value = option;
+        optElement.textContent = option;
+        select.appendChild(optElement);
+    });
+    select.value = defaultValue;
+    return select;
+}
+
+function addNewTeacher(teacherData = {}) {
+    const table = document.querySelector('table tbody');
+    
+    const teacherRow = document.createElement('tr');
+    teacherRow.classList.add('teacher-row');
+    teacherRow.innerHTML = `
+        <td>
+            <input type="text" class="teacher-name" placeholder="اسم المعلم" onchange="autoSave()">
+        </td>
+        <td colspan="4"></td>
+        <td>
+            <button class="add-subject-btn btn btn-primary" onclick="addSubjectRow(this.closest('.teacher-row'))">
+                + إضافة مادة
+            </button>
+            <button class="delete-btn btn btn-danger" onclick="deleteTeacher(this.closest('.teacher-row'))">
+                حذف
+            </button>
+        </td>
+    `;
+
+    const totalRow = document.createElement('tr');
+    totalRow.classList.add('total-row');
+    totalRow.innerHTML = `
+        <td colspan="6" class="text-center">
+            المجموع النهائي: عدد المواد: 0 | عدد الصفوف: 0 | عدد الفصول: 0 | إجمالي الحصص: 0
+        </td>
+    `;
+    totalRow.style.display = 'none';
+
+    table.appendChild(teacherRow);
+    table.appendChild(totalRow);
+
+    updateTotals();
+    return teacherRow;
+}
+
+function addSubjectRow(teacherRow) {
+    let totalRow = teacherRow.nextElementSibling;
+    while(totalRow && !totalRow.classList.contains('total-row')) {
+        totalRow = totalRow.nextElementSibling;
+    }
+
+    const newSubjectRow = document.createElement('tr');
+    newSubjectRow.classList.add('subject-row');
+    newSubjectRow.innerHTML = `
+        <td></td>
+        <td>
+            <select class="form-control school-select" onchange="updateTotals(); autoSave()">
+                <option value="">اختر المدرسة</option>
+                ${schools.map(school => `<option value="${school}">${school}</option>`).join('')}
+            </select>
+        </td>
+        <td>
+            <select class="form-control subject-select" onchange="updateTotals(); autoSave()">
+                <option value="">اختر المادة</option>
+                ${subjects.map(subject => `<option value="${subject}">${subject}</option>`).join('')}
+            </select>
+        </td>
+        <td>
+            <select class="form-control grade-select" onchange="updateTotals(); autoSave()">
+                <option value="">اختر الصف</option>
+                ${grades.map(grade => `<option value="${grade}">${grade}</option>`).join('')}
+            </select>
+        </td>
+        <td>
+            <select class="form-control class-select" onchange="updateTotals(); autoSave()">
+                <option value="">اختر الفصل</option>
+                ${classes.map(cls => `<option value="${cls}">${cls}</option>`).join('')}
+            </select>
+        </td>
+        <td>
+            <select class="form-control periods-select" onchange="updateTotals(); autoSave()">
+                <option value="">عدد الحصص</option>
+                ${periods.map(period => `<option value="${period}">${period}</option>`).join('')}
+            </select>
+        </td>
+        <td>
+            <button class="delete-btn btn btn-danger" onclick="deleteSubject(this.closest('.subject-row'))">
+                حذف
+            </button>
+        </td>
+    `;
+
+    if(totalRow) {
+        teacherRow.parentNode.insertBefore(newSubjectRow, totalRow);
+        totalRow.style.display = 'table-row';
+    } else {
+        teacherRow.parentNode.insertBefore(newSubjectRow, teacherRow.nextSibling);
+    }
+
+    updateTotals();
+    return newSubjectRow;
+}
+
+function updateTotals() {
+    document.querySelectorAll('.teacher-row').forEach(teacherRow => {
+        let totalHours = 0;
+        const subjects = new Set();
+        const grades = new Set();
+        const classes = new Set();
+
+        let currentRow = teacherRow.nextElementSibling;
+        let totalRow = null;
+
+        while(currentRow && !currentRow.classList.contains('total-row')) {
+            if(currentRow.classList.contains('subject-row')) {
+                const selects = currentRow.querySelectorAll('select');
+                const schoolSelect = selects[0];
+                const subjectSelect = selects[1];
+                const gradeSelect = selects[2];
+                const classSelect = selects[3];
+                const periodsSelect = selects[4];
+
+                // تحسين طريقة إضافة القيم للمجموعات
+                if(subjectSelect.value && gradeSelect.value && classSelect.value) {
+                    subjects.add(subjectSelect.value);
+                    grades.add(gradeSelect.value);
+                    // إضافة تركيبة الصف والفصل معاً للتمييز بين الفصول المختلفة
+                    classes.add(`${gradeSelect.value}-${classSelect.value}`);
+                }
+                
+                // إضافة عدد الحصص فقط إذا كانت جميع الحقول معبأة
+                if(schoolSelect.value && subjectSelect.value && gradeSelect.value && 
+                   classSelect.value && periodsSelect.value) {
+                    totalHours += parseInt(periodsSelect.value) || 0;
+                }
+            }
+            currentRow = currentRow.nextElementSibling;
+        }
+
+        totalRow = currentRow;
+
+        if(totalHours > 24) {
+            alert('تنبيه: لا يمكن تجاوز 24 حصة للمعلم الواحد!');
+            return;
+        }
+
+        if(totalRow) {
+            const totalText = `المجموع النهائي: عدد المواد: ${subjects.size} | عدد الصفوف: ${grades.size} | عدد الفصول: ${classes.size} | إجمالي الحصص: ${totalHours}`;
+            totalRow.querySelector('td').textContent = totalText;
+            totalRow.querySelector('td').setAttribute('colspan', '7');
+            totalRow.style.display = subjects.size > 0 ? 'table-row' : 'none';
+        }
+    });
+    autoSave();
+}
+
+
+
+function deleteTeacher(teacherRow) {
+    if(confirm('هل أنت متأكد من حذف هذا المعلم وجميع مواده؟')) {
+        let nextRow = teacherRow.nextElementSibling;
+        while(nextRow && (nextRow.classList.contains('subject-row') || nextRow.classList.contains('total-row'))) {
+            const rowToDelete = nextRow;
+            nextRow = nextRow.nextElementSibling;
+            rowToDelete.remove();
+        }
+        teacherRow.remove();
+        updateTotals();
+        autoSave();
+    }
+}
+
+function deleteSubject(subjectRow) {
+    if(confirm('هل أنت متأكد من حذف هذه المادة؟')) {
+        subjectRow.remove();
+        updateTotals();
+        autoSave();
+    }
+}
+
+function autoSave() {
+    const teachers = [];
+    document.querySelectorAll('.teacher-row').forEach(teacherRow => {
+        const teacher = {
+            name: teacherRow.querySelector('.teacher-name').value,
+            subjects: []
+        };
+
+        let nextRow = teacherRow.nextElementSibling;
+        while(nextRow && nextRow.classList.contains('subject-row')) {
+            const selects = nextRow.querySelectorAll('select');
+            teacher.subjects.push({
+                school: selects[0].value,    // إضافة المدرسة
+                subject: selects[1].value,
+                grade: selects[2].value,
+                class: selects[3].value,
+                periods: selects[4].value
+            });
+            nextRow = nextRow.nextElementSibling;
+        }
+        teachers.push(teacher);
+    });
+
+    localStorage.setItem('teachersData', JSON.stringify(teachers));
+}
+
+function saveData() {
+    autoSave();
+    alert('تم حفظ البيانات بنجاح!');
+}
+
+function exportData() {
+    const data = localStorage.getItem('teachersData');
+    const blob = new Blob([data], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `teachers_data_${new Date().toLocaleDateString()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+function printStats() {
+    const stats = {
+        totalTeachers: 0,
+        totalSubjects: 0,
+        totalPeriods: 0,
+        subjectCounts: {},
+        gradeCounts: {},
+        teacherDetails: []
+    };
+
+    document.querySelectorAll('.teacher-row').forEach(teacherRow => {
+        const teacherName = teacherRow.querySelector('.teacher-name').value;
+        if (!teacherName) return;
+
+        let teacherStats = {
+            name: teacherName,
+            subjects: 0,
+            periods: 0
+        };
+
+        stats.totalTeachers++;
+        
+        let currentRow = teacherRow.nextElementSibling;
+        while(currentRow && currentRow.classList.contains('subject-row')) {
+            const selects = currentRow.querySelectorAll('select');
+            // تصحيح ترتيب القراءة من القوائم المنسدلة
+            const school = selects[0].value;
+            const subject = selects[1].value;
+            const grade = selects[2].value;
+            const classNum = selects[3].value;
+            const periods = parseInt(selects[4].value) || 0;
+
+            // التحقق من اكتمال البيانات
+            if (school && subject && grade && classNum && periods) {
+                stats.totalSubjects++;
+                teacherStats.subjects++;
+                teacherStats.periods += periods;
+                stats.totalPeriods += periods;
+
+                // إحصائيات المواد
+                stats.subjectCounts[subject] = (stats.subjectCounts[subject] || 0) + 1;
+                // إحصائيات الصفوف
+                stats.gradeCounts[grade] = (stats.gradeCounts[grade] || 0) + 1;
+            }
+
+            currentRow = currentRow.nextElementSibling;
+        }
+
+        if (teacherStats.subjects > 0) {
+            stats.teacherDetails.push(teacherStats);
+        }
+    });
+
+    // إنشاء نافذة الطباعة مع تحسينات في التصميم
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html dir="rtl">
+        <head>
+            <title>إحصائيات المواد المسندة للمعلمين</title>
+            <style>
+                body { 
+                    font-family: Arial, sans-serif; 
+                    padding: 20px; 
+                    background-color: #f5f5f5;
+                }
+                .stats-container { 
+                    margin-bottom: 30px;
+                    background-color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+                .stats-title { 
+                    color: #2196F3; 
+                    margin-bottom: 15px;
+                    border-bottom: 2px solid #2196F3;
+                    padding-bottom: 5px;
+                }
+                .stats-item { 
+                    margin: 10px 0;
+                    font-size: 16px;
+                }
+                table { 
+                    width: 100%; 
+                    border-collapse: collapse; 
+                    margin: 15px 0;
+                    background-color: white;
+                }
+                th, td { 
+                    border: 1px solid #ddd; 
+                    padding: 12px; 
+                    text-align: right;
+                }
+                th { 
+                    background-color: #f5f5f5;
+                    font-weight: bold;
+                }
+                tr:hover { background-color: #f9f9f9; }
+            </style>
+        </head>
+        <body>
+            <h1 style="text-align: center; color: #1976D2;">إحصائيات المواد المسندة للمعلمين</h1>
+            
+            <div class="stats-container">
+                <h2 class="stats-title">إحصائيات عامة</h2>
+                <div class="stats-item">عدد المعلمين: ${stats.totalTeachers}</div>
+                <div class="stats-item">إجمالي المواد المسندة: ${stats.totalSubjects}</div>
+                <div class="stats-item">إجمالي الحصص: ${stats.totalPeriods}</div>
+            </div>
+
+            <div class="stats-container">
+                <h2 class="stats-title">إحصائيات المواد</h2>
+                <table>
+                    <tr><th>المادة</th><th>عدد الإسنادات</th></tr>
+                    ${Object.entries(stats.subjectCounts)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([subject, count]) => `<tr><td>${subject}</td><td>${count}</td></tr>`)
+                        .join('')}
+                </table>
+            </div>
+
+            <div class="stats-container">
+                <h2 class="stats-title">إحصائيات الصفوف</h2>
+                <table>
+                    <tr><th>الصف</th><th>عدد الإسنادات</th></tr>
+                    ${Object.entries(stats.gradeCounts)
+                        .sort((a, b) => grades.indexOf(a[0]) - grades.indexOf(b[0]))
+                        .map(([grade, count]) => `<tr><td>${grade}</td><td>${count}</td></tr>`)
+                        .join('')}
+                </table>
+            </div>
+
+            <div class="stats-container">
+                <h2 class="stats-title">تفاصيل المعلمين</h2>
+                <table>
+                    <tr><th>اسم المعلم</th><th>عدد المواد</th><th>مجموع الحصص</th></tr>
+                    ${stats.teacherDetails
+                        .sort((a, b) => b.periods - a.periods)
+                        .map(t => `<tr><td>${t.name}</td><td>${t.subjects}</td><td>${t.periods}</td></tr>`)
+                        .join('')}
+                </table>
+            </div>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+
+window.onload = () => {
+    const savedData = localStorage.getItem('teachersData');
+    if (savedData) {
+        try {
+            const teachers = JSON.parse(savedData);
+            if (Array.isArray(teachers)) {
+                teachers.forEach(teacher => {
+                    const teacherRow = addNewTeacher();
+                    teacherRow.querySelector('.teacher-name').value = teacher.name;
+
+                    if (teacher.subjects && Array.isArray(teacher.subjects)) {
+                        teacher.subjects.forEach(subject => {
+                            const subjectRow = addSubjectRow(teacherRow);
+                            const selects = subjectRow.querySelectorAll('select');
+                            selects[0].value = subject.school;    // إضافة المدرسة
+                            selects[1].value = subject.subject;
+                            selects[2].value = subject.grade;
+                            selects[3].value = subject.class;
+                            selects[4].value = subject.periods;
+                        });
+                    }
+                });
+                updateTotals();
+            }
+        } catch (error) {
+            console.error('خطأ في تحميل البيانات:', error);
+        }
+    }
+};
+
+
+document.getElementById('importFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            localStorage.setItem('teachersData', JSON.stringify(data));
+            window.location.reload();
+        } catch (error) {
+            alert('خطأ في ملف الاستيراد: ' + error.message);
+        }
+    };
+    reader.readAsText(file);
+});
+
+document.getElementById('addTeacherBtn').addEventListener('click', function() {
+    addNewTeacher();
+});
+// دالة استيراد المعلمين من الصفحة الرئيسية
+function importTeachersFromMain() {
+    // قراءة بيانات المعلمين من localStorage
+    const mainTeachersData = localStorage.getItem('teachersStats');
+    
+    if (!mainTeachersData) {
+        alert('لا توجد بيانات معلمين في الصفحة الرئيسية');
+        return;
+    }
+
+    try {
+        const mainTeachers = JSON.parse(mainTeachersData);
+        
+        // حذف جميع المعلمين الحاليين بطريقة آمنة
+        const tbody = document.getElementById('teachersTableBody');
+        tbody.innerHTML = '';
+
+        // إضافة المعلمين من الصفحة الرئيسية
+        mainTeachers.forEach(teacher => {
+            if (teacher.name && teacher.name !== "معلم جديد") {
+                const teacherRow = addNewTeacher();
+                if (teacherRow && teacherRow.querySelector('.teacher-name')) {
+                    teacherRow.querySelector('.teacher-name').value = teacher.name;
+                    // إضافة صف مادة فارغ بشكل آمن
+                    setTimeout(() => {
+                        addSubjectRow(teacherRow);
+                    }, 100);
+                }
+            }
+        });
+
+        // تحديث الإجماليات بعد إضافة جميع المعلمين
+        setTimeout(() => {
+            updateTotals();
+            autoSave();
+            alert('تم استيراد المعلمين بنجاح');
+        }, 500);
+
+    } catch (error) {
+        console.error('خطأ في استيراد البيانات:', error);
+        alert('حدث خطأ أثناء استيراد البيانات');
+    }
+}
+
+// إضافة مستمع الحدث للزر الجديد
+document.addEventListener('DOMContentLoaded', function() {
+    const importFromMainBtn = document.getElementById('importFromMainBtn');
+    if (importFromMainBtn) {
+        importFromMainBtn.addEventListener('click', importTeachersFromMain);
+    }
+});
+
+
+    </script>
+</body>
+</html>

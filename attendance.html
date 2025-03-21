@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام تقييم الغياب والتاخير</title>
+    <link rel="icon" type="image/png" href="شعار_وزارة_التعليم.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            table-layout: fixed; /* إضافة جديدة */
+        }
+        th, td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+        /* تعديل عرض الأعمدة */
+       table th:nth-child(1),
+table td:nth-child(1) {
+    width: 20px;
+    min-width: 20px;
+}
+
+/* عمود اسم المعلم */
+table th:nth-child(2),
+table td:nth-child(2) {
+    width: 250px;
+    min-width: 250px;
+    text-align: right;
+}
+
+/* عمود الغياب (أيام) */
+table th:nth-child(3),
+table td:nth-child(3) {
+    width: 50px;
+    min-width: 50px;
+}
+
+/* عمود تقييم الغياب */
+table th:nth-child(4),
+table td:nth-child(4) {
+    width: 100px;
+    min-width: 100px;
+}
+
+/* عمود تأخير (دقائق) */
+table th:nth-child(5),
+table td:nth-child(5) {
+    width: 80px;
+    min-width: 80px;
+}
+
+/* عمود تأخير (ساعات) */
+table th:nth-child(6),
+table td:nth-child(6) {
+    width: 80px;
+    min-width: 80px;
+}
+/* إضافة هذا الكود في قسم <style> */
+.delay-warning {
+    color: red;
+    font-weight: bold;
+}
+
+
+/* عمود تأخير (أيام) */
+table th:nth-child(7),
+table td:nth-child(7) {
+    width: 80px;
+    min-width: 80px;
+}
+
+/* عمود تقييم التأخير */
+table th:nth-child(8),
+table td:nth-child(8) {
+    width: 100px;
+    min-width: 100px;
+}
+
+/* عمود التقييم النهائي */
+table th:nth-child(9),
+table td:nth-child(9) {
+    width: 100px;
+    min-width: 100px;
+}
+
+
+        /* تنسيق اسم المعلم */
+        table th:nth-child(2),
+        table td:nth-child(2) {
+            min-width: 200px;
+            text-align: right;
+        }
+
+        /* تنسيق عمود الإجراءات */
+        table th:last-child,
+table td:last-child {
+    width: 200px;
+    min-width: 200px;
+    white-space: normal;
+}
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+        .rating-5 { color: #27ae60; }
+        .rating-4 { color: #2ecc71; }
+        .rating-3 { color: #f1c40f; }
+        .rating-2 { color: #e67e22; }
+        .rating-1 { color: #e74c3c; }
+        .button {
+            background-color: #3498db;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 2px;
+            min-width: 80px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        td .button {
+    padding: 4px 8px;
+    margin: 2px;
+    font-size: 12px;
+    display: inline-block;
+}
+        .edit-button { background-color: #3498db; }
+        .delete-button { background-color: #e74c3c; }
+        .save-button { background-color: #27ae60; }
+        .print-button { background-color: #8e44ad; }
+        .button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 8px;
+            background-color: white;
+            padding: 12px;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        .input-group {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* المسافة بين العناصر */
+    margin-bottom: 20px;
+}
+#absenceDays,
+#delayMinutes {
+    width: 100px;
+    text-align: center;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+        .import-btn {
+            position: relative;
+            cursor: pointer;
+        }
+        .editable-cell input {
+            width: 80px;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+input[type="number"] {
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: auto;
+    margin: 0;
+}
+    </style>
+
+
+</head>
+<body>
+    <div class="container">
+        <h1>نظام تقييم الغياب والتاخير</h1>
+        
+        <div class="controls no-print">
+            <div class="input-group">
+                <input type="text" id="teacherName" placeholder="اسم المعلم">
+                <input type="number" id="absenceDays" placeholder="أيام الغياب">
+                <input type="number" id="delayMinutes" placeholder="دقائق التأخير">
+                <button class="button" onclick="addTeacher()">إضافة معلم</button>
+            </div>
+            <div class="action-buttons">
+                <button class="button print-button" onclick="printAllStats()">طباعة جميع الإحصائيات</button>
+ <button class="button delete-button" onclick="deleteAllData()">حذف البيانات</button>
+                <button class="button" onclick="exportToJSON()">تصدير JSON</button>
+                <label class="button import-btn">
+                    استيراد JSON
+                    <input type="file" id="importFile" onchange="importFromJSON()" style="display: none">
+                </label>
+                <button class="button" onclick="importNamesFromMain()">استيراد الأسماء من الرئيسية</button>
+                <button class="button" onclick="location.href='main.html'">العودة للصفحة الرئيسية</button>
+            </div>
+        </div>
+
+        <table id="teachersTable">
+            <thead>
+    <tr>
+        <th>م</th>
+        <th>اسم المعلم</th>
+        <th>الغياب (أيام)</th>
+        <th>تقييم الغياب</th>
+        <th>تأخير (دقائق)</th>
+        <th>تأخير (ساعات)</th>
+        <th>تأخير (أيام)</th>
+        <th>تقييم التأخير</th>
+        <th>التقييم النهائي</th>
+        <th class="no-print">الإجراءات</th>
+    </tr>
+</thead>
+            <tbody id="teachersBody">
+            </tbody>
+        </table>
+    </div>
+<script>
+    let teachers = [];
+    let counter = 1;
+function showInstructions() {
+        const message = `
+        🎯 آلية احتساب التقييم:
+
+        📊 تقييم الغياب:
+        • 0 يوم غياب = 5 درجات
+        • 1 يوم غياب = 4 درجات
+        • 2 يوم غياب = 3 درجات
+        • 3 يوم غياب = درجتان
+        • 4 أيام أو أكثر = درجة واحدة
+
+        ⏰ تقييم التأخير:
+        • أقل من 7 ساعات (419 دقيقة أو أقل) = 5 درجات
+        • من 7 إلى 14 ساعة (420-839 دقيقة) = 4 درجات
+        • من 14 إلى 21 ساعة (840-1259 دقيقة) = 3 درجات
+        • من 21 إلى 28 ساعة (1260-1679 دقيقة) = درجتان
+        • 28 ساعة فأكثر (1680 دقيقة فأكثر) = درجة واحدة
+
+        🎯 التقييم النهائي:
+        • يتم احتساب المتوسط الحسابي لتقييم الغياب وتقييم التأخير
+        • مثال: إذا كان تقييم الغياب 4 وتقييم التأخير 5، فإن التقييم النهائي = (4+5)/2 = 4.5 ويتم تقريبه إلى 5 (يتم التقريب دائماً للدرجة الأعلى لصالح المعلم)
+        `;
+
+        const popup = document.createElement('div');
+        popup.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            direction: rtl;
+            font-family: Arial;
+            white-space: pre-line;
+            line-height: 1.5;
+        `;
+
+        popup.innerHTML = `
+            <h2 style="color: #3498db; text-align: center; margin-bottom: 20px;">نظام التقييم</h2>
+            <div style="margin-bottom: 20px;">${message}</div>
+            <button onclick="this.parentElement.remove()" style="
+                background: #3498db;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                display: block;
+                margin: 0 auto;
+            ">فهمت</button>
+        `;
+
+        document.body.appendChild(popup);
+    }
+
+
+   function calculateRating(absenceDays, delayMinutes) {
+    let absenceScore = 5;
+    if (absenceDays === 1) absenceScore = 4;
+    else if (absenceDays === 2) absenceScore = 3;
+    else if (absenceDays === 3) absenceScore = 2;
+    else if (absenceDays >= 4) absenceScore = 1;
+
+    let delayScore = 5;
+    if (delayMinutes >= 420 && delayMinutes < 840) delayScore = 4;
+    else if (delayMinutes >= 840 && delayMinutes < 1260) delayScore = 3;
+    else if (delayMinutes >= 1260 && delayMinutes < 1680) delayScore = 2;
+    else if (delayMinutes >= 1680) delayScore = 1;
+
+    const average = (absenceScore + delayScore) / 2;
+    return Math.ceil(average); // التقريب الرياضي للأعلى
+}
+
+    // حساب وحدات التأخير
+    function calculateDelayUnits(minutes) {
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        return {
+            hours: hours,
+            days: days
+        };
+    }
+
+    // حفظ البيانات
+    function saveToLocalStorage() {
+        localStorage.setItem('teachersData', JSON.stringify(teachers));
+        localStorage.setItem('counter', counter);
+    }
+
+    // تحميل البيانات
+    function loadFromLocalStorage() {
+        const savedTeachers = localStorage.getItem('teachersData');
+        const savedCounter = localStorage.getItem('counter');
+        if (savedTeachers) {
+            teachers = JSON.parse(savedTeachers);
+            counter = parseInt(savedCounter) || 1;
+            updateTable();
+        }
+    }
+// أضف هذه الدالة في قسم JavaScript
+function deleteAllData() {
+    if (confirm('هل أنت متأكد من حذف جميع البيانات؟ لا يمكن التراجع عن هذا الإجراء.')) {
+        teachers = [];
+        counter = 1;
+        updateTable();
+        saveToLocalStorage();
+        alert('تم حذف جميع البيانات بنجاح');
+    }
+}
+
+
+    // إضافة معلم
+    function addTeacher() {
+        const name = document.getElementById('teacherName').value;
+        const absenceDays = parseInt(document.getElementById('absenceDays').value) || 0;
+        const delayMinutes = parseInt(document.getElementById('delayMinutes').value) || 0;
+
+        if (!name) {
+            alert('الرجاء إدخال اسم المعلم');
+            return;
+        }
+
+        const delayUnits = calculateDelayUnits(delayMinutes);
+        const rating = calculateRating(absenceDays, delayMinutes);
+
+        const teacher = {
+            id: counter++,
+            name: name,
+            absenceDays: absenceDays,
+            delayMinutes: delayMinutes,
+            delayHours: delayUnits.hours,
+            delayDays: delayUnits.days,
+            rating: rating
+        };
+
+        teachers.push(teacher);
+        sortTeachersAlphabetically();
+        updateTable();
+        clearInputs();
+        saveToLocalStorage();
+    }
+function sortTeachersAlphabetically() {
+    teachers.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+}
+
+    // تحديث الجدول
+    function updateTable() {
+    const tbody = document.getElementById('teachersBody');
+    tbody.innerHTML = '';
+
+    teachers.forEach((teacher, index) => {
+        const absenceScore = calculateAbsenceScore(teacher.absenceDays);
+        const delayScore = calculateDelayScore(teacher.delayMinutes);
+        const finalRating = Math.ceil((absenceScore + delayScore) / 2);
+
+        const delayHoursClass = teacher.delayHours >= 7 ? 'delay-warning' : '';
+
+        const row = document.createElement('tr');
+        row.setAttribute('data-id', teacher.id);
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${teacher.name}</td>
+            <td>${teacher.absenceDays}</td>
+            <td class="rating-${absenceScore}">${absenceScore} من 5</td>
+            <td>${teacher.delayMinutes}</td>
+            <td class="${delayHoursClass}">${teacher.delayHours}</td>
+            <td>${teacher.delayDays}</td>
+            <td class="rating-${delayScore}">${delayScore} من 5</td>
+            <td class="rating-${finalRating}">${finalRating} من 5</td>
+            <td class="no-print">
+                <button class="button edit-button" onclick="editTeacherName(${teacher.id})">تعديل الاسم</button>
+                <button class="button edit-button" onclick="editTeacher(${teacher.id})">تعديل القيم</button>
+                <button class="button delete-button" onclick="deleteTeacher(${teacher.id})">حذف</button>
+                <button class="button print-button" onclick="printAbsenceStats(${teacher.id})">طباعة الغياب</button>
+                <button class="button print-button" onclick="printDelayStats(${teacher.id})">طباعة التاخير</button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+
+// دالة حساب تقييم الغياب
+function calculateAbsenceScore(absenceDays) {
+    if (absenceDays === 0) return 5;
+    if (absenceDays === 1) return 4;
+    if (absenceDays === 2) return 3;
+    if (absenceDays === 3) return 2;
+    return 1; // 4 أيام أو أكثر
+}
+
+// دالة حساب تقييم التأخير
+function calculateDelayScore(delayMinutes) {
+    if (delayMinutes < 420) return 5;      // أقل من 7 ساعات
+    if (delayMinutes < 840) return 4;      // 7-14 ساعة
+    if (delayMinutes < 1260) return 3;     // 14-21 ساعة
+    if (delayMinutes < 1680) return 2;     // 21-28 ساعة
+    return 1;                              // أكثر من 28 ساعة
+}
+
+// تحديث دالة editTeacher
+function editTeacher(id) {
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    const teacher = teachers.find(t => t.id === id);
+    const absenceScore = calculateAbsenceScore(teacher.absenceDays);
+    const delayScore = calculateDelayScore(teacher.delayMinutes);
+
+    row.innerHTML = `
+        <td>${teacher.id}</td>
+        <td><input type="text" value="${teacher.name}" id="edit-name-${id}"></td>
+        <td><input type="number" value="${teacher.absenceDays}" id="edit-absence-${id}"></td>
+        <td class="rating-${absenceScore}">${absenceScore} من 5</td>
+        <td><input type="number" value="${teacher.delayMinutes}" id="edit-delay-${id}"></td>
+        <td>${teacher.delayHours}</td>
+        <td><input type="number" value="${teacher.delayDays}" id="edit-delayDays-${id}"></td>
+        <td class="rating-${delayScore}">${delayScore} من 5</td>
+        <td class="rating-${teacher.rating}">${teacher.rating} من 5</td>
+        <td class="no-print">
+            <button class="button save-button" onclick="saveTeacher(${id})">حفظ</button>
+            <button class="button delete-button" onclick="deleteTeacher(${id})">حذف</button>
+        </td>
+    `;
+}
+
+
+
+    // حفظ تعديلات المعلم
+    function saveTeacher(id) {
+    const name = document.getElementById(`edit-name-${id}`).value;
+    const absenceDays = parseInt(document.getElementById(`edit-absence-${id}`).value) || 0;
+    const delayMinutes = parseInt(document.getElementById(`edit-delay-${id}`).value) || 0;
+    const delayDays = parseInt(document.getElementById(`edit-delayDays-${id}`).value) || 0;
+
+    if (!name) {
+        alert('الرجاء إدخال اسم المعلم');
+        return;
+    }
+
+    const delayUnits = calculateDelayUnits(delayMinutes);
+    const rating = calculateRating(absenceDays, delayMinutes);
+
+    const teacherIndex = teachers.findIndex(t => t.id === id);
+    teachers[teacherIndex] = {
+        ...teachers[teacherIndex],
+        name: name,
+        absenceDays: absenceDays,
+        delayMinutes: delayMinutes,
+        delayHours: delayUnits.hours,
+        delayDays: delayDays, // استخدام القيمة المدخلة يدوياً
+        rating: rating
+    };
+    
+    sortTeachersAlphabetically();
+    updateTable();
+    saveToLocalStorage();
+}
+
+    // حذف معلم
+    function deleteTeacher(id) {
+    if (confirm('هل أنت متأكد من حذف هذا المعلم؟')) {
+        teachers = teachers.filter(t => t.id !== id);
+        updateTable(); // سيُعيد ترقيم الفهرس تلقائيًا
+        saveToLocalStorage();
+    }
+}
+
+    // طباعة إحصائيات الغياب
+    function printAbsenceStats(id) {
+    const teacher = teachers.find(t => t.id === id);
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write(`
+        <html dir="rtl">
+        <head>
+            <title>إحصائيات الغياب - ${teacher.name}</title>
+            <style>
+                body { font-family: Arial; padding: 20px; }
+                .stats { margin: 20px; }
+                .header { text-align: center; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+                th { background-color: #f2f2f2; }
+                .signatures {
+                    margin-top: 50px;
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 20px;
+                }
+                .signature-box {
+                    text-align: center;
+                    width: 200px;
+                }
+                .signature-line {
+                    border-top: 1px solid #000;
+                    margin: 10px auto;
+                    width: 150px;
+                }
+                .teacher-name {
+                    text-align: right;
+                    margin: 20px;
+                    font-weight: bold;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="teacher-name">
+                المعلم: ${teacher.name}
+            </div>
+            <div class="header">
+                <h2>إحصائيات الغياب</h2>
+                <p>تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}</p>
+            </div>
+            <table>
+                <tr>
+                    <th>المعيار</th>
+                    <th>القيمة</th>
+                </tr>
+                <tr>
+                    <td>أيام الغياب</td>
+                    <td>${teacher.absenceDays}</td>
+                </tr>
+                <tr>
+                    <td>التقييم النهائي</td>
+                    <td>${teacher.rating} من 5</td>
+                </tr>
+                <tr>
+                    <td>ملاحظات</td>
+                    <td>${getAbsenceNote(teacher.absenceDays)}</td>
+                </tr>
+            </table>
+            <div class="signatures">
+    <div class="signature-box">
+        <div>المعلم</div>
+        <div>${teacher.name}</div>
+        <div>التوقيع</div>
+        <div class="signature-line"></div>
+    </div>
+    <div class="signature-box">
+        <div>مدير المدرسة</div>
+        <div>محمد حسين منصور حوذان</div>
+        <div>التوقيع</div>
+        <div class="signature-line"></div>
+    </div>
+</div>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+    // طباعة إحصائيات التأخير
+    // طباعة إحصائيات التأخير
+function printDelayStats(id) {
+    const teacher = teachers.find(t => t.id === id);
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write(`
+        <html dir="rtl">
+        <head>
+            <title>إحصائيات التأخير - ${teacher.name}</title>
+            <style>
+                body { font-family: Arial; padding: 20px; }
+                .stats { margin: 20px; }
+                .header { text-align: center; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+                th { background-color: #f2f2f2; }
+                .signatures {
+                    margin-top: 50px;
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 20px;
+                }
+                .signature-box {
+                    text-align: center;
+                    width: 200px;
+                }
+                .signature-line {
+                    border-top: 1px solid #000;
+                    margin: 10px auto;
+                    width: 150px;
+                }
+                .teacher-name {
+                    text-align: right;
+                    margin: 20px;
+                    font-weight: bold;
+                }
+                .note {
+                    color: #444;
+                    font-style: italic;
+                    padding: 10px;
+                    background-color: #f9f9f9;
+                    border-radius: 4px;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="teacher-name">
+                المعلم: ${teacher.name}
+            </div>
+            <div class="header">
+                <h2>إحصائيات التأخير</h2>
+                <p>تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}</p>
+            </div>
+            <table>
+                <tr>
+                    <th>المعيار</th>
+                    <th>القيمة</th>
+                </tr>
+                <tr>
+                    <td>دقائق التأخير</td>
+                    <td>${teacher.delayMinutes}</td>
+                </tr>
+                <tr>
+                    <td>ساعات التأخير</td>
+                    <td>${teacher.delayHours}</td>
+                </tr>
+                <tr>
+                    <td>أيام التأخير</td>
+                    <td>${teacher.delayDays}</td>
+                </tr>
+                <tr>
+                    <td>التقييم النهائي</td>
+                    <td>${teacher.rating} من 5</td>
+                </tr>
+                <tr>
+                    <td>ملاحظات</td>
+                    <td>${getDelayNote(teacher.delayMinutes)}</td>
+                </tr>
+            </table>
+            <div class="signatures">
+    <div class="signature-box">
+        <div>المعلم</div>
+        <div>${teacher.name}</div>
+        <div>التوقيع</div>
+        <div class="signature-line"></div>
+    </div>
+    <div class="signature-box">
+        <div>مدير المدرسة</div>
+        <div>محمد حسين منصور حوذان</div>
+        <div>التوقيع</div>
+        <div class="signature-line"></div>
+    </div>
+</div>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+
+    // طباعة جميع الإحصائيات
+    function printAllStats() {
+        const printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write(`
+            <html dir="rtl">
+            <head>
+                <title>إحصائيات جميع المعلمين</title>
+                <style>
+                    body { font-family: Arial; padding: 20px; }
+                    table { width: 100%; border-collapse: collapse; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+                    th { background-color: #f2f2f2; }
+                    .header { text-align: center; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h2>إحصائيات جميع المعلمين</h2>
+                    <p>تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}</p>
+                </div>
+                <table>
+                    <tr>
+                        <th>اسم المعلم</th>
+                        <th>الغياب (أيام)</th>
+                        <th>تأخير (دقائق)</th>
+                        <th>تأخير (ساعات)</th>
+                        <th>تأخير (أيام)</th>
+                        <th>التقييم النهائي</th>
+                    </tr>
+                    ${teachers.map(t => `
+                        <tr>
+                            <td>${t.name}</td>
+                            <td>${t.absenceDays}</td>
+                            <td>${t.delayMinutes}</td>
+                            <td>${t.delayHours}</td>
+                            <td>${t.delayDays}</td>
+                            <td>${t.rating} من 5</td>
+                        </tr>
+                    `).join('')}
+                </table>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    // تصدير البيانات
+    function exportToJSON() {
+        const dataStr = JSON.stringify(teachers, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        const exportFileDefaultName = 'teachers-data.json';
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    }
+
+    // استيراد البيانات
+    function importFromJSON() {
+    const file = document.getElementById('importFile').files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                teachers = importedData;
+                counter = Math.max(...teachers.map(t => t.id), 0) + 1; // إصلاح هنا
+                updateTable();
+                saveToLocalStorage();
+                alert('تم استيراد البيانات بنجاح');
+            } catch (error) {
+                alert('حدث خطأ أثناء استيراد الملف');
+            }
+        };
+        reader.readAsText(file);
+    }
+}
+
+    // مسح الحقول
+    function clearInputs() {
+        document.getElementById('teacherName').value = '';
+        document.getElementById('absenceDays').value = '';
+        document.getElementById('delayMinutes').value = '';
+    }
+
+    // دالة مساعدة للملاحظات
+    function getAbsenceNote(days) {
+        if (days === 0) return "لا يوجد غياب - ممتاز";
+        else if (days === 1) return "غياب مقبول";
+        else if (days === 2) return "غياب متوسط - يحتاج متابعة";
+        else if (days === 3) return "غياب كثير - يستدعي المراجعة";
+        else return "غياب مرتفع جداً - يتطلب إجراء فوري";
+    }
+// دالة مساعدة لملاحظات التأخير
+function getDelayNote(minutes) {
+    if (minutes < 420) return "لا يوجد تأخير يؤثر على التقييم - ممتاز";
+    else if (minutes < 840) return "تأخير 7 ساعات - تقييم 4 من 5";
+    else if (minutes < 1260) return "تأخير 14 ساعة - تقييم 3 من 5";
+    else if (minutes < 1680) return "تأخير 21 ساعة - تقييم 2 من 5";
+    else return "تأخير أكثر من 28 ساعة - تقييم 1 من 5";
+}
+
+
+function importNamesFromMain() {
+    const mainData = localStorage.getItem('teachersStats');
+    
+    if (!mainData) {
+        alert('لا توجد بيانات في الصفحة الرئيسية');
+        return;
+    }
+    
+    try {
+        const teachersFromMain = JSON.parse(mainData);
+        const existingNames = teachers.map(t => t.name);
+        
+        teachersFromMain.forEach(teacher => {
+            if (!existingNames.includes(teacher.name)) {
+                teachers.push({
+                    id: counter++,
+                    name: teacher.name,
+                    absenceDays: 0,
+                    delayMinutes: 0,
+                    delayHours: 0,
+                    delayDays: 0,
+                    rating: 5
+                });
+            }
+        });
+        
+        updateTable();
+        saveToLocalStorage();
+        alert(`تم استيراد ${teachersFromMain.length} اسم بنجاح`);
+    } catch (error) {
+        alert('حدث خطأ أثناء استيراد البيانات');
+        console.error(error);
+    }
+}
+
+
+
+    // تحميل البيانات عند بدء التطبيق
+    window.onload = function() {
+        loadFromLocalStorage();
+        if (teachers.length === 0) {
+            const defaultTeachers = [
+                { name: "محمد علي", absenceDays: 2, delayMinutes: 40 },
+                { name: "أحمد خالد", absenceDays: 1, delayMinutes: 30 },
+                { name: "عبدالله سعيد", absenceDays: 0, delayMinutes: 10 }
+            ];
+
+            defaultTeachers.forEach(teacher => {
+                document.getElementById('teacherName').value = teacher.name;
+                document.getElementById('absenceDays').value = teacher.absenceDays;
+                document.getElementById('delayMinutes').value = teacher.delayMinutes;
+                addTeacher();
+            });
+        }
+    };
+window.onload = function() {
+        loadFromLocalStorage();
+        showInstructions();
+    };
+// دالة تعديل اسم المعلم فقط
+function editTeacherName(id) {
+    const teacher = teachers.find(t => t.id === id);
+    
+    // استخدام مربع حوار لإدخال الاسم الجديد
+    const newName = prompt("تعديل اسم المعلم", teacher.name);
+    
+    if (newName !== null) {  // إذا لم يضغط المستخدم على إلغاء
+        if (!newName.trim()) {
+            alert('الرجاء إدخال اسم المعلم');
+            return;
+        }
+        
+        const teacherIndex = teachers.findIndex(t => t.id === id);
+        teachers[teacherIndex].name = newName;
+        
+        sortTeachersAlphabetically();
+        updateTable();
+        saveToLocalStorage();
+    }
+}
+
+</script>
+</body>
+</html>

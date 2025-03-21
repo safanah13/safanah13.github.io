@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملف الإنجاز</title>
+    <link rel="icon" type="image/png" href="شعار_وزارة_التعليم.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #800000;
+            text-align: center;
+        }
+        .back-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #800000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ملف إنجاز المعلم</h1>
+        <p id="teacherInfo"></p>
+        <!-- يمكنك إضافة محتوى إضافي هنا -->
+        <button class="back-btn" onclick="window.history.back()">العودة</button>
+    </div>
+
+    <script>
+        // استخراج معرف المعلم من الرابط
+        const urlParams = new URLSearchParams(window.location.search);
+        const teacherId = urlParams.get('id');
+
+        // عرض معلومات المعلم (يمكنك استبدال هذا ببيانات حقيقية من قاعدة البيانات)
+        const teacherInfo = document.getElementById('teacherInfo');
+        if (teacherId) {
+            teacherInfo.textContent = `عرض ملف إنجاز المعلم ذو المعرف: ${teacherId}`;
+        } else {
+            teacherInfo.textContent = 'لم يتم تحديد معلم.';
+        }
+    </script>
+</body>
+</html>

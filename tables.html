@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>جدول المعلمين حسب المواد</title>
+    <link rel="icon" type="image/png" href="شعار_وزارة_التعليم.png">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: right;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .controls {
+            margin: 20px 0;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 5px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .btn-export {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-import {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-save {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-add {
+            background: #9c27b0;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        td[contenteditable="true"] {
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+
+        td[contenteditable="true"]:focus {
+            outline: 2px solid #2196F3;
+            background-color: #e3f2fd;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .total-row {
+            background-color: #e6e6e6 !important;
+            font-weight: bold;
+        }
+select {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+}
+
+select[multiple] {
+    height: auto;
+}
+
+select option {
+    padding: 2px 5px;
+}
+
+select:focus {
+    outline: 2px solid #2196F3;
+    background-color: #e3f2fd;
+}
+.btn-add {
+    background: #9c27b0;
+    color: white;
+    margin-right: 5px;
+}
+
+.btn-delete, .btn-add {
+    padding: 4px 8px;
+    font-size: 12px;
+    margin: 2px;
+}
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    direction: rtl;
+}
+
+.schedule-table th, .schedule-table td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: center;
+    min-width: 60px;
+}
+
+.teacher-name {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 2% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 1000px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    position: relative;
+    direction: rtl;
+}
+
+.close {
+    color: #aaa;
+    float: left;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.schedule-table select {
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.schedule-table select:focus {
+    outline: 2px solid #2196F3;
+    border-color: #2196F3;
+}
+.btn-home {
+    background: #607d8b;
+    color: white;
+}
+
+.btn-schedule {
+    background: #2196F3;
+    color: white;
+    margin-right: 5px;
+}
+.btn-print {
+    background: #607d8b;
+    color: white;
+    margin-right: 5px;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button class="btn btn-export" onclick="exportData()">تصدير البيانات</button>
+    <button class="btn btn-import" onclick="document.getElementById('fileInput').click()">استيراد البيانات</button>
+    <input type="file" id="fileInput" class="file-input" accept=".json">
+    <button class="btn btn-save" onclick="saveData()">حفظ البيانات</button>
+    <button class="btn btn-add" onclick="addNewRow()">إضافة صف جديد</button>
+    <button class="btn" onclick="window.location.href='main.html'">العودة للرئيسية</button>
+    </div>
+
+    <table id="teachersTable">
+        <tr>
+            <th>اسم المعلم</th>
+            <th>الفصول</th>
+            <th>المادة</th>
+            <th>عدد الحصص</th>
+            <th>الإجراءات</th>
+        </tr>
+    </table>
+
+    <script>
+    // البيانات الأولية للمعلمين
+    const initialData = [
+        // معلمو المواد الدينية
+        { name: "إبراهيم الردادي", classes: "1/2", subject: "دين", hours: "12" },
+        { name: "عبد الرحمن عواد", classes: "1/3ق", subject: "دين", hours: "15" },
+        { name: "عبدالرحمن الشنقيطي", classes: "2/3ق", subject: "فقه", hours: "10" },
+        { name: "وليد الاحمدي", classes: "1/4ق", subject: "توحيد", hours: "8" }
+    ];
+
+    // قائمة المعلمين الكاملة
+    const teachersList = [
+    "عبدالرحمن الشنقيطي",
+    "إبراهيم الردادي",
+    "وليد الاحمدي",
+    "عبدالله الردادي",
+    "عبد الرحمن عواد",
+    "عبد العزيز الصاعدي",
+    "فوزي الرحيلي",
+    "احمد الحجيلي",
+    "وليد شيخ",
+    "تركي السبيعي",
+    "عبد الرحمن الصيدلاني",
+    "ماجد الحافظي",
+    "موسى الخطابي",
+    "بندر الصاعدي",
+    "حاتم ابو حسين",
+    "فيصل العوفي",
+    "نعمان السيد",
+    "يزيد الاحمدي",
+    "محمد المطيري",
+    "عوض العلوي",
+    "عادل الحجيلي",
+    "سعد الاحمدي",
+    "هاني الحربي",
+    "عبد الله الحجيلي",
+    "عبد الرحمن الجهني",
+    "امجد المغامسي",
+    "سلطان الاحمدي",
+    "بدر مهل",
+    "عبد الرحمن الترجمي",
+    "اسامه القرافي",
+    "خالد الحازمي",
+    "طالب المورعي",
+    "عبد القادر البرقاني",
+    "فؤاد الحمادي",
+    "خالد الجابري",
+    "فهد الوسيدي",
+    "وجدي محروس",
+    "عبدالله الاحمدي",
+    "ماجد المحمدي",
+    "عادل الرحيلي"
+];
+
+
+    // قائمة الفصول الكاملة
+    const classesList = [
+        "1-1", "2/1", "1/2", "1/3ق", "2/3ق", "1/4ق", "2/4ق",
+        "1/5ق", "2/5ق", "1/6ق", "2/6ق", "3/3س", "3/4س", "3/5س", "3/6س"
+    ];
+
+    // قائمة المواد الكاملة
+    const subjectsList = [
+    "دين",
+    "لغتي", 
+    "انجليزي",
+    "رياضيات",
+    "علوم",
+    "بدنية",
+    "فنية",
+    "اجتماعيات",
+    "حياتية",
+    "رقمية",
+    "فقة",
+    "توحيد١",
+    "توحيد٣س",
+    "فقه٣س",
+    "تجويد",
+    "انتظار١",
+    "انتظار٢",
+    "انتظار٣"
+];
+
+    // دالة إنشاء قائمة المعلمين المنسدلة
+    function createTeachersDropdown() {
+        const select = document.createElement("select");
+        select.style.width = "100%";
+        
+        const emptyOption = document.createElement("option");
+        emptyOption.value = "";
+        emptyOption.text = "اختر المعلم";
+        select.appendChild(emptyOption);
+        
+        teachersList.forEach(teacher => {
+            const option = document.createElement("option");
+            option.value = teacher;
+            option.text = teacher;
+            select.appendChild(option);
+        });
+        return select;
+    }
+
+    // دالة إنشاء قائمة الفصول المنسدلة
+    function createClassesDropdown() {
+        const select = document.createElement("select");
+        select.style.width = "100%";
+        
+        const emptyOption = document.createElement("option");
+        emptyOption.value = "";
+        emptyOption.text = "اختر الفصل";
+        select.appendChild(emptyOption);
+        
+        classesList.forEach(className => {
+            const option = document.createElement("option");
+            option.value = className;
+            option.text = className;
+            select.appendChild(option);
+        });
+        return select;
+    }
+
+    // دالة إنشاء قائمة المواد المنسدلة
+    function createSubjectsDropdown() {
+        const select = document.createElement("select");
+        select.style.width = "100%";
+        
+        const emptyOption = document.createElement("option");
+        emptyOption.value = "";
+        emptyOption.text = "اختر المادة";
+        select.appendChild(emptyOption);
+        
+        subjectsList.forEach(subject => {
+            const option = document.createElement("option");
+            option.value = subject;
+            option.text = subject;
+            select.appendChild(option);
+        });
+        return select;
+    }
+function addNewRow() {
+    const table = document.getElementById('teachersTable');
+    const newRow = table.insertRow();
+    
+    // خلية المعلم
+    const teacherCell = newRow.insertCell();
+    teacherCell.textContent = "اختر المعلم"; // نص افتراضي
+    teacherCell.style.cursor = "pointer"; // تغيير المؤشر إلى pointer عند التمرير فوق الخلية
+    teacherCell.addEventListener('click', function() {
+        // إذا كانت القائمة المنسدلة موجودة بالفعل، لا ننشئها مرة أخرى
+        if (teacherCell.querySelector('select')) return;
+
+        // إنشاء القائمة المنسدلة عند النقر على الخلية
+        const teacherSelect = createTeachersDropdown();
+        teacherCell.textContent = ""; // إزالة النص الافتراضي
+        teacherCell.appendChild(teacherSelect);
+        teacherSelect.focus(); // التركيز على القائمة المنسدلة
+
+        // إظهار باقي الخلايا عند اختيار المعلم
+        teacherSelect.addEventListener('change', function() {
+            if (this.value) {
+                for (let i = 1; i < newRow.cells.length; i++) {
+                    newRow.cells[i].style.display = '';
+                }
+            } else {
+                for (let i = 1; i < newRow.cells.length; i++) {
+                    newRow.cells[i].style.display = 'none';
+                }
+            }
+            calculateTotals();
+        });
+    });
+    
+    // إخفاء باقي الخلايا حتى يتم اختيار المعلم
+    const cells = [
+        createClassesDropdown(),
+        createSubjectsDropdown(),
+        createHoursDropdown()
+    ];
+    
+    cells.forEach(select => {
+        const cell = newRow.insertCell();
+        cell.style.display = 'none'; // إخفاء الخلايا
+        cell.appendChild(select);
+    });
+    
+    // خلية الإجراءات
+    const actionCell = newRow.insertCell();
+    actionCell.style.display = 'none'; // إخفاء خلية الإجراءات
+    actionCell.appendChild(createActionButtons());
+    
+    calculateTotals();
+}
+    // دالة إنشاء قائمة عدد الحصص المنسدلة
+    function createHoursDropdown() {
+        const select = document.createElement("select");
+        select.style.width = "100%";
+        
+        const emptyOption = document.createElement("option");
+        emptyOption.value = "";
+        emptyOption.text = "اختر عدد الحصص";
+        select.appendChild(emptyOption);
+        
+        for(let i = 1; i <= 24; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.text = i;
+            select.appendChild(option);
+        }
+        return select;
+    }
+
+    // دالة إنشاء الأزرار
+    function createActionButtons() {
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'inline-block';
+
+    // إضافة زر حذف للصف الرئيسي
+    const deleteMainButton = document.createElement('button');
+    deleteMainButton.textContent = 'حذف';
+    deleteMainButton.className = 'btn btn-delete';
+    deleteMainButton.onclick = function() { deleteTeacherRows(this); };
+
+    // زر إضافة مادة
+    const addButton = document.createElement('button');
+    addButton.textContent = 'إضافة مادة';
+    addButton.className = 'btn btn-add';
+    addButton.onclick = function() { addSubjectRow(this); };
+
+    // زر الجدول
+    const scheduleButton = document.createElement('button');
+    scheduleButton.textContent = 'الجدول';
+    scheduleButton.className = 'btn btn-schedule';
+    scheduleButton.onclick = function() { showSchedule(this); };
+
+    // إضافة الأزرار بالترتيب
+    buttonContainer.appendChild(deleteMainButton);
+    buttonContainer.appendChild(document.createTextNode(' '));
+    buttonContainer.appendChild(addButton);
+    buttonContainer.appendChild(document.createTextNode(' '));
+    buttonContainer.appendChild(scheduleButton);
+    buttonContainer.appendChild(document.createTextNode(' '));
+    
+    return buttonContainer;
+}
+
+
+// إضافة دالة جديدة لحذف المعلم وجميع صفوفه
+function deleteTeacherRows(button) {
+    if(confirm('هل أنت متأكد من حذف هذا المعلم وجميع مواده؟')) {
+        const mainRow = button.closest('tr');
+        const teacherName = mainRow.cells[0].querySelector('select')?.value || mainRow.cells[0].textContent;
+        const table = document.getElementById('teachersTable');
+        const rows = Array.from(table.rows);
+        
+        // حذف الصف الرئيسي وجميع الصفوف التابعة له
+        let currentRow = mainRow;
+        while (currentRow && currentRow.rowIndex < rows.length) {
+            const currentTeacherName = currentRow.cells[0].querySelector('select')?.value || currentRow.cells[0].textContent;
+            if (currentTeacherName === teacherName) {
+                const nextRow = rows[currentRow.rowIndex + 1];
+                currentRow.remove();
+                currentRow = nextRow;
+            } else {
+                break;
+            }
+        }
+        
+        calculateTotals();
+    }
+}
+
+    // دالة تحديث الجدول
+    // تعديل الدالة updateTable
+function updateTable(data) {
+    const table = document.getElementById('teachersTable');
+    
+    // حذف جميع الصفوف ما عدا العناوين
+    while(table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+
+    let currentTeacher = null;
+    
+    data.forEach(item => {
+        const row = table.insertRow();
+        
+        // خلية المعلم
+        const teacherCell = row.insertCell();
+        if (currentTeacher !== item.name) {
+            // صف المعلم الرئيسي
+            const teacherSelect = createTeachersDropdown();
+            if (item.name) teacherSelect.value = item.name;
+            teacherCell.appendChild(teacherSelect);
+            currentTeacher = item.name;
+            
+            // إضافة الخلايا الأخرى
+            const cells = [
+                createClassesDropdown(),
+                createSubjectsDropdown(),
+                createHoursDropdown()
+            ];
+            
+            cells.forEach((select, index) => {
+                const cell = row.insertCell();
+                if (item[['classes', 'subject', 'hours'][index]]) {
+                    select.value = item[['classes', 'subject', 'hours'][index]];
+                }
+                cell.appendChild(select);
+            });
+            
+            // إضافة أزرار التحكم الكاملة
+            const actionCell = row.insertCell();
+            actionCell.appendChild(createActionButtons());
+        } else {
+            // صف مادة إضافي
+            teacherCell.textContent = item.name;
+            teacherCell.style.backgroundColor = '#f9f9f9';
+            
+            // إضافة الخلايا الأخرى
+            const cells = [
+                createClassesDropdown(),
+                createSubjectsDropdown(),
+                createHoursDropdown()
+            ];
+            
+            cells.forEach((select, index) => {
+                const cell = row.insertCell();
+                if (item[['classes', 'subject', 'hours'][index]]) {
+                    select.value = item[['classes', 'subject', 'hours'][index]];
+                }
+                cell.appendChild(select);
+            });
+            
+            // إضافة زر الحذف فقط
+            const actionCell = row.insertCell();
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'حذف';
+            deleteButton.className = 'btn btn-delete';
+            deleteButton.onclick = function() { deleteRow(this); };
+            actionCell.appendChild(deleteButton);
+        }
+    });
+
+    calculateTotals();
+}
+
+
+// تعديل دالة تحميل البيانات عند بدء الصفحة
+window.onload = function() {
+    const savedData = localStorage.getItem('teachersData');
+    if(savedData) {
+        const data = JSON.parse(savedData);
+        // إضافة صف فارغ واحد إذا لم تكن هناك بيانات محفوظة
+        if (data.length === 0) {
+            updateTable([{}]);
+        } else {
+            updateTable(data);
+        }
+    } else {
+        // إضافة صف فارغ واحد عند بدء التطبيق لأول مرة
+        updateTable([{}]);
+    }
+};
+
+    // دالة إضافة صف مادة جديد
+    function addSubjectRow(button) {
+    const table = document.getElementById('teachersTable');
+    const currentRow = button.closest('tr');
+    const newRow = table.insertRow(currentRow.rowIndex + 1);
+    
+    // نسخ اسم المعلم
+    const teacherCell = newRow.insertCell();
+    const teacherName = currentRow.cells[0].querySelector('select')?.value || currentRow.cells[0].textContent;
+    teacherCell.textContent = teacherName;
+    teacherCell.style.backgroundColor = '#f9f9f9';
+    
+    // إضافة باقي الخلايا
+    const cells = [
+        createClassesDropdown(),
+        createSubjectsDropdown(),
+        createHoursDropdown()
+    ];
+    
+    cells.forEach(select => {
+        const cell = newRow.insertCell();
+        cell.appendChild(select);
+    });
+
+    // إضافة خلية الإجراءات مع زر الحذف فقط
+    const actionCell = newRow.insertCell();
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'حذف';
+    deleteButton.className = 'btn btn-delete';
+    deleteButton.onclick = function() { deleteRow(this); };
+    actionCell.appendChild(deleteButton);
+
+    calculateTotals();
+}
+
+    // دالة حذف صف
+    function deleteRow(button) {
+        if(confirm('هل أنت متأكد من حذف هذا الصف؟')) {
+            const row = button.closest('tr');
+            row.remove();
+            calculateTotals();
+        }
+    }
+// دالة حفظ جدول المعلم
+function saveTeacherSchedule(teacherName, scheduleData) {
+    let schedules = JSON.parse(localStorage.getItem('teacherSchedules') || '{}');
+    schedules[teacherName] = scheduleData;
+    localStorage.setItem('teacherSchedules', JSON.stringify(schedules));
+}
+
+// دالة استرجاع جدول المعلم
+function getTeacherSchedule(teacherName) {
+    let schedules = JSON.parse(localStorage.getItem('teacherSchedules') || '{}');
+    return schedules[teacherName] || null;
+}
+
+
+    // دالة حساب المجاميع
+    function calculateTotals() {
+    const table = document.getElementById('teachersTable');
+    const subjectTotals = {};
+    const teacherTotals = {};
+    
+    // حذف صفوف المجاميع القديمة
+    Array.from(table.rows).forEach(row => {
+        if(row.classList.contains('total-row')) {
+            row.remove();
+        }
+    });
+
+    // تجميع البيانات وتحديث آخر صف لكل معلم
+    let rows = Array.from(table.rows).filter(row => !row.classList.contains('total-row'));
+    for(let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const teacher = row.cells[0].querySelector('select')?.value || row.cells[0].textContent;
+        const classes = row.cells[1].querySelector('select')?.value;
+        const subject = row.cells[2].querySelector('select')?.value;
+        const hours = parseInt(row.cells[3].querySelector('select')?.value);
+        
+        // تجميع بيانات المعلم
+        if(teacher && teacher !== "اختر المعلم") {
+            if (!teacherTotals[teacher]) {
+                teacherTotals[teacher] = {
+                    classes: new Set(),
+                    subjects: new Set(),
+                    hours: 0,
+                    rows: []
+                };
+            }
+            teacherTotals[teacher].rows.push(row);
+            if (classes && classes !== "اختر الفصل") {
+                teacherTotals[teacher].classes.add(classes);
+            }
+            if (subject && subject !== "اختر المادة") {
+                teacherTotals[teacher].subjects.add(subject);
+            }
+            if (!isNaN(hours)) {
+                teacherTotals[teacher].hours += hours;
+            }
+        }
+
+        // تجميع بيانات المواد
+        if(subject && subject !== "اختر المادة" && !isNaN(hours)) {
+            subjectTotals[subject] = (subjectTotals[subject] || 0) + hours;
+        }
+    }
+    
+    // إضافة صفوف مجاميع المعلمين بعد آخر صف لكل معلم
+    Object.entries(teacherTotals).forEach(([teacher, totals]) => {
+        const lastRow = totals.rows[totals.rows.length - 1];
+        const insertIndex = Array.from(table.rows).indexOf(lastRow) + 1;
+        
+        const row = table.insertRow(insertIndex);
+        row.classList.add('total-row');
+        row.style.backgroundColor = '#f0f0f0';
+        
+        const teacherCell = row.insertCell();
+        teacherCell.textContent = `مجموع ${teacher}`;
+        teacherCell.style.fontWeight = 'bold';
+        
+        const classesCell = row.insertCell();
+        classesCell.textContent = `عدد الفصول: ${totals.classes.size}`;
+        
+        const subjectsCell = row.insertCell();
+        subjectsCell.textContent = `عدد المواد: ${totals.subjects.size}`;
+        
+        const hoursCell = row.insertCell();
+        hoursCell.textContent = `مجموع الحصص: ${totals.hours}`;
+        
+        const emptyCell = row.insertCell();
+    });
+    
+    // إضافة عنوان المجموع الكلي
+    const totalHeaderRow = table.insertRow();
+    totalHeaderRow.classList.add('total-row');
+    const totalHeaderCell = totalHeaderRow.insertCell();
+    totalHeaderCell.colSpan = 5;
+    totalHeaderCell.style.backgroundColor = '#ffffff';
+    totalHeaderCell.style.textAlign = 'center';
+    totalHeaderCell.style.padding = '10px';
+    totalHeaderCell.style.fontWeight = 'bold';
+    totalHeaderCell.style.fontSize = '16px';
+    totalHeaderCell.textContent = 'المجموع الكلي لإحصائيات الجدول';
+    
+    // إضافة مجاميع المواد
+    Object.entries(subjectTotals).forEach(([subject, total]) => {
+        if (total > 0) {
+            const row = table.insertRow();
+            row.classList.add('total-row');
+            
+            const titleCell = row.insertCell();
+            titleCell.colSpan = "2";
+            titleCell.textContent = `مجموع حصص ${subject}`;
+            
+            const subjectCell = row.insertCell();
+            subjectCell.textContent = subject;
+            
+            const hoursCell = row.insertCell();
+            hoursCell.textContent = total;
+            
+            const emptyCell = row.insertCell();
+        }
+    });
+}
+
+
+
+    // دالة تصدير البيانات
+    function exportData() {
+    // تجميع كل البيانات
+    const exportData = {
+        // بيانات المعلمين الأساسية
+        teachersData: [],
+        // جداول المعلمين
+        teacherSchedules: JSON.parse(localStorage.getItem('teacherSchedules') || '{}')
+    };
+
+    // جمع بيانات المعلمين من الجدول
+    const table = document.getElementById('teachersTable');
+    for(let i = 1; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        if(!row.classList.contains('total-row')) {
+            exportData.teachersData.push({
+                name: row.cells[0].querySelector('select')?.value || row.cells[0].textContent,
+                classes: row.cells[1].querySelector('select').value,
+                subject: row.cells[2].querySelector('select').value,
+                hours: row.cells[3].querySelector('select').value
+            });
+        }
+    }
+
+    // تحويل البيانات إلى ملف للتحميل
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const date = new Date().toISOString().split('T')[0]; // التاريخ الحالي
+    a.download = `teachers_complete_data_${date}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+
+    // دالة حفظ البيانات
+    function saveData() {
+        const table = document.getElementById('teachersTable');
+        const data = [];
+        
+        for(let i = 1; i < table.rows.length; i++) {
+            const row = table.rows[i];
+            if(!row.classList.contains('total-row')) {
+                data.push({
+                    name: row.cells[0].querySelector('select')?.value || row.cells[0].textContent,
+                    classes: row.cells[1].querySelector('select').value,
+                    subject: row.cells[2].querySelector('select').value,
+                    hours: row.cells[3].querySelector('select').value
+                });
+            }
+        }
+
+        localStorage.setItem('teachersData', JSON.stringify(data));
+        alert('تم حفظ البيانات بنجاح');
+    }
+function printTable() {
+    // إنشاء نسخة من الجدول الحالي
+    const table = document.getElementById('teachersTable');
+    const tableClone = table.cloneNode(true);
+    
+    // تحويل جميع القوائم المنسدلة إلى نص عادي
+    const selects = tableClone.querySelectorAll('select');
+    selects.forEach(select => {
+        const text = select.options[select.selectedIndex]?.text || '';
+        const textNode = document.createTextNode(text);
+        select.parentNode.replaceChild(textNode, select);
+    });
+    
+    // إزالة أزرار الإجراءات
+    const actionCells = tableClone.querySelectorAll('td:last-child');
+    actionCells.forEach(cell => {
+        cell.remove();
+    });
+    
+    // إزالة عمود الإجراءات من الترويسة
+    const headerRow = tableClone.querySelector('tr');
+    headerRow.lastElementChild.remove();
+
+    // إنشاء نافذة الطباعة
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write(`
+        <html dir="rtl">
+        <head>
+            <title>جدول المعلمين</title>
+            <style>
+                @media print {
+                    body { font-family: Arial, sans-serif; }
+                    table { 
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 20px 0;
+                    }
+                    th, td {
+                        border: 1px solid black;
+                        padding: 8px;
+                        text-align: center;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                    .header {
+                        text-align: center;
+                        margin-bottom: 20px;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h3>المملكة العربية السعودية</h3>
+                <h3>وزارة التعليم</h3>
+                <h2>جدول المعلمين حسب المواد</h2>
+            </div>
+            ${tableClone.outerHTML}
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    
+    // انتظر حتى يتم تحميل المحتوى ثم اطبع
+    printWindow.onload = function() {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+    };
+}
+
+
+
+    // دالة عرض الجدول
+    function showSchedule(button) {
+    const row = button.closest('tr');
+    const teacherName = row.cells[0].querySelector('select')?.value || row.cells[0].textContent;
+    
+    // إنشاء النافذة المنبثقة
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'block';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    // زر الإغلاق
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'close';
+    closeBtn.innerHTML = '×';
+    closeBtn.onclick = function() {
+        // حفظ البيانات قبل الإغلاق
+        const scheduleData = [];
+        const rows = table.querySelectorAll('tr');
+        
+        rows.forEach((row, index) => {
+            if (index > 0) { // تجاهل صف العناوين
+                const rowData = [];
+                const cells = row.querySelectorAll('td');
+                cells.forEach((cell, cellIndex) => {
+                    if (cellIndex > 0) { // تجاهل خلية اليوم
+                        const select = cell.querySelector('select');
+                        rowData.push(select ? select.value : cell.textContent);
+                    }
+                });
+                scheduleData.push(rowData);
+            }
+        });
+        
+        // حفظ البيانات في localStorage
+        saveTeacherSchedule(teacherName, scheduleData);
+        modal.remove();
+    };
+    
+    // عنوان الجدول
+    const title = document.createElement('h2');
+    title.className = 'teacher-name';
+    title.textContent = `جدول المعلم: ${teacherName}`;
+    
+    // إنشاء الجدول
+    const table = document.createElement('table');
+    table.className = 'schedule-table';
+    
+    // إضافة صف العناوين
+    const headerRow = table.insertRow();
+    const daysHeader = headerRow.insertCell();
+    daysHeader.textContent = 'الأيام';
+    daysHeader.style.backgroundColor = '#f2f2f2';
+    
+    // إضافة أرقام الحصص
+    for(let i = 1; i <= 7; i++) {
+        const th = headerRow.insertCell();
+        th.textContent = `الحصة ${i}`;
+        th.style.backgroundColor = '#f2f2f2';
+    }
+    
+    // استرجاع البيانات المحفوظة
+    const savedSchedule = getTeacherSchedule(teacherName);
+    
+    // إضافة صفوف الأيام
+    const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+    days.forEach((day, dayIndex) => {
+        const row = table.insertRow();
+        const dayCell = row.insertCell();
+        dayCell.textContent = day;
+        dayCell.style.backgroundColor = '#f2f2f2';
+        
+        // إضافة خلايا الحصص
+        for(let i = 0; i < 7; i++) {
+            const cell = row.insertCell();
+            const select = document.createElement('select');
+            select.style.width = '100%';
+            select.style.padding = '4px';
+            
+            // إضافة الخيار الفارغ
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.text = 'اختر الفصل';
+            select.appendChild(emptyOption);
+            // إضافة خيارات الفصول
+            const periods = [
+                "1/1", "2/1", "1/2", "1/3ق", "2/3ق", "1/4ق", "2/4ق",
+                "1/5ق", "2/5ق", "1/6ق", "2/6ق", "3/3س", "3/4س", "3/5س", "3/6س",
+                "فراغ"
+            ];
+            
+            periods.forEach(period => {
+                const option = document.createElement('option');
+                option.value = period;
+                option.text = period;
+                select.appendChild(option);
+            });
+            
+            // استرجاع القيمة المحفوظة إن وجدت
+            if (savedSchedule && savedSchedule[dayIndex] && savedSchedule[dayIndex][i]) {
+                select.value = savedSchedule[dayIndex][i];
+            }
+            
+            cell.appendChild(select);
+        }
+    });
+    
+    // إنشاء حاوية الأزرار
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.textAlign = 'center';
+    buttonContainer.style.marginTop = '20px';
+
+    // زر الحفظ
+    const saveButton = document.createElement('button');
+    saveButton.textContent = 'حفظ الجدول';
+    saveButton.className = 'btn btn-save';
+    saveButton.onclick = function() {
+        const scheduleData = [];
+        const rows = table.querySelectorAll('tr');
+        
+        rows.forEach((row, index) => {
+            if (index > 0) {
+                const rowData = [];
+                const cells = row.querySelectorAll('td');
+                cells.forEach((cell, cellIndex) => {
+                    if (cellIndex > 0) {
+                        const select = cell.querySelector('select');
+                        rowData.push(select ? select.value : cell.textContent);
+                    }
+                });
+                scheduleData.push(rowData);
+            }
+        });
+        
+        saveTeacherSchedule(teacherName, scheduleData);
+        alert('تم حفظ الجدول بنجاح');
+    };
+
+    // زر الطباعة
+    const printButton = document.createElement('button');
+    printButton.textContent = 'طباعة الجدول';
+    printButton.className = 'btn btn-print';
+    printButton.style.marginRight = '10px';
+    printButton.onclick = function() {
+        printSchedule(teacherName, table.cloneNode(true));
+    };
+
+    // إضافة الأزرار للحاوية
+    buttonContainer.appendChild(saveButton);
+    buttonContainer.appendChild(printButton);
+
+    // تجميع كل العناصر
+    modalContent.appendChild(closeBtn);
+    modalContent.appendChild(title);
+    modalContent.appendChild(table);
+    modalContent.appendChild(buttonContainer);
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+}
+
+    // تحميل البيانات عند بدء الصفحة
+    window.onload = function() {
+        const savedData = localStorage.getItem('teachersData');
+        if(savedData) {
+            updateTable(JSON.parse(savedData));
+        } else {
+            updateTable(initialData);
+        }
+    };
+
+    // مستمعات الأحداث
+    document.getElementById('teachersTable').addEventListener('change', function(e) {
+        if(e.target.tagName === 'SELECT') {
+            calculateTotals();
+        }
+    });
+
+    document.getElementById('teachersTable').addEventListener('input', function(e) {
+        if(e.target.tagName === 'TD') {
+            calculateTotals();
+        }
+    });
+
+    // إضافة مستمع لاستيراد الملفات
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            
+            // تحديث بيانات المعلمين في الجدول
+            if (importedData.teachersData) {
+                updateTable(importedData.teachersData);
+            }
+            
+            // تحديث جداول المعلمين في localStorage
+            if (importedData.teacherSchedules) {
+                localStorage.setItem('teacherSchedules', JSON.stringify(importedData.teacherSchedules));
+            }
+            
+            alert('تم استيراد البيانات بنجاح');
+        } catch(error) {
+            alert('حدث خطأ أثناء قراءة الملف');
+            console.error(error);
+        }
+    };
+    
+    reader.readAsText(file);
+});
+// دالة الحفظ التلقائي
+function autoSave() {
+    const table = document.getElementById('teachersTable');
+    const data = [];
+    
+    for(let i = 1; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        if(!row.classList.contains('total-row')) {
+            data.push({
+                name: row.cells[0].querySelector('select')?.value || row.cells[0].textContent,
+                classes: row.cells[1].querySelector('select').value,
+                subject: row.cells[2].querySelector('select').value,
+                hours: row.cells[3].querySelector('select').value
+            });
+        }
+    }
+
+    localStorage.setItem('teachersData', JSON.stringify(data));
+    
+    // إضافة مؤشر صغير للحفظ التلقائي
+    showAutoSaveIndicator();
+}
+
+// دالة إظهار مؤشر الحفظ التلقائي
+function showAutoSaveIndicator() {
+    const indicator = document.createElement('div');
+    indicator.style.position = 'fixed';
+    indicator.style.bottom = '20px';
+    indicator.style.right = '20px';
+    indicator.style.padding = '10px';
+    indicator.style.background = '#4CAF50';
+    indicator.style.color = 'white';
+    indicator.style.borderRadius = '5px';
+    indicator.style.opacity = '0.9';
+    indicator.textContent = 'تم الحفظ تلقائياً';
+    
+    document.body.appendChild(indicator);
+    
+    // إخفاء المؤشر بعد ثانيتين
+    setTimeout(() => {
+        indicator.remove();
+    }, 2000);
+}
+
+// تعديل دالة الحفظ اليدوي
+function saveData() {
+    const table = document.getElementById('teachersTable');
+    const data = [];
+    
+    for(let i = 1; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        if(!row.classList.contains('total-row')) {
+            data.push({
+                name: row.cells[0].querySelector('select')?.value || row.cells[0].textContent,
+                classes: row.cells[1].querySelector('select').value,
+                subject: row.cells[2].querySelector('select').value,
+                hours: row.cells[3].querySelector('select').value
+            });
+        }
+    }
+
+    localStorage.setItem('teachersData', JSON.stringify(data));
+    
+    // إظهار رسالة تأكيد الحفظ اليدوي
+    alert('تم حفظ البيانات بنجاح');
+}
+
+// إضافة مراقب للتغييرات في الجدول
+document.getElementById('teachersTable').addEventListener('change', function(e) {
+    if(e.target.tagName === 'SELECT') {
+        autoSave();
+        calculateTotals();
+    }
+});
+
+function printSchedule(teacherName, tableClone) {
+    // إنشاء جدول جديد نظيف للطباعة
+    const cleanTable = document.createElement('table');
+    cleanTable.className = 'schedule-table';
+    cleanTable.style.width = '100%';
+    cleanTable.style.borderCollapse = 'collapse';
+
+    // استخراج البيانات من الجدول الأصلي
+    const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+    const periods = Array.from({length: 7}, (_, i) => i + 1).map(num => `الحصة ${num}`);
+    
+    // إنشاء صف العناوين
+    const headerRow = cleanTable.insertRow();
+    const cornerCell = headerRow.insertCell();
+    cornerCell.textContent = "الأيام";
+    cornerCell.style.backgroundColor = "#f2f2f2";
+    cornerCell.style.fontWeight = "bold";
+    cornerCell.style.border = "1px solid black";
+    cornerCell.style.padding = "8px";
+    cornerCell.style.textAlign = "center";
+    
+    // إضافة عناوين الحصص
+    periods.forEach(period => {
+        const th = headerRow.insertCell();
+        th.textContent = period;
+        th.style.backgroundColor = "#f2f2f2";
+        th.style.fontWeight = "bold";
+        th.style.border = "1px solid black";
+        th.style.padding = "8px";
+        th.style.textAlign = "center";
+    });
+    
+    // الحصول على البيانات المحفوظة للمعلم
+    const savedSchedule = getTeacherSchedule(teacherName);
+    
+    // إضافة صفوف الأيام
+    days.forEach((day, i) => {
+        const row = cleanTable.insertRow();
+        
+        // خلية اليوم
+        const dayCell = row.insertCell();
+        dayCell.textContent = day;
+        dayCell.style.backgroundColor = "#f2f2f2";
+        dayCell.style.fontWeight = "bold";
+        dayCell.style.border = "1px solid black";
+        dayCell.style.padding = "8px";
+        dayCell.style.textAlign = "center";
+        
+        // خلايا الحصص
+        for (let j = 0; j < 7; j++) {
+            const cell = row.insertCell();
+            
+            // إذا كانت البيانات متوفرة للمعلم، اعرضها
+            if (savedSchedule && savedSchedule[i] && savedSchedule[i][j]) {
+                cell.textContent = savedSchedule[i][j];
+            } else {
+                cell.textContent = "";
+            }
+            
+            cell.style.border = "1px solid black";
+            cell.style.padding = "8px";
+            cell.style.textAlign = "center";
+        }
+    });
+    
+    // إنشاء نافذة الطباعة
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write(`
+        <html dir="rtl">
+        <head>
+            <title>جدول المعلم: ${teacherName}</title>
+            <style>
+                body { 
+                    font-family: Arial, sans-serif; 
+                    padding: 20px;
+                }
+                table { 
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 20px 0;
+                }
+                td, th {
+                    border: 1px solid black;
+                    padding: 8px;
+                    text-align: center;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h3>المملكة العربية السعودية</h3>
+                <h3>وزارة التعليم</h3>
+                <h2>جدول المعلم: ${teacherName}</h2>
+            </div>
+            ${cleanTable.outerHTML}
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+    }, 300);
+}
+
+</script>
+
+</body>
+</html>

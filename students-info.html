@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بيانات طلاب مدرسة</title>
+    <link rel="icon" type="image/png" href="شعار_وزارة_التعليم.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .button {
+            cursor: pointer;
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .class-separator {
+            background-color: #f9f9f9;
+            height: 20px;
+        }
+        .school-selector {
+            margin-bottom: 20px;
+        }
+        .school-selector label {
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        .school-selector select {
+            padding: 5px;
+            font-size: 16px;
+        }
+.button-home {
+    background-color: #28a745; /* لون أخضر */
+}
+
+.button-home:hover {
+    background-color: #218838; /* لون أخضر داكن عند التمرير */
+}
+.class-total {
+            background-color: #e9f7ff;
+            font-weight: bold;
+        }
+        .grade-total {
+            background-color: #d4edda;
+            font-weight: bold;
+        }
+        .total {
+            background-color: #f8d7da;
+            font-weight: bold;
+        }
+@media print {
+    .button,
+    .school-selector {
+        display: none !important;
+    }
+    
+    body {
+        margin: 0;
+        padding: 15px;
+    }
+    
+    h1 {
+        margin-bottom: 20px;
+    }
+    
+    table {
+        width: 100%;
+        page-break-inside: auto;
+    }
+    
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+}
+.notification-btn {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.notification-btn:hover {
+    background-color: #138496;
+}
+
+
+
+      </style>
+</head>
+<body>
+    <h1>بيانات طلاب مدرسة</h1>
+
+    <div class="school-selector">
+        <label for="schoolSelect">اختر المدرسة:</label>
+        <select id="schoolSelect" onchange="switchSchool()">
+            <option value="سعيد">سعيد</option>
+            <option value="ورش">ورش</option>
+            <option value="القشيري">القشيري</option>
+        </select>
+    </div>
+
+    <div>
+        <button class="button" onclick="goToHomePage()">العودة للصفحة الرئيسية</button>
+        <button class="button" onclick="loadData('سعيد')">استيراد بيانات سعيد</button>
+        <button class="button" onclick="loadData('ورش')">استيراد بيانات ورش</button>
+        <button class="button" onclick="loadData('القشيري')">استيراد بيانات القشيري</button>
+        <button class="button" onclick="deleteStudent()">حذف طالب</button>
+        <button class="button" onclick="addStudent()">إضافة طالب</button>
+        <button class="button" onclick="deleteData()">حذف البيانات</button>
+        <button class="button" onclick="exportData()">تصدير البيانات</button>
+        <button class="button" onclick="printData()">طباعة البيانات</button>
+        <button class="button" onclick="saveData()">حفظ البيانات</button>
+    </div>
+
+    <table id="studentsTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>رقم الطالب</th>
+                <th>اسم الطالب</th>
+                <th>رقم الصف</th>
+                <th>الفصل</th>
+                <th>الجوال</th>
+                <th>الإشعارات</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- البيانات ستظهر هنا -->
+        </tbody>
+    </table>
+
+    <script>
+        let schoolsData = {
+            سعيد: [],
+            ورش: [],
+            القشيري: []
+        };
+        let currentSchool = "";
+
+        const schoolClassOrder = {
+            "ورش": {
+                "الصف الأول": ["1", "2", "3"],
+                "الصف الثاني": ["1", "2", "3"],
+                "الصف الثالث": ["1", "2", "3"]
+            },
+            "سعيد": {
+                "الصف الثالث": ["1"],
+                "الصف الرابع": ["1"],
+                "الصف الخامس": ["1"],
+                "الصف السادس": ["1"]
+            },
+            "القشيري": {
+                "الصف الأول": ["الفصل 1", "الفصل 2"],
+                "الصف الثاني": ["الفصل 1"],
+                "الصف الثالث": ["الفصل 1", "الفصل 2"],
+                "الصف الرابع": ["الفصل 1", "الفصل 2"],
+                "الصف الخامس": ["الفصل 1", "الفصل 2"],
+                "الصف السادس": ["الفصل 1", "الفصل 2"]
+            }
+        };
+
+        // قراءة البيانات المحفوظة عند تحميل الصفحة
+        window.onload = function() {
+            const savedSchools = ["سعيد", "ورش", "القشيري"];
+            savedSchools.forEach(school => {
+                const savedData = localStorage.getItem(`savedStudentsData_${school}`);
+                if (savedData) {
+                    schoolsData[school] = JSON.parse(savedData);
+                }
+            });
+
+            // عرض بيانات المدرسة المحددة (إذا كانت موجودة)
+            const selectedSchool = document.getElementById("schoolSelect").value;
+            currentSchool = selectedSchool;
+            displayData(schoolsData[selectedSchool]);
+        };
+
+        // دالة استيراد البيانات من ملف HTML
+        function loadData(schoolName) {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = ".html";
+            input.onchange = (event) => {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(e.target.result, "text/html");
+                    const rows = doc.querySelectorAll("table tbody tr");
+
+                    schoolsData[schoolName] = [];
+                    rows.forEach(row => {
+                        const cells = row.querySelectorAll("td");
+                        if (cells.length >= 5) {
+                            const firstCellContent = cells[0].textContent.trim();
+                            if (!isNaN(firstCellContent)) {
+                                schoolsData[schoolName].push({
+                                    studentId: cells[4].textContent.trim(),
+                                    studentName: cells[3].textContent.trim(),
+                                    classNumber: cells[2].textContent.trim(),
+                                    class: cells[1].textContent.trim(),
+                                    mobile: cells[0].textContent.trim()
+                                });
+                            }
+                        }
+                    });
+
+                    if (schoolsData[schoolName].length > 0) {
+                        currentSchool = schoolName;
+                        sortData(schoolsData[schoolName], schoolName);
+                        displayData(schoolsData[schoolName]);
+                        localStorage.setItem(`savedStudentsData_${schoolName}`, JSON.stringify(schoolsData[schoolName]));
+                        alert(`تم استيراد بيانات ${schoolName} بنجاح!`);
+                    } else {
+                        alert("لم يتم العثور على بيانات صالحة في الملف.");
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // دالة فرز البيانات
+        function sortData(data, schoolName) {
+            const classOrder = schoolClassOrder[schoolName] || {};
+
+            data.sort((a, b) => {
+                const classA = a.classNumber;
+                const classB = b.classNumber;
+
+                if (!classOrder[classA] || !classOrder[classB]) {
+                    return 0;
+                }
+
+                const orderA = Object.keys(classOrder).indexOf(classA);
+                const orderB = Object.keys(classOrder).indexOf(classB);
+                if (orderA !== orderB) return orderA - orderB;
+
+                const classAOrder = classOrder[classA].indexOf(a.class);
+                const classBOrder = classOrder[classB].indexOf(b.class);
+                return classAOrder - classBOrder;
+            });
+        }
+
+        // دالة عرض البيانات في الجدول
+        function displayData(students) {
+            document.querySelector("h1").textContent = `بيانات طلاب مدرسة ${currentSchool}`;
+            const tbody = document.querySelector("#studentsTable tbody");
+            tbody.innerHTML = "";
+
+            let currentGrade = "";
+            let currentClass = "";
+            let sequence = 1;
+            let classStudents = 0;
+            let gradeTotal = 0;
+            let totalStudents = 0;
+
+            // تجميع الطلاب حسب الصف والفصل
+            const groupedStudents = {};
+            students.forEach(student => {
+                if (!groupedStudents[student.classNumber]) {
+                    groupedStudents[student.classNumber] = {};
+                }
+                if (!groupedStudents[student.classNumber][student.class]) {
+                    groupedStudents[student.classNumber][student.class] = [];
+                }
+                groupedStudents[student.classNumber][student.class].push(student);
+            });
+
+            // عرض البيانات مع المجاميع
+            for (const grade in groupedStudents) {
+                if (currentGrade !== grade) {
+                    currentGrade = grade;
+                    gradeTotal = 0;
+                }
+
+                for (const className in groupedStudents[grade]) {
+                    const classStudents = groupedStudents[grade][className];
+
+                    // عرض بيانات الطلاب في الفصل
+                    classStudents.forEach((student, index) => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${sequence}</td>
+                            <td>${student.studentId}</td>
+                            <td>${student.studentName}</td>
+                            <td>${student.classNumber}</td>
+                            <td>${student.class}</td>
+                            <td>${student.mobile}</td>
+                            <td>
+                                <button class="notification-btn" onclick="showNotifications('${student.studentName}', '${student.studentId}')">
+                                    الإشعارات
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                        sequence++;
+                    });
+
+                    // إضافة مجموع الفصل
+                    const classTotalRow = document.createElement("tr");
+                    classTotalRow.className = "class-total";
+                    classTotalRow.innerHTML = `
+                        <td colspan="2">فصل ${grade} ${className}</td>
+                        <td>${classStudents.length} طالباً</td>
+                        <td colspan="3"></td>
+                    `;
+                    tbody.appendChild(classTotalRow);
+                    gradeTotal += classStudents.length;
+                }
+
+                // إضافة المجموع الكلي للصف
+                const gradeTotalRow = document.createElement("tr");
+                gradeTotalRow.className = "grade-total";
+                gradeTotalRow.innerHTML = `
+                    <td colspan="2">المجموع الكلي ${grade}</td>
+                    <td>${gradeTotal} طالباً</td>
+                    <td colspan="3"></td>
+                `;
+                tbody.appendChild(gradeTotalRow);
+                totalStudents += gradeTotal;
+            }
+
+            // إضافة المجموع الكلي
+            if (totalStudents > 0) {
+                const totalRow = document.createElement("tr");
+                totalRow.className = "total";
+                totalRow.innerHTML = `
+                    <td colspan="2">المجموع الكلي</td>
+                    <td>${totalStudents} طالباً</td>
+                    <td colspan="3"></td>
+                `;
+                tbody.appendChild(totalRow);
+            }
+        }
+
+        // دالة حذف طالب
+        function deleteStudent() {
+            if (!currentSchool || schoolsData[currentSchool].length === 0) {
+                alert("لا توجد بيانات لحذفها.");
+                return;
+            }
+
+            const studentNames = schoolsData[currentSchool].map(student => student.studentName);
+            const selectedStudentName = prompt("أدخل اسم الطالب المراد حذفه:", studentNames[0]);
+
+            if (selectedStudentName) {
+                const index = schoolsData[currentSchool].findIndex(student => student.studentName === selectedStudentName);
+                if (index !== -1) {
+                    schoolsData[currentSchool].splice(index, 1);
+                    displayData(schoolsData[currentSchool]);
+                    localStorage.setItem(`savedStudentsData_${currentSchool}`, JSON.stringify(schoolsData[currentSchool]));
+                    alert(`تم حذف الطالب ${selectedStudentName} بنجاح!`);
+                } else {
+                    alert("لم يتم العثور على الطالب.");
+                }
+            }
+        }
+
+        // دالة إضافة طالب
+        function addStudent() {
+            // التحقق من تحديد المدرسة
+            if (!currentSchool) {
+                alert("يرجى تحديد المدرسة أولاً.");
+                return;
+            }
+
+            const studentName = prompt("أدخل اسم الطالب:");
+            const classNumber = prompt("أدخل رقم الصف:");
+            const className = prompt("أدخل الفصل:");
+            const studentId = prompt("أدخل رقم الهوية:");
+            const mobile = prompt("أدخل رقم الجوال:");
+
+            if (studentName && classNumber && className && studentId && mobile) {
+                const newStudent = {
+                    studentId: studentId,
+                    studentName: studentName,
+                    classNumber: classNumber,
+                    class: className,
+                    mobile: mobile
+                };
+
+                // إضافة الطالب إلى المدرسة المحددة
+                schoolsData[currentSchool].push(newStudent);
+
+                // فرز البيانات حسب الترتيب الأبجدي للاسم
+                schoolsData[currentSchool].sort((a, b) => a.studentName.localeCompare(b.studentName));
+
+                // عرض البيانات المحدثة
+                displayData(schoolsData[currentSchool]);
+
+                // حفظ البيانات في localStorage
+                localStorage.setItem(`savedStudentsData_${currentSchool}`, JSON.stringify(schoolsData[currentSchool]));
+
+                alert(`تم إضافة الطالب ${studentName} بنجاح!`);
+            } else {
+                alert("يرجى إدخال جميع البيانات المطلوبة.");
+            }
+        }
+
+        // دالة حذف البيانات
+        function deleteData() {
+            if (currentSchool) {
+                schoolsData[currentSchool] = [];
+                displayData(schoolsData[currentSchool]);
+                localStorage.removeItem(`savedStudentsData_${currentSchool}`);
+                alert(`تم حذف بيانات ${currentSchool} بنجاح!`);
+            } else {
+                alert("يرجى تحديد المدرسة أولاً.");
+            }
+        }
+
+        // دالة تصدير البيانات
+        function exportData() {
+            if (!currentSchool || !schoolsData[currentSchool].length) {
+                alert("لا توجد بيانات لتصديرها");
+                return;
+            }
+
+            try {
+                const jsonData = JSON.stringify(schoolsData[currentSchool], null, 2);
+                const blob = new Blob([jsonData], { type: 'application/json;charset=utf-8' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                const today = new Date().toISOString().split('T')[0];
+                a.download = `الطلاب_${currentSchool}_${today}.json`;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(a.href);
+                }, 100);
+            } catch (error) {
+                console.error('خطأ في تصدير البيانات:', error);
+                alert('حدث خطأ أثناء تصدير البيانات');
+            }
+        }
+
+        // دالة طباعة البيانات
+        function printData() {
+            window.print();
+        }
+
+        // دالة العودة للصفحة الرئيسية
+        function goToHomePage() {
+            window.location.href = "main.html";
+        }
+
+        // دالة حفظ البيانات محليًا
+        function saveData() {
+            if (currentSchool && schoolsData[currentSchool].length > 0) {
+                localStorage.setItem(`savedStudentsData_${currentSchool}`, JSON.stringify(schoolsData[currentSchool]));
+                alert(`تم حفظ بيانات ${currentSchool} بنجاح!`);
+            } else {
+                alert("لا توجد بيانات لحفظها.");
+            }
+        }
+
+        // دالة عرض الإشعارات
+        function showNotifications(studentName, studentId) {
+            window.open(`notifications.html?name=${encodeURIComponent(studentName)}&id=${encodeURIComponent(studentId)}`, '_blank');
+        }
+
+        // دالة تبديل المدرسة
+        function switchSchool() {
+            const selectedSchool = document.getElementById("schoolSelect").value;
+            currentSchool = selectedSchool;
+
+            // تحديث عنوان الصفحة عند تغيير المدرسة
+            document.querySelector("h1").textContent = `استيراد بيانات الطلاب ${selectedSchool}`;
+
+            // عرض بيانات المدرسة المحددة
+            displayData(schoolsData[selectedSchool]);
+        }
+    </script>
+</body>
+</html>

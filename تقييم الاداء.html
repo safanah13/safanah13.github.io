@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام تقييم الأداء الوظيفي للمعلمين</title>
+    <link rel="icon" type="image/png" href="شعار_وزارة_التعليم.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .performance-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 20px;
+            border-radius: 10px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .rating-buttons {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .rating-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            min-width: 35px;
+            transition: transform 0.2s ease;
+        }
+
+        .rating-btn[data-rating="1"] { background-color: #dc3545; color: white; }
+        .rating-btn[data-rating="2"] { background-color: #ff6b6b; color: white; }
+        .rating-btn[data-rating="3"] { background-color: #fd7e14; color: white; }
+        .rating-btn[data-rating="4"] { background-color: #0d6efd; color: white; }
+        .rating-btn[data-rating="5"] { background-color: #198754; color: white; }
+
+        .rating-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .feedback-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .print-section {
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            margin-top: 20px;
+        }
+
+        .print-section .btn {
+            min-width: 30px;
+            padding: 4px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .teacher-input-group {
+            min-width: 300px;
+            width: auto;
+        }
+        
+        .school-select {
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex align-items-center" style="gap: 10px;">
+        <select id="schoolSelect" class="form-select" style="min-width: 250px;" onchange="changeSchool()">
+            <option value="ابتدائية الامام محمد علي القشيري لتحفيظ القرآن الكريم">ابتدائية الامام محمد علي القشيري لتحفيظ القرآن الكريم</option>
+            <option value="ابتدائية سعيد بن الحارث القرشي-عام">ابتدائية سعيد بن الحارث القرشي-عام</option>
+            <option value="متوسطة الامام ورش لتحفيظ القرآن الكريم">متوسطة الامام ورش لتحفيظ القرآن الكريم</option>
+        </select>
+        <select id="teacherSelect" class="form-select" style="min-width: 250px;" onchange="loadTeacherData()">
+            <option value="">اختر المعلم...</option>
+            <option value="إبراهيم عبدالله عمر الشنقيطي">إبراهيم عبدالله عمر الشنقيطي</option>
+<option value="ابراهيم مسلم رجاء الردادي ">ابراهيم مسلم رجاء الردادي</option>
+<option value="إبراهيم موسى نافع المحمدي">إبراهيم موسى نافع المحمدي</option>
+<option value="احمد ظاهر فرج الحجيلي">احمد ظاهر فرج الحجيلي</option>
+<option value="اسامه ساطي فهد القرافي">اسامه ساطي فهد القرافي</option>
+<option value="اسامه سعيد سعيد الاحمدي">اسامه سعيد سعيد الاحمدي</option>
+<option value="أشرف بندر عمر شيخ">أشرف بندر عمر شيخ</option>
+<option value="أمجد علي عبدالرحمن المغامسي">أمجد علي عبدالرحمن المغامسي</option>
+<option value="أيمن سليمان صالح منحي">أيمن سليمان صالح منحي</option>
+<option value="أيمن محمد عبدالرحمن الأحمدي">أيمن محمد عبدالرحمن الأحمدي</option>
+<option value="بدر مهل شخير العروي">بدر مهل شخير العروي</option>
+<option value="بكر فواز مرجح الرحيلي">بكر فواز مرجح الرحيلي</option>
+<option value="بندر عمري سليمان الصاعدي">بندر عمري سليمان الصاعدي</option>
+<option value="تركي عبدالله حسين السبيعي">تركي عبدالله حسين السبيعي</option>
+<option value="حاتم تركي محمود ابو حسين">حاتم تركي محمود ابو حسين</option>
+<option value="حسين منسي حسن العمري">حسين منسي حسن العمري</option>
+<option value="خالد سليمان محمد الكسيبري">خالد سليمان محمد الكسيبري</option>
+<option value="خالد علي سليمان الفريدي">خالد علي سليمان الفريدي</option>
+<option value="خالد سعد أحمد الزهراني">خالد سعد أحمد الزهراني </option>
+<option value="خالد ضيف الله علي الجابري">خالد ضيف الله علي الجابري</option>
+<option value="خالد عليان شليه الحازمي">خالد عليان شليه الحازمي</option>
+<option value="سعد بن عبدالله بن سعد الشريدة">سعد بن عبدالله بن سعد الشريدة</option>
+<option value="سعد نافع سالم الأحمدي">سعد نافع سالم الأحمدي</option>
+<option value="سلطان سعيد مسعد المزيني">سلطان سعيد مسعد المزيني</option>
+<option value="سلطان لافي راضي الاحمدي">سلطان لافي راضي الاحمدي</option>
+<option value="صالح محمد صالح الزهراني">صالح محمد صالح الزهراني</option>
+<option value="طالب حطيحط عايد المورعي">طالب حطيحط عايد المورعي</option>
+<option value="طه محمد محمد اسماعيل عبدالكريم ">طه محمد محمد اسماعيل عبدالكريم </option>
+<option value="عادل رزيق جابر الرحيلي">عادل رزيق جابر الرحيلي</option>
+<option value="عادل حمدان حامد الحجيلي">عادل حمدان حامد الحجيلي</option>
+<option value="عبد الله ناهر خلف الردادي">عبد الله ناهر خلف الردادي</option>
+<option value="عبدالرحمن حميد محمد صالح الحربي">عبدالرحمن حميد محمد صالح الحربي</option>
+<option value="عبدالرحمن عبدالعزيز منصور الجهني">عبدالرحمن عبدالعزيز منصور الجهني</option>
+<option value="عبدالرحمن محمد الأمين الحسين الشنقيطي">عبدالرحمن محمد الأمين الحسين الشنقيطي</option>
+<option value="عبدالرحمن مرزوق ضيف الله الجهني">عبدالرحمن مرزوق ضيف الله الجهني</option>
+<option value="عبدالعزيز رشيد مسعود الصاعدي">عبدالعزيز رشيد مسعود الصاعدي</option>
+<option value="عبدالقادر مسعد عواد البرقاني">عبدالقادر مسعد عواد البرقاني</option>
+<option value="عبدالله رزيق مرزوق الحجيلي">عبدالله رزيق مرزوق الحجيلي</option>
+<option value="عبدالله سالم سليمان الاحمدي ">عبدالله سالم سليمان الاحمدي </option>
+<option value="عبدالله عوض محمد الجهني">عبدالله عوض محمد الجهني</option>
+<option value="عبدالله محمد الأمين حسن الشنقيطي">عبدالله محمد الأمين حسن الشنقيطي</option>
+<option value="عبدالله منصور ثمان الفريدي">عبدالله منصور ثمان الفريدي</option>
+<option value="عمر دخيل الله محمد الصاعدي">عمر دخيل الله محمد الصاعدي</option>
+<option value="عوض راشد عاتق العلوي">عوض راشد عاتق العلوي</option>
+<option value="فهد هلال محمد الحيسوني">فهد هلال محمد الحيسوني</option>
+<option value="فهد محمد منصور الوسيدي">فهد محمد منصور الوسيدي</option>
+<option value="فؤاد عودة عواد الحمادي">فؤاد عودة عواد الحمادي</option>
+<option value="فيصل عوض معوض العمري">فيصل عوض معوض العمري</option>
+<option value="فيصل سويعد سعيد العوفي">فيصل سويعد سعيد العوفي</option>
+<option value="ماجد إبراهيم يعقوب البرقاوي">ماجد إبراهيم يعقوب البرقاوي</option>
+<option value="ماجد خير الله قريميس المحمدي">ماجد خير الله قريميس المحمدي</option>
+<option value="مازن عبداللطيف نازل المغذوي">مازن عبداللطيف نازل المغذوي</option>
+<option value="محمد حماد حمدان المطيري">محمد حماد حمدان المطيري</option>
+<option value="محمد فالح سالم الجهني">محمد فالح سالم الجهني</option>
+<option value="موسى حماد حميد الخطابي">موسى حماد حميد الخطابي</option>
+<option value="نعمان حمدي عبدالرحمن السيد">نعمان حمدي عبدالرحمن السيد</option>
+<option value="هاني عبدالله حمدان الحربي">هاني عبدالله حمدان الحربي</option>
+<option value="وجدي عبدالرحيم عبدالرحمن محروس">وجدي عبدالرحيم عبدالرحمن محروس</option>
+<option value="وليد عبدالرحمن مولوي شيخ">وليد عبدالرحمن مولوي شيخ</option>
+<option value="وليد وصل شلية الاحمدي">وليد وصل شلية الاحمدي</option>
+<option value="ياسر عوض ربيع الردادي">ياسر عوض ربيع الردادي</option>
+<option value="يزيد احمد محمد الأحمدي">يزيد احمد محمد الأحمدي</option>
+
+        </select>
+        <div class="input-group" style="min-width: 350px;">
+            <input type="text" id="teacherName" class="form-control" placeholder="اسم المعلم">
+            <button class="btn btn-light" onclick="saveTeacherData()">حفظ</button>
+        </div>
+        <span class="text-black" id="displayTeacherName"></span>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="performance-card">
+                    <h5>الملخص الإجمالي</h5>
+                    <div class="progress mt-3">
+                        <div class="progress-bar" id="totalProgress" role="progressbar" style="width: 0%">0%</div>
+                    </div>
+                    <div class="mt-3">
+                        <div>متوسط التقييم: <span id="averageRating">0</span>/5</div>
+                        <div>العناصر المكتملة: <span class="badge bg-success" id="completedElements">0</span></div>
+                        <div>العناصر المتبقية: <span class="badge bg-danger" id="remainingElements">0</span></div>
+                    </div>
+                    <div class="print-section d-flex gap-2">
+                        <button class="btn btn-secondary" onclick="printEvaluation()">
+                            <i class="fas fa-print"></i> طباعة التقييم
+                        </button>
+                        <button class="btn btn-success" onclick="exportToExcel()">
+                            <i class="fas fa-file-excel"></i> تصدير إلى Excel
+                        </button>
+<button class="btn btn-primary" onclick="window.location.href='main.html'">
+    <i class="fas fa-arrow-right"></i> العودة للصفحة الرئيسية
+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="performanceElements"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
+
+    <script>
+        const basicElements = [
+        {
+        id: 1,
+        title: "1-اداء الواجبات الوظيفية",
+        weight: 10,
+        criteria: {
+            1: "يُظهر الحد الأدنى للواجبات الوظيفية المطلوبة منه ويتأخر عن العمل بشكل مستمر ودون مبرر",
+            2: "يُظهر التزاماً محدوداً للواجبات الوظيفية ويحتاج إلى توجيه متكرر، ويتأخر عن العمل أحياناً دون سبب واضح",
+            3: "يُظهر التزاماً جيداً للواجبات الوظيفية الأساسية ويؤديها ويظهر استعداداً لتحمل المسؤوليات الإضافية بشكل غير منتظم، ويلتزم بمواعيد العمل معظم الوقت",
+            4: "يلتزم بوضوح بالواجبات الوظيفية بشكل جيد ودون الحاجة إلى توجيه مستمر، ويتحمل المهام الإضافية ويحرص على تحسين الأداء بشكل مستمر، ويلتزم بمواعيد العمل بشكل منتظم ولا يتأخر إلا لأسباب مبررة",
+            5: "يلتزم تماماً ويُظهر احترافية عالية في أداء جميع الواجبات الوظيفية دون الحاجة إلى أي توجيه، ويُبادر بشكل استباقي إلى تحمل المسؤوليات الإضافية ويتولى المهام الأكثر تعقيداً، ودائم الالتزام بمواعيد العمل، ويكون حاضراً بشكل دائم قبل الوقت المطلوب"
+        }
+    },
+    {
+        id: 2,
+        title: "2-التفاعل مع المجتمع المحلي",
+        weight: 10,
+        criteria: {
+            1: "يُظهر الحد الأدنى من الاهتمام والجهد للتفاعل مع المجتمع المحلي",
+            2: "يتواجد في أنشطة المجتمع المحلي دون المشاركة الفعالة",
+            3: "يشارك في بعض فعاليات وأنشطة المجتمع المحلي، بشكل غير منتظم أو عندما يكون مطلوباً منه",
+            4: "يشارك بانتظام في أنشطة وفعاليات المجتمع المحلي ويُظهر تفاعلاً إيجابياً مع الزملاء في مجال عمله",
+            5: "يشارك بشكل استباقي ودائم في جميع الفعاليات والأنشطة المهنية ذات الصلة ويشجع الآخرين على المشاركة والتفاعل المستمر ويُظهر استعداداً للمساعدة"
+        }
+    },
+    {
+        id: 3,
+        title: "3-التفاعل مع أولياء الأمور",
+        weight: 10,
+        criteria: {
+            1: "نادراً ما يشارك في أي نوع من التواصل مع أولياء الأمور",
+            2: "يشارك في التواصل مع أولياء الأمور بشكل محدود عند الطلب، ويُقدم معلومات غير كافية حول أداء المتعلمين",
+            3: "يشارك في التواصل مع أولياء الأمور عند الحاجة، يقدم معلومات كافية حول أداء المتعلمين",
+            4: "يتواصل بانتظام مع أولياء الأمور، ويقدم معلومات كافية ومفيدة حول احتياجات وأداء المتعلمين ويستجيب لأسئلتهم ومخاوفهم بسرعة وفعالية",
+            5: "يبادر بالتواصل الدائم الفعال مع أولياء الأمور، ويقدم معلومات دقيقة وشاملة عن واحتياجات وأداء المتعلمين يساهم بشكل استباقي في التطوير والتحسين"
+        }
+    },
+    {
+        id: 4,
+        title: "4-التنويع في استراتيجيات التدريس",
+        weight: 10,
+        criteria: {
+            1: "يعتمد فقط على طرق التدريس التقليدية والمباشرة مثل الشرح النظري دون إشراك المتعلمين",
+            2: "يستخدم استراتيجيات تدريس تقليدية، مع استخدام محدود لبعض الطرق الحديثة للأنشطة التعليمية التي لا تتناسب مع أهداف التدريس",
+            3: "يستخدم استراتيجيات تدريس مناسبة متنوعة وفعالة بشكل غير منتظم، وقد يواجه صعوبة في التطبيق الفعال",
+            4: "يظهر استعداداً لتجربة استراتيجيات تدريس جديدة مناسبة وفعالة، تتناسب مع أهداف الدرس واحتياجات المتعلمين، يستخدم مجموعة متوازنة من الأنشطة التعليمية التي تشمل التعلم التفاعلي، التعلم التعاوني، والمشاريع العملية. ويستخدمها بشكل فعال لتحفيز المتعلمين على المشاركة والتعلم",
+            5: "يُظهر مهارة استثنائية في الجمع بين الشرح النظري والتطبيق العملي، مما يحفز المتعلمين ويُشركهم بفاعلية في عملية التعلم، ويكيّف استراتيجيات التدريس بشكل فردي بناءً على احتياجات كل طالب، مما يضمن تحسين مستوى التعلم الشخصي"
+        }
+    },
+    {
+        id: 5,
+        title: "5-تحسين نتائج المتعلمين",
+        weight: 10,
+        criteria: {
+            1: "نادراً ما يوفر أي دعم للمتعلمين الذين يواجهون صعوبات في الأداء",
+            2: "يوفر بعض الدعم للمتعلمين، لكنه غير كافٍ لتحسين أدائهم بشكل ملموس",
+            3: "يُقدم دعماً إضافياً للمتعلمين ذوي الأداء الضعيف، يضع أهدافاً لتحسين النتائج، لكن المتابعة والتقييم غير منتظمة ويحتاج الى تحسين في استهداف الاحتياجات الفردية",
+            4: "يُقدم دعماً مخصصاً للمتعلمين ويستخدم استراتيجيات فعالة لمعالجة نقاط القصور وتعزيز نقاط القوة، ويضع أهدافاً واضحة لتحسين نتائج المتعلمين ويتابع تقدمهم بانتظام ويُجري تعديلات على الخطط عند الحاجة",
+            5: "يُقدّم دعماً استباقياً ومخصصاً لكل متعلم بناءً على احتياجاته الفردية، ويستخدم استراتيجيات متعددة لتحسين الأداء، ويظهر تميزاً في تطبيق استراتيجيات تقويمية مبتكرة ومتنوعة تساهم في تحقيق نتائج استثنائية، ويعدّل الخطط بشكل فوري عند الحاجة"
+        }
+    },
+    {
+        id: 6,
+        title: "6-توظيف تقنيات ووسائل التعلم المناسبة",
+        weight: 10,
+        criteria: {
+            1: "نادراً ما يستخدم التقنيات والوسائل التعليمية المناسبة",
+            2: "يستخدم التقنيات والوسائل التعليمية بشكل محدودة ولا تتناسب مع المحتوى التعليمي",
+            3: "يستخدم أغلب التقنيات والوسائل التعليمية المناسبة ويوظفها بشكل منتظم وتتناسب مع المحتوى التعليمي",
+            4: "يستخدم جميع التقنيات والوسائل التعليمية المتوفرة بالمدرسة المناسبة ويوظفها بشكل منتظم وتتناسب مع احتياجات المتعلمين مما يعزز من فعالية الدروس",
+            5: "يستخدم جميع التقنيات والوسائل التعليمية المتوفرة بالمدرسة ويُظهر مهارة استثنائية في دمج التقنيات الحديثة بشكل سلس في الدروس، مع تحسين تفاعل المتعلمين واستيعابهم للمحتوى، يستخدم الأدوات التقنية بفعالية لتحفيز المتعلمين"
+        }
+    },
+    {
+        id: 7,
+        title: "7-إعداد وتنفيذ خطة التعلم",
+        weight: 10,
+        criteria: {
+            1: "نادراً ما يقوم بإعداد خطة التعلم ويعتمد بشكل كامل على التدريس المباشر دون إعداد مسبق",
+            2: "يقوم بإعداد خطة تعلم تتضمن أهداف تعليمية غير واضحة، ويعتمد على المواد الجاهزة دون تخصيص أو تطوير المحتوى ليتناسب مع المتعلمين ويفتقر إلى التنويع في أساليب التدريس",
+            3: "يقوم بإعداد خطة تعلم تتضمن أهداف تعليمية واضحة ومحددة لا تراعي الفروق الفردية بين المتعلمين ولا تغطي المحتوى التعليمي، ويستخدم مواد تعليمية غير كافية ولا ينوع في استخدام أساليب التدريس",
+            4: "يقوم بإعداد خطة تعلم تتضمن أهداف تعليمية واضحة ومحددة وقابلة للقياس تراعي الفروق الفردية بين المتعلمين، وتلبي جميع احتياجاتهم بشكل فعال. ويُنظم الدرس بشكل منطقي ويُخصص وقتاً كافياً لكل نشاط ويراعي التنوع في أساليب التدريس",
+            5: "يقوم بإعداد خطة تعلم تتضمن أهداف تعليمية واضحة ومحددة وقابلة للقياس تراعي الفروق الفردية بين المتعلمين، ويكيفها وفق احتياجات جميع المتعلمين، ويستخدم أساليب تدريس مبتكرة ومتنوعة، مع مراعاة أساليب التعلم واستخدام مواد تعليمية تفاعلية لتعزز فهم المتعلمين"
+        }
+    },
+    {
+        id: 8,
+        title: "8-الإدارة الصفية",
+        weight: 5,
+        criteria: {
+            1: "نادراً ما يدير الصف بفاعلية",
+            2: "يدير الصف دون مراعاة القوانين والتعليميات الصفية",
+            3: "يدير الصف بفاعلية ويظهر قدرة على توجيه المتعلمين لتطبيق القوانين والتعليمات الصفية",
+            4: "يدير الصف بفاعلية ويوفر بيئة صفية ممتعة، وإعطاء فرص متكافئة للطلاب للإجابة عن الأسئلة",
+            5: "يدير الصف بكفاءة عالية يبني علاقات ايجابية مع المتعلمين ويشجع التفاعل بين الأقران ويوفر بيئة صفية محفزة تستثير المعرفة، ويمتلك القدرة على التعامل مع الطلبة وفق احتياجاتهم"
+        }
+    },
+    {
+        id: 9,
+        title: "9-تهيئة بيئة تعليمية",
+        weight: 5,
+        criteria: {
+            1: "نادراً ما يخلق بيئة تعليمية محفزة أو داعمة للتعلم النشط",
+            2: "يهيئ بيئة تعليمية تعزز فهم الطالب بشكل جزئي للمعرفة",
+            3: "يهيئ بيئة تعليمية تعزز فهم الطالب للمعرفة وتراعي الفروق الفردية بين المتعلمين",
+            4: "يهيئ بيئة تعليمية معززة ومحفّزة للتعليم والتعلم وفق احتياجات المتعلمين",
+            5: "يهيئ بيئة تعليمية آمنة معززة ومحفّزة للتعليم، تستدعي خبرات المتعلمين، وتنمي مهاراتهم لتقديم معارف جديدة تستند على الدروس السابقة"
+        }
+    },
+    {
+        id: 10,
+        title: "10-تحليل نتائج المتعلمين وتشخيص مستوياتهم",
+        weight: 10,
+        criteria: {
+            1: "نادراً ما يقوم بتحليل نتائج المتعلمين بشكل منهجي",
+            2: "يُجري تحليلاً محدوداً للنتائج، ولكن دون الاعتماد على أدوات أو أساليب دقيقة",
+            3: "يُجري تحليلاً أساسياً لنتائج المتعلمين باستخدام بعض الأدوات أو الأساليب المتاحة",
+            4: "يُجري تحليلاً دقيقاً وشاملاً لنتائج المتعلمين باستخدام أدوات وأساليب منهجية، ويقدم تشخيصاً دقيقاً لاحتياجات كل متعلم بناءً على بيانات تحليلية واضحة، ويقدّم توصيات مخصصة لتحسين أداء المتعلمين",
+            5: "يُجري تحليلاً متقدماً لنتائج المتعلمين باستخدام تقنيات تحليل البيانات المتقدمة لتحديد التوجهات الفردية والجماعية، يقدم تشخيصاً دقيقاً وشاملاً لمستويات المتعلمين ويستخدم التحليل لتقديم خطط تطوير فردية مخصصة، ويعمل على تحسين مستمر لأساليب تحليل النتائج وتشخيص المستويات"
+        }
+    },
+    {
+        id: 11,
+        title: "11-تنوع أساليب التقويم",
+        weight: 10,
+        criteria: {
+            1: "نادراً ما يستخدم أساليب وأدوات تقييم مناسبة، يعتمد فقط على نوع واحد من أساليب التقييم، لكنه قد لا يكون شاملاً بشكل كافٍ",
+            2: "يستخدم أساليب وأدوات تقييم مناسبة تقوم على أسس علمية، ويُوظف مجموعة من أساليب التقييم مع طبيعة الأهداف ومخرجات التعلم",
+            3: "يستخدم أساليب وأدوات تقييم مناسبة تقوم على أسس علمية، ويُوظف مجموعة من أساليب التقييم مع طبيعة الأهداف ومخرجات التعلم",
+            4: "يستخدم أساليب وأدوات تقييم مناسبة تقوم على أسس علمية لرفع مستوى التحصيل الدراسي ويستخدم مجموعة متنوعة من أساليب التقويم تشمل الاختبارات التحريرية، المشاريع العملية، التقييمات الشفوية، والتقويم الإلكتروني، للوقوف على مدى استعداد المتعلمين وتشخيص امتلاكهم لمهارات وخبرات أساسية سابقة",
+            5: "يستخدم أساليب وأدوات تقييم مناسبة لرفع مستوى التحصيل وتوظيفها في تحسين عملية التعليم، استخدام أساليب تقييم تساعد على قياس مدى تحقق أهداف العملية التعليمية وقياس تقدم التعلم واصدار أحكام عن مستويات الطلبة"
+        }
+    }
+];
+
+        let ratings = {};
+let cachedSummary = null;
+
+// إعداد IndexedDB
+let db;
+const dbPromise = indexedDB.open('TeacherPerformanceDB', 1);
+dbPromise.onupgradeneeded = (event) => {
+    db = event.target.result;
+    db.createObjectStore('teachers', { keyPath: 'teacherName' });
+};
+
+dbPromise.onsuccess = (event) => {
+    db = event.target.result;
+    console.log('تم تهيئة قاعدة البيانات بنجاح');
+};
+
+dbPromise.onerror = (event) => {
+    console.error('فشل في تهيئة قاعدة البيانات:', event.target.error);
+    showAlert('فشل في الاتصال بقاعدة البيانات', 'danger');
+};
+
+// حفظ البيانات في IndexedDB مع توقيت ISO 8601
+async function saveToDB(teacherName, data) {
+    try {
+        if (!teacherName || typeof teacherName !== 'string' || teacherName.trim() === '') {
+            throw new Error('اسم المعلم غير صالح');
+        }
+
+        if (!db) {
+            db = await dbPromise;
+        }
+        if (!(db instanceof IDBDatabase)) {
+            throw new Error('قاعدة البيانات غير متاحة');
+        }
+
+        const tx = db.transaction('teachers', 'readwrite');
+        const store = tx.objectStore('teachers');
+         
+        // استخدام toISOString لتوليد تنسيق ISO 8601
+        const timestamp = new Date().toISOString();
+        const teacherData = {
+            teacherName: teacherName.trim(),
+            ratings: data.ratings || {},
+            timestamp: timestamp
+        };
+
+        await store.put(teacherData);
+        await new Promise((resolve) => tx.oncomplete = resolve);
+        console.log(`تم حفظ بيانات المعلم ${teacherName} بنجاح`);
+        showAlert('تم حفظ البيانات بنجاح', 'success');
+    } catch (error) {
+        console.error('Error saving to DB:', error);
+        showAlert(`فشل في حفظ البيانات: ${error.message}`, 'danger');
+        throw error;
+    }
+}
+
+// تحميل البيانات من IndexedDB
+async function loadFromDB(teacherName) {
+    try {
+        if (!teacherName || typeof teacherName !== 'string' || teacherName.trim() === '') {
+            return {};
+        }
+
+        if (!db) {
+            db = await dbPromise;
+        }
+        if (!(db instanceof IDBDatabase)) {
+            throw new Error('قاعدة البيانات غير متاحة');
+        }
+
+        const tx = db.transaction('teachers', 'readonly');
+        const store = tx.objectStore('teachers');
+        const request = store.get(teacherName.trim());
+        const data = await new Promise((resolve, reject) => {
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+        console.log('البيانات المستخرجة من IndexedDB:', data);
+        if (data && data.timestamp) {
+            console.log('Timestamp المخزن:', data.timestamp);
+        }
+        return data ? data : {};
+    } catch (error) {
+        console.error('Error loading from DB:', error);
+        showAlert('فشل في تحميل البيانات، سيتم استخدام بيانات افتراضية', 'warning');
+        return {};
+    }
+}
+
+// عرض الرسائل
+function showAlert(message, type = 'success') {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} success-alert`;
+    alert.textContent = message;
+    document.body.appendChild(alert);
+    setTimeout(() => alert.remove(), 2000);
+}
+
+// عرض العناصر
+function displayElements(elements) {
+    const container = document.getElementById('performanceElements');
+    if (!container) {
+        console.error('عنصر performanceElements غير موجود في DOM');
+        showAlert('خطأ في واجهة المستخدم', 'danger');
+        return;
+    }
+    container.innerHTML = '';
+    if (!elements || elements.length === 0) {
+        container.innerHTML = '<p>لا توجد عناصر تقييم متاحة</p>';
+        console.warn('elements فارغ أو غير مُعرف');
+        return;
+    }
+    elements.forEach(element => {
+        const card = createElementCard(element);
+        container.appendChild(card);
+    });
+}
+
+function createElementCard(element) {
+    const card = document.createElement('div');
+    card.className = 'performance-card';
+    card.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center">
+            <h5>${element.title}</h5>
+            <span class="badge bg-info">${element.weight}%</span>
+        </div>
+        <div class="criteria-section mt-3">
+            <div class="accordion" id="accordion-${element.id}">
+                ${Object.entries(element.criteria).map(([rating, desc]) => `
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#criteria-${element.id}-${rating}">
+                                المستوى ${rating}
+                            </button>
+                        </h2>
+                        <div id="criteria-${element.id}-${rating}" class="accordion-collapse collapse">
+                            <div class="accordion-body">${desc}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        <div class="rating-buttons mt-3">
+            ${[1, 2, 3, 4, 5].map(i => `
+                <button class="rating-btn ${ratings[element.id] === i ? 'active' : ''}" 
+                        data-element-id="${element.id}" data-rating="${i}" 
+                        onclick="rateElement(${element.id}, ${i})">${i}</button>
+            `).join('')}
+        </div>
+        <div class="feedback-message mt-2" style="display: ${ratings[element.id] === 1 ? 'block' : 'none'}">
+            ${ratings[element.id] === 1 ? `<strong>ملاحظة مهمة:</strong> المعلم يحتاج إلى دورة تدريبية في ${element.title}` : ''}
+        </div>
+    `;
+    console.log(`تم إنشاء بطاقة للعنصر ${element.id}: ${element.title}`, card);
+    return card;
+}
+
+// تقييم العنصر
+async function rateElement(elementId, rating) {
+    try {
+        console.log(`جارٍ تقييم العنصر ${elementId} بتقييم ${rating}`);
+        ratings[elementId] = rating;
+        console.log('ratings بعد التحديث:', ratings);
+        const teacherName = document.getElementById('teacherName').value;
+        if (teacherName) {
+            await saveToDB(teacherName, { ratings });
+        } else {
+            showAlert('يرجى إدخال اسم المعلم أولاً', 'warning');
+            return;
+        }
+        updateUI(elementId, rating);
+        setTimeout(() => updateSummary(), 100); // تأخير صغير للتأكد من التحديث
+    } catch (error) {
+        if (error instanceof TypeError) {
+            console.error('TypeError in rating element:', error);
+            showAlert('خطأ في نوع البيانات أثناء تحديث التقييم. الرجاء المحاولة لاحقًا.', 'danger');
+        } else if (error instanceof DOMException) {
+            console.error('DOM Exception in rating element:', error);
+            showAlert('خطأ في الوصول إلى عناصر الصفحة. الرجاء التحقق من الاتصال.', 'danger');
+        } else {
+            console.error('Error in rating element:', {
+                message: error.message,
+                stack: error.stack,
+                elementId: elementId,
+                rating: rating
+            });
+            showAlert(`فشل في تحديث التقييم للعنصر "${basicElements.find(e => e.id === elementId)?.title || 'غير معروف'}": ${error.message}`, 'danger');
+            ratings[elementId] = null;
+            updateUI(elementId, null);
+            updateSummary();
+        }
+    }
+}
+
+function updateUI(elementId, rating) {
+    const buttons = document.querySelectorAll(`button[data-element-id="${elementId}"]`);
+    if (!buttons || buttons.length === 0) {
+        console.error(`لم يتم العثور على أزرار التقييم للعنصر ${elementId}`);
+        showAlert(`خطأ في تحديث التقييم للعنصر ${basicElements.find(e => e.id === elementId)?.title || 'غير معروف'}`, 'warning');
+        return;
+    }
+    buttons.forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.getAttribute('data-rating')) === rating);
+    });
+
+    const card = document.querySelector(`.performance-card:nth-child(${elementId})`);
+    if (!card) {
+        console.error(`لم يتم العثور على بطاقة الأداء للعنصر ${elementId}`);
+        showAlert('خطأ في تحديث واجهة المستخدم', 'danger');
+        return;
+    }
+
+    const feedback = card.querySelector('.feedback-message');
+    const element = basicElements.find(e => e.id === elementId);
+    if (rating === 1) {
+        feedback.style.display = 'block';
+        feedback.innerHTML = `<strong>ملاحظة مهمة:</strong> المعلم يحتاج إلى دورة تدريبية في ${element.title}`;
+    } else {
+        feedback.style.display = 'none';
+    }
+}
+
+// تحديث الملخص
+function updateSummary() {
+    console.log('جارٍ تحديث الملخص، ratings:', ratings);
+    if (cachedSummary && Object.keys(ratings).length === cachedSummary.ratedElements) return cachedSummary;
+
+    const totalElements = basicElements.length;
+    const ratedElements = Object.keys(ratings).filter(id => ratings[id] !== null && ratings[id] !== undefined).length;
+    console.log(`totalElements: ${totalElements}, ratedElements: ${ratedElements}`);
+    let weightedSum = 0, totalWeight = 0;
+
+    basicElements.forEach(element => {
+        if (ratings[element.id]) {
+            console.log(`العنصر ${element.id} (${element.title}) لديه تقييم: ${ratings[element.id]}`);
+            weightedSum += ratings[element.id] * element.weight;
+            totalWeight += element.weight;
+        }
+    });
+
+    const averageRating = totalWeight > 0 ? (weightedSum / totalWeight).toFixed(1) : '0';
+    const progress = (ratedElements / totalElements * 100).toFixed(0);
+
+    const progressBar = document.getElementById('totalProgress');
+    if (!progressBar) {
+        console.error('عنصر totalProgress غير موجود في DOM');
+        showAlert('خطأ في تحديث الملخص', 'danger');
+        return;
+    }
+
+    console.log(`تحديث شريط التقدم: ${progress}%`);
+    progressBar.style.width = `${progress}%`;
+    progressBar.textContent = `${progress}%`;
+    progressBar.style.backgroundColor = progress < 30 ? '#dc3545' : progress < 70 ? '#ffc107' : '#28a745';
+
+    document.getElementById('averageRating').textContent = averageRating;
+    document.getElementById('completedElements').textContent = ratedElements;
+    document.getElementById('remainingElements').textContent = totalElements - ratedElements;
+
+    cachedSummary = { averageRating, ratedElements, progress };
+}
+
+// حفظ بيانات المعلم
+async function saveTeacherData() {
+    const teacherName = document.getElementById('teacherName').value.trim();
+    if (!teacherName || !/^[أ-ي\s]+$/.test(teacherName)) {
+        showAlert('يرجى إدخال اسم معلم صحيح باللغة العربية', 'danger');
+        return;
+    }
+
+    try {
+        await saveToDB(teacherName, { ratings });
+        document.getElementById('displayTeacherName').textContent = teacherName;
+        updateTeacherSelect(teacherName);
+        showAlert('تم حفظ بيانات المعلم بنجاح');
+    } catch (error) {
+        console.error('Error saving teacher data:', error);
+        showAlert(`فشل في حفظ بيانات المعلم: ${error.message}`, 'danger');
+    }
+}
+
+// تحميل بيانات المعلم
+async function loadTeacherData() {
+    const teacherSelect = document.getElementById('teacherSelect');
+    const teacherName = teacherSelect ? teacherSelect.value : '';
+    if (!teacherName) {
+        console.warn('لم يتم اختيار معلم');
+        showAlert('يرجى اختيار اسم معلم من القائمة', 'warning');
+        return;
+    }
+
+    try {
+        console.log('جارٍ تحميل بيانات المعلم:', teacherName);
+        const data = await loadFromDB(teacherName);
+        console.log('البيانات المحملة:', data);
+        ratings = data.ratings || {};
+
+        const teacherNameInput = document.getElementById('teacherName');
+        const displayTeacherName = document.getElementById('displayTeacherName');
+        const performanceElements = document.getElementById('performanceElements');
+
+        if (!teacherNameInput || !displayTeacherName || !performanceElements) {
+            throw new Error('بعض العناصر الضرورية في DOM غير موجودة');
+        }
+
+        teacherNameInput.value = teacherName;
+        displayTeacherName.textContent = teacherName;
+        displayElements(basicElements);
+        updateSummary();
+    } catch (error) {
+        console.error('Error loading teacher data:', error);
+        showAlert('فشل في تحميل بيانات المعلم، سيتم استخدام بيانات افتراضية', 'warning');
+        ratings = {}; // تهيئة ratings كقيمة افتراضية
+        displayElements(basicElements); // محاولة عرض العناصر حتى لو فشل التحميل
+    }
+}
+
+// تحديث قائمة المعلمين
+async function updateTeacherSelect(teacherName) {
+    const teacherSelect = document.getElementById('teacherSelect');
+    if (!teacherSelect) {
+        console.error('عنصر teacherSelect غير موجود في DOM');
+        showAlert('خطأ في تحميل القائمة', 'danger');
+        return;
+    }
+    if (!Array.from(teacherSelect.options).some(opt => opt.value === teacherName)) {
+        teacherSelect.add(new Option(teacherName, teacherName));
+    }
+    teacherSelect.value = teacherName;
+}
+
+// طباعة التقييم
+async function printEvaluation() {
+    const printWindow = window.open('', '', 'width=800,height=600');
+    const selectedSchool = document.getElementById('schoolSelect').value;
+    const teacherName = document.getElementById('displayTeacherName').textContent;
+
+    try {
+        const teacherData = await loadFromDB(teacherName);
+        let timestamp;
+
+        if (teacherData.timestamp) {
+            const date = new Date(teacherData.timestamp);
+            if (isNaN(date.getTime())) {
+                const [datePart, timePart] = teacherData.timestamp.split(', ');
+                const [day, month, year] = datePart.split('/').map(Number);
+                timestamp = new Date(year, month - 1, day, ...(timePart ? timePart.split(':').map(Number) : [0, 0, 0]))
+                    .toLocaleString('ar-SA', { 
+                        timeZone: 'Asia/Riyadh', 
+                        dateStyle: 'full', 
+                        timeStyle: 'short' 
+                    });
+            } else {
+                timestamp = date.toLocaleString('ar-SA', { 
+                    timeZone: 'Asia/Riyadh', 
+                    dateStyle: 'full', 
+                    timeStyle: 'short' 
+                });
+            }
+        } else {
+            timestamp = new Date().toLocaleString('ar-SA', { 
+                timeZone: 'Asia/Riyadh', 
+                dateStyle: 'full', 
+                timeStyle: 'short' 
+            });
+        }
+
+        let content = `
+            <html dir="rtl">
+            <head>
+                <title>تقرير تقييم الأداء</title>
+                <style>
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        padding: 20px; 
+                        margin: 0; 
+                        line-height: 1.6;
+                    }
+                    .header { text-align: center; margin-bottom: 20px; }
+                    .evaluation-item { 
+                        margin-bottom: 10px; 
+                        padding: 10px; 
+                        border-bottom: 1px solid #eee; 
+                    }
+                    .rating { font-weight: bold; }
+                    .feedback-note { 
+                        background-color: #fff3cd; 
+                        border: 1px solid #ffeeba; 
+                        color: #856404; 
+                        padding: 10px; 
+                        margin-top: 10px; 
+                        border-radius: 5px; 
+                    }
+                    .signatures {
+                        width: 100%;
+                        margin-top: 30px;
+                        page-break-inside: avoid; /* لتجنب تقسيم التوقيعات عبر صفحات */
+                    }
+                    .signature-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                    }
+                    .signature-block {
+                        text-align: center;
+                        padding: 10px;
+                        border: 1px solid #ccc;
+                        min-height: 120px; /* ضمان ارتفاع كافٍ */
+                    }
+                    .signature-line {
+                        border-bottom: 1px solid #000;
+                        width: 200px;
+                        margin: 15px auto;
+                        page-break-inside: avoid; /* لتجنب تقسيم الخط عبر صفحات */
+                    }
+                    @media print {
+    @page { size: A4 portrait; margin: 15mm; }
+    body { padding: 0; font-size: 12pt; }
+    .signatures { margin-bottom: 20mm; }
+    .signature-table td { vertical-align: bottom; }
+    .signature-line { width: 150px; }
+    .evaluation-item { page-break-inside: avoid; }
+    .signatures { page-break-before: avoid; }
+}
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h2>تقرير تقييم الأداء الوظيفي</h2>
+                    <h3 style="color: #2c3e50; margin: 10px 0;">المدرسة: ${selectedSchool}</h3>
+                    <h3>المعلم: ${teacherName}</h3>
+                    <p>تاريخ التقييم: ${timestamp}</p>
+                </div>
+        `;
+
+        basicElements.forEach(element => {
+            const rating = ratings[element.id] || 'لم يتم التقييم';
+            content += `
+                <div class="evaluation-item">
+                    <h4>${element.title} (${element.weight}%)</h4>
+                    <p class="rating">التقييم: ${rating}/5</p>
+                    ${rating === 1 ? `<div class="feedback-note"><strong>ملاحظة مهمة:</strong> المعلم يحتاج إلى دورة تدريبية في ${element.title}</div>` : ''}
+                </div>
+            `;
+        });
+
+        content += `
+                <div class="signatures">
+                    <table class="signature-table">
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="signature-block">
+                                    <p><strong>اسم المعلم: ${teacherName}</strong></p>
+                                    <p>التوقيع</p><div class="signature-line"></div>
+                                    <p>التاريخ: ________________</p>
+                                </div>
+                            </td>
+                            <td style="width: 50%;">
+                                <div class="signature-block">
+                                    <p><strong>مدير المدرسة</strong></p>
+                                    <p>محمد حسين منصور حوذان</p>
+                                    <div class="signature-line"></div>
+                                    <p>التاريخ: ________________</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </body></html>
+        `;
+
+        printWindow.document.write(content);
+        printWindow.document.close();
+        printWindow.print();
+    } catch (error) {
+        console.error('Error in printEvaluation:', error);
+        showAlert('فشل في طباعة التقييم', 'danger');
+    }
+}
+
+// تصدير إلى Excel
+async function exportToExcel() {
+    try {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('تقرير التقييم');
+        worksheet.views = [{ rightToLeft: true }];
+
+        worksheet.mergeCells('A1:E1');
+        worksheet.getCell('A1').value = `تقرير تقييم الأداء الوظيفي للمعلم: ${document.getElementById('teacherName').value || 'غير محدد'}`;
+        worksheet.getCell('A1').alignment = { horizontal: 'center' };
+        worksheet.getCell('A1').font = { bold: true, size: 16 };
+
+        // تحميل البيانات من IndexedDB للحصول على timestamp
+        const teacherName = document.getElementById('teacherName').value || 'غير محدد';
+        const teacherData = await loadFromDB(teacherName);
+        const timestamp = teacherData.timestamp ? 
+            new Date(teacherData.timestamp).toLocaleString('ar-SA', { 
+                timeZone: 'Asia/Riyadh', 
+                dateStyle: 'full', 
+                timeStyle: 'short' 
+            }) : 
+            new Date().toLocaleString('ar-SA', { 
+                timeZone: 'Asia/Riyadh', 
+                dateStyle: 'full', 
+                timeStyle: 'short' 
+            });
+
+        worksheet.mergeCells('A2:E2');
+        worksheet.getCell('A2').value = `تاريخ التقرير: ${timestamp}`;
+        worksheet.getCell('A2').alignment = { horizontal: 'center' };
+
+        worksheet.addRow(['المحور', 'التقييم', 'الوزن النسبي', 'المعايير', 'الملاحظات']);
+        const headerRow = worksheet.getRow(3);
+        headerRow.font = { bold: true };
+        headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
+
+        worksheet.getColumn('A').width = 30;
+        worksheet.getColumn('B').width = 10;
+        worksheet.getColumn('C').width = 15;
+        worksheet.getColumn('D').width = 50;
+        worksheet.getColumn('E').width = 30;
+
+        basicElements.forEach(element => {
+            const rating = ratings[element.id] || 'لم يتم التقييم';
+            const criteria = rating !== 'لم يتم التقييم' ? element.criteria[rating] : '';
+            const notes = rating === 1 ? 'يحتاج إلى دورة تدريبية' : '';
+            worksheet.addRow([element.title, rating, `${element.weight}%`, criteria, notes]);
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `تقييم_${teacherName}_${new Date().toLocaleDateString('ar-SA').replace(/\//g, '-')}.xlsx`;
+        link.click();
+    } catch (error) {
+        console.error('Error exporting to Excel:', error);
+        showAlert('حدث خطأ أثناء تصدير الملف', 'danger');
+    }
+}
+
+// تهيئة النظام
+window.onload = async () => {
+    try {
+const selectedTeacherData = JSON.parse(localStorage.getItem('selectedTeacherData') || '{}');
+if (selectedTeacherData && selectedTeacherData.name) {
+    const teacherNameInput = document.getElementById('teacherName');
+    const displayTeacherName = document.getElementById('displayTeacherName');
+    const teacherSelect = document.getElementById('teacherSelect');
+    
+    if (teacherNameInput) teacherNameInput.value = selectedTeacherData.name;
+    if (displayTeacherName) displayTeacherName.textContent = selectedTeacherData.name;
+    
+    // تحديد المعلم في القائمة المنسدلة إذا كان موجوداً
+    if (teacherSelect) {
+        for (let i = 0; i < teacherSelect.options.length; i++) {
+            if (teacherSelect.options[i].value === selectedTeacherData.name) {
+                teacherSelect.selectedIndex = i;
+                break;
+            }
+        }
+    }
+    
+    // تحميل بيانات المعلم من قاعدة البيانات
+    setTimeout(() => {
+        loadTeacherData();
+    }, 500);
+}
+        ratings = {};
+        console.log('جارٍ تهيئة النظام');
+        displayElements(basicElements);
+        updateSummary();
+        // الانتظار على dbPromise بشكل آمن
+        db = await dbPromise;
+        const tx = db.transaction('teachers', 'readonly');
+        const store = tx.objectStore('teachers');
+        const allTeachers = await new Promise((resolve, reject) => {
+            const request = store.getAll();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+        const teacherSelect = document.getElementById('teacherSelect');
+        if (teacherSelect) {
+            teacherSelect.innerHTML = '<option value="">اختر المعلم...</option>';
+            allTeachers.forEach(teacher => updateTeacherSelect(teacher.teacherName));
+        } else {
+            console.error('عنصر teacherSelect غير موجود');
+            showAlert('خطأ في تحميل القائمة المنسدلة', 'danger');
+        }
+    } catch (error) {
+        console.error('Error loading teachers:', error);
+        showAlert('فشل في تحميل قائمة المعلمين', 'warning');
+        displayElements(basicElements); // محاولة عرض العناصر على أي حال
+    }
+};
+    </script>
+</body>
+</html>

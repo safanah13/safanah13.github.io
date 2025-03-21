@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المدرسة</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header img {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .card a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        /* أنماط رسالة الترحيب */
+        .welcome-message {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .welcome-message h2 {
+            color: #800000;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .welcome-message p {
+            color: #2c3e50;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .school-name {
+            color: #1a5f7a;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        /* تأثيرات الورود */
+        .flower {
+            position: fixed;
+            pointer-events: none;
+            animation: falling 10s linear infinite;
+            z-index: 1000;
+        }
+
+        @keyframes falling {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.innerHTML = '🌹';
+            flower.className = 'flower';
+            flower.style.left = Math.random() * 100 + 'vw';
+            flower.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            document.body.appendChild(flower);
+            
+            setTimeout(() => {
+                flower.remove();
+            }, 10000);
+        }
+
+        // إنشاء وردة كل 300 مللي ثانية
+        setInterval(createFlower, 300);
+    </script>
+
+    <div class="container">
+        <div class="header">
+            <img src="شعار_وزارة_التعليم.png" alt="شعار وزارة التعليم">
+            <h1>نظام إدارة المدرسة</h1>
+        </div>
+
+        <div class="welcome-message">
+            <h2>✨ مرحباً بك مديرنا الغالي ✨</h2>
+            <p>الأستاذ/ محمد حسين منصور حوذان</p>
+            <p>في برنامج إدارة شؤون المدارس</p>
+            <div class="school-name">🏫 ابتدائية سعيد بن الحارث القرشي - تعليم عام</div>
+            <div class="school-name">🕌 ابتدائية الإمام محمد علي القشيري لتحفيظ القرآن الكريم</div>
+            <div class="school-name">🕌 متوسطة الإمام ورش لتحفيظ القرآن الكريم</div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <a href="attendance.html">شؤون المعلمين</a>
+            </div>
+            <div class="card">
+                <a href="Employee.html">شؤون الموظفين</a>
+            </div>
+            <div class="card">
+                <a href="Injaz.html">انجاز المعلمين</a>
+            </div>
+            <div class="card">
+                <a href="main.html">احصائيات منصة مدرستي</a>
+            </div>
+            <div class="card">
+                <a href="students-info.html">بيانات الطلاب</a>
+            </div>
+            <div class="card">
+                <a href="subjects.html">المواد المسندة للمعلمين</a>
+            </div>
+            <div class="card">
+                <a href="tables.html">جداول المعلمين</a>
+            </div>
+            <div class="card">
+                <a href="تقييم الاداء.html">تقييم الأداء الوظيفي</a>
+            </div>
+            <div class="card">
+                <a href="مساءلة.html">المساءلة</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,3026 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إحصائيات منصة مدرستي</title>
+    <link rel="icon" type="image/png" href="شعار_وزارة_التعليم.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+#newsBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-top: 2px solid #800000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    height: 40px;
+    z-index: 1001;
+}
+
+.news-logo {
+    background-color: #800000;
+    color: white;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+}
+
+.news-container {
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.news-scroll {
+    position: absolute;
+    white-space: nowrap;
+    animation: newsScroll 60s linear infinite;
+    padding: 10px 0;
+    font-weight: bold;
+}
+
+.news-scroll span {
+    margin-right: 100px;
+}
+
+@keyframes newsScroll {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+/* تعديل الهوامش والمسافات السفلية في الصفحة للتوافق مع شريط الأخبار */
+body {
+    padding-bottom: 50px;
+}
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            background-color: #fff;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            overflow: hidden;
+        }
+        th {
+            background-color: #800000;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .totals-row {
+            font-weight: bold;
+            background-color: #f4f4f4;
+        }
+        .teacher-totals-row {
+            font-weight: bold;
+            background-color: #e8e8ff;
+        }
+        
+        /* تنسيق عمود التسلسل */
+        .sequence-column {
+            width: 40px !important;
+            min-width: 40px;
+            max-width: 40px;
+        }
+        
+        .teacher-name {
+            vertical-align: middle;
+            font-weight: bold;
+            padding: 5px !important;
+            min-width: 180px;
+        }
+        
+        .teacherNameInput {
+            font-weight: bold;
+            width: 95%;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .print-teacher-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        /* تعديل أبعاد الأعمدة بعد إضافة التسلسل */
+        th:nth-child(1), td:nth-child(1) { width: 4%; }
+        th:nth-child(2), td:nth-child(2) { width: 15%; }
+        th:nth-child(3), td:nth-child(3) { width: 15%; }
+        
+        input[type="number"], input[type="text"].completionRate {
+    width: 90%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;     /* زيادة حجم الخط */
+    font-weight: bold;   /* جعل الخط عريض */
+}
+input[readonly] {
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+}
+        
+        .control-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-action {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            width: 70px;
+        }
+
+        .btn-warning {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-info {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-action:hover {
+            opacity: 0.8;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-add {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .btn-print {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-save {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .btn-info {
+            background-color: #3498db;
+            color: white;
+        }
+.ministry-logo {
+    max-height: 80px;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+.header {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.header-cell {
+    width: 33%;
+    padding: 5px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.principal-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+        
+        @media print {
+    .control-buttons, input, .btn-action {
+        display: none;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    table {
+        width: 100%;
+    }
+    
+    td[data-value]:after {
+        content: attr(data-value);
+    }
+    
+    .teacherNameInput {
+        border: none;
+        background: transparent;
+    }
+
+    .edit-teacher-name {
+        display: none;
+    }
+    
+    .print-teacher-name {
+        display: block !important;
+    }
+    
+    .google-search-container {
+        display: none !important;
+    }
+}
+
+.btn-danger {
+    background-color: #800000;
+    color: white;
+}
+
+
+             .btn-code {
+              background-color: #9b59b6;
+              color: white;
+           }
+
+        @media screen {
+            .print-teacher-name {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            th, td {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            th, td {
+                font-size: 12px;
+                padding: 6px;
+            }
+            h1 {
+                font-size: 18px;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+        }
+@media print {
+    .side-links {
+        display: none !important;
+    }
+}
+@media print {
+    td[data-value]:after {
+        content: attr(data-value);
+        font-size: 16px;
+        font-weight: bold;
+    }
+}
+@media print {
+    #newsBar {
+        display: none !important;
+    }
+}
+
+            .email-buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        #sendEmailsBtn, #sendDefaultersBtn {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        #emailModal, #recipientModal {
+            font-family: 'Cairo', sans-serif;
+        }
+.notes-row {
+    background-color: #f9f9f9;
+}
+
+.checkbox-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.print-notes {
+    background-color: #800000;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.print-notes:hover {
+    opacity: 0.9;
+}
+
+@media print {
+    .notes-row input[type="checkbox"],
+    .print-notes {
+        display: none;
+    }
+    
+    .checkbox-container {
+        display: none;
+    }
+}
+.teacher-totals-row {
+    background-color: #E6F3FF !important; /* لون أزرق فاتح */
+    font-weight: bold;
+}
+
+/* لتأكيد تطبيق اللون على جميع الخلايا في الصف */
+.teacher-totals-row td {
+    background-color: #E6F3FF !important;
+}
+
+
+    </style>
+</head>
+<body>
+<div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 10px; text-align: center;">
+    <strong>ملاحظة هامة:</strong> يرجى استخدام الأرقام الإنجليزية (1234567890) بدلاً من الأرقام العربية (١٢٣٤٥٦٧٨٩٠) لضمان عمل التطبيق بشكل صحيح.
+</div>
+
+<!-- استبدال قسم العنوان الحالي بهذا الكود -->
+<div class="header" style="margin-bottom: 10px; background-color: white; padding: 5px 0; border-bottom: 1px solid #eee;">
+    <div class="header-row" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="header-cell" style="width: 33%; text-align: right; padding-right: 15px; font-size: 14px;">
+            المملكة العربية السعودية<br>
+            وزارة التعليم<br>
+            إدارة التعليم بمنطقة المدينة المنورة
+        </div>
+        <div class="header-cell" style="width: 33%; text-align: center;">
+            <img src="شعار_وزارة_التعليم.png" alt="شعار وزارة التعليم" style="height: 50px;">
+            <div style="font-size: 18px; margin-top: 5px;">رؤية VISION 2030</div>
+        </div>
+        <div class="header-cell" style="width: 33%; text-align: left; padding-left: 15px; font-size: 14px;">
+            ابتدائية الإمام محمد علي القشيري لتحفيظ القرآن الكريم<br>
+            ابتدائية سعيد بن الحارث القرشي - تعليم عام<br>
+            متوسطة الإمام ورش لتحفيظ القرآن الكريم
+        </div>
+    </div>
+</div>
+
+<!-- عنوان الصفحة الرئيسي بتنسيق محسن -->
+<h1 style="text-align: center; font-size: 24px; margin: 15px 0; font-weight: bold;">
+    احصائية منصة مدرستي من 14-2-1446 الى 1-12-1446
+</h1>
+
+<!-- إضافة مساحة لاسم مدير المدرسة -->
+<div style="text-align: center; margin: 15px 0 20px; padding: 8px; background-color: #f8f8f8; border-radius: 5px; font-size: 30px;">
+    <div style="font-size: 22px; color: #555; margin-bottom: 14px;">مدير المدرسة</div>
+    محمد حسين منصور حوذان
+</div>
+
+<!-- مربع بحث قوقل -->
+<div class="google-search-container" style="width: 500px; margin: 5px auto 15px auto; direction: rtl;">
+    <form action="https://www.google.com/search" method="get" target="_blank">
+        <div style="display: flex; border: 1px solid #ddd; border-radius: 24px; padding: 5px; background-color: white;">
+            <input type="text" name="q" placeholder="ابحث في قوقل..." 
+                style="flex-grow: 1; border: none; outline: none; padding: 8px 15px; font-size: 14px; font-family: 'Cairo', sans-serif; background: transparent;">
+            <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0 10px;">
+                <span style="color: #4285F4; font-weight: bold;">بحث</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="side-links" style="position: absolute; top: 190px; right: 20px; display: flex; flex-direction: column; gap: 5px;">
+    <a href="https://schools.madrasati.sa/" target="_blank" style="text-decoration: none; display: block;">
+        <div style="width: 150px; background-color: #800000; border: 1px solid #600000; color: white; text-align: center; padding: 8px; border-radius: 4px; font-weight: bold; cursor: pointer;">منصة مدرستي</div>
+    </a>
+    <a href="https://safanah12.com/" target="_blank" style="text-decoration: none; display: block;">
+        <div style="width: 150px; background-color: #800000; border: 1px solid #600000; color: white; text-align: center; padding: 8px; border-radius: 4px; font-weight: bold; cursor: pointer;">موقع المدرسة</div>
+    </a>
+    <a href="https://noor.moe.gov.sa/Noor/login.aspx" target="_blank" style="text-decoration: none; display: block;">
+        <div style="width: 150px; background-color: #800000; border: 1px solid #600000; color: white; text-align: center; padding: 8px; border-radius: 4px; font-weight: bold; cursor: pointer;">نظام نور</div>
+    </a>
+</div>
+
+
+
+    <div class="control-buttons" style="justify-content: center;">
+    <button id="addTeacherBtn" class="btn btn-add">إضافة معلم جديد</button>
+    <button id="printBtn" class="btn btn-print">طباعة الإحصائيات</button>
+<button onclick="window.open('https://mjmboys-my.sharepoint.com/:x:/g/personal/p135143_mb_moe_gov_sa/ETqo91sH3o9Ds15cYbRYPAkBBp4cXiZd4WYifPDAbo7fHQ?e=dGtYzr', '_blank')" 
+            class="btn" 
+            style="background-color: #800000; color: white; margin: 0 10px;">
+        احصائيات الاستئذان
+    </button>
+<button onclick="window.location.href='subjects.html'" 
+            class="btn" 
+            style="background-color: #800000; color: white; margin: 0 10px;">
+         الاسنادات
+    </button>
+    <button onclick="cleanupTeachersData()" class="btn btn-info">تنظيف البيانات</button>
+    <button id="saveBtn" class="btn btn-save">حفظ البيانات</button>
+    <button id="showCodeBtn" class="btn btn-code">عرض/إخفاء الكود</button>
+    <button id="exportBtn" class="btn btn-info">تصدير البيانات</button>
+    <button id="importBtn" class="btn btn-info">استيراد البيانات</button>
+    <button onclick="checkData()" class="btn btn-info">فحص البيانات</button>
+    <input type="file" id="importFile" accept=".json" style="display: none;">
+    <button id="sendEmailsBtn" class="btn btn-info">إرسال الإحصائيات بالبريد</button>
+    <button id="sendDefaultersBtn" class="btn btn-danger">إرسال مساءلات للمقصرين</button>
+    <button id="sendWhatsappBtn" class="btn btn-info">رسالة واتساب</button>
+<button onclick="goToAbsenceSystem()" class="btn" style="background-color: #800000; color: white;">
+      غياب المعلمين
+</button>
+<button onclick="window.location.href='Employee.html'" class="btn" style="background-color: #800000; color: white; margin: 0 10px;">
+      غياب الموظفين
+</button>
+
+<button onclick="window.location.href='tables.html'" 
+        class="btn" 
+        style="background-color: #800000; color: white; margin: 0 10px;">
+    الجداول
+</button>
+<button onclick="window.location.href='students-info.html'" 
+        class="btn" 
+        style="background-color: #800000; color: white; margin: 0 10px;">
+    الطلاب
+</button>
+
+
+</div>
+<div id="codeContainer" style="display: none; margin-top: 20px;">
+    <pre id="codeDisplay" style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; overflow: auto; max-height: 300px;"></pre>
+</div>
+    
+    <div class="table-container">
+        <table id="statsTable">
+            <thead>
+                <tr>
+                    <th class="sequence-column" rowspan="2">م</th>
+                    <th rowspan="2">اسم المعلم</th>
+                    <th rowspan="2">الفترات الزمنية</th>
+                    <th rowspan="2">عدد الدروس الكلي</th>
+                    <th rowspan="2">الدروس المعدة</th>
+                    <th rowspan="2">الدروس الغير معدة</th>
+                    <th rowspan="2">عدد الواجبات</th>
+                    <th rowspan="2">عدد الإثراءات</th>
+                    <th rowspan="2">عدد الأنشطة</th>
+                    <th rowspan="2">الخطط الأسبوعية</th>
+                    <th rowspan="2">نسبة الإنجاز</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- سيتم إنشاء الصفوف ديناميكيًا من البيانات المخزنة -->
+            </tbody>
+            <tfoot>
+                <tr class="totals-row">
+                    <td colspan="3">المجموع الكلي</td>
+                    <td id="totalLessonsSum">0</td>
+                    <td id="preparedLessonsSum">0</td>
+                    <td id="unpreparedLessonsSum">0</td>
+                    <td id="assignmentsSum">0</td>
+                    <td id="enrichmentsSum">0</td>
+                    <td id="activitiesSum">0</td>
+                    <td id="weeklyPlansSum">0</td>
+                    <td id="completionRateAverage">0%</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <script>
+        let teachersData = [
+            {
+                name: "عادل حمدان الحجيلي",
+                periods: [
+                    {
+                        periodName: "من 14-2 الى 28-4",
+                        totalLessons: 170,
+                        preparedLessons: 35,
+                        unpreparedLessons: 135,
+                        assignments: 25,
+                        enrichments: 26,
+                        activities: 45,
+                        weeklyPlans: 35,
+                        completionRate: "20.59%"
+                    },
+                    {
+                        periodName: "من 15-5 الى 14-8",
+                        totalLessons: 140,
+                        preparedLessons: 55,
+                        unpreparedLessons: 85,
+                        assignments: 23,
+                        enrichments: 36,
+                        activities: 19,
+                        weeklyPlans: 55,
+                        completionRate: "39.29%"
+                    },
+                    {
+                        periodName: "من 2-9 الى 1-12",
+                        totalLessons: 130,
+                        preparedLessons: 114,
+                        unpreparedLessons: 16,
+                        assignments: 14,
+                        enrichments: 25,
+                        activities: 26,
+                        weeklyPlans: 114,
+                        completionRate: "87.69%"
+                    }
+                ]
+            }
+        ];
+window.onerror = function(message, source, lineno, colno, error) {
+    alert('حدث خطأ: ' + message);
+    console.error('خطأ في السطر:', lineno, 'الرسالة:', message);
+    return true;
+}
+
+        function loadSavedData() {
+            const savedData = localStorage.getItem('teachersStats');
+            if (savedData) {
+                teachersData = JSON.parse(savedData);
+            }
+            renderTable();
+        }
+
+        function saveData() {
+    localStorage.setItem('teachersStats', JSON.stringify(teachersData));
+    
+    // تحديث الكود في العنصر النصي
+    const codeDisplay = document.getElementById('codeDisplay');
+    if (codeDisplay) {
+        codeDisplay.textContent = 'let teachersData = ' + JSON.stringify(teachersData, null, 4) + ';';
+    }
+    
+    alert('تم حفظ البيانات بنجاح');
+}
+
+        function calculateTeacherTotals(teacher) {
+            let totalLessons = 0, preparedLessons = 0, unpreparedLessons = 0;
+            let assignments = 0, enrichments = 0, activities = 0, weeklyPlans = 0;
+            
+            teacher.periods.forEach(period => {
+                totalLessons += parseFloat(period.totalLessons) || 0;
+                preparedLessons += parseFloat(period.preparedLessons) || 0;
+                unpreparedLessons += parseFloat(period.unpreparedLessons) || 0;
+                assignments += parseFloat(period.assignments) || 0;
+                enrichments += parseFloat(period.enrichments) || 0;
+                activities += parseFloat(period.activities) || 0;
+                weeklyPlans += parseFloat(period.weeklyPlans) || 0;
+            });
+            
+            const completionRate = totalLessons > 0 ? ((preparedLessons / totalLessons) * 100).toFixed(2) : 0;
+            
+            return {
+                totalLessons,
+                preparedLessons,
+                unpreparedLessons,
+                assignments,
+                enrichments,
+                activities,
+                weeklyPlans,
+                completionRate
+            };
+        }
+
+        function updateTeacherData(teacherIndex, periodIndex, field, value) {
+            value = parseFloat(value) || 0;
+            teachersData[teacherIndex].periods[periodIndex][field] = value;
+            
+            const period = teachersData[teacherIndex].periods[periodIndex];
+            
+            if (field === 'totalLessons' || field === 'preparedLessons') {
+                period.unpreparedLessons = period.totalLessons - period.preparedLessons;
+                const completionRate = period.totalLessons > 0 ? ((period.preparedLessons / period.totalLessons) * 100).toFixed(2) : 0;
+                period.completionRate = completionRate + "%";
+                period.weeklyPlans = period.preparedLessons;
+            }
+            
+            renderTable();
+        }
+
+        function updateTeacherName(teacherIndex, newName) {
+            teachersData[teacherIndex].name = newName;
+            sortTeachersAlphabetically();
+            renderTable();
+        }
+function updateTeacherEmail(teacherIndex, newEmail) {
+    teachersData[teacherIndex].email = newEmail;
+    saveData();
+}
+
+                
+        function renderTable() {
+    const tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = '';
+    let displayedSequence = 0;
+
+    // استخدام حلقة for تقليدية بدلاً من forEach للتحكم أفضل في تدفق البرنامج
+    for (let teacherIndex = 0; teacherIndex < teachersData.length; teacherIndex++) {
+        const teacher = teachersData[teacherIndex];
+        
+        // تحقق من وجود بيانات للمعلم
+        let hasData = false;
+        for (let i = 0; i < teacher.periods.length; i++) {
+            const period = teacher.periods[i];
+            if (period.totalLessons > 0 || period.preparedLessons > 0 || 
+                period.assignments > 0 || period.enrichments > 0 || 
+                period.activities > 0) {
+                hasData = true;
+                break;
+            }
+        }
+        
+        // تخطي المعلم إذا لم يكن لديه بيانات وليس معلم جديد
+        if (!hasData && teacher.name === "معلم جديد" && !teacher.isNewlyAdded && !teacher.email && !teacher.phone) {
+    continue;
+}
+ displayedSequence++;
+        
+        // عرض فترات المعلم
+        for (let periodIndex = 0; periodIndex < teacher.periods.length; periodIndex++) {
+            const period = teacher.periods[periodIndex];
+            const row = document.createElement('tr');
+            
+            if (periodIndex === 0) {
+                row.innerHTML = `
+                    <td class="sequence-column" rowspan="3">${teacherIndex + 1}</td>
+                    <td class="teacher-name" rowspan="3">
+                        <div class="print-teacher-name">${teacher.name}</div>
+                        <div class="edit-teacher-name">
+                            <input type="text" class="teacherNameInput" value="${teacher.name}" 
+                                onchange="updateTeacherName(${teacherIndex}, this.value)">
+                            <input type="email" class="teacherEmailInput" style="width: 95%; margin-top: 5px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;" 
+                                value="${teacher.email || ''}" placeholder="البريد الإلكتروني"
+                                onchange="updateTeacherEmail(${teacherIndex}, this.value)">
+                            <input type="tel" class="teacherPhoneInput" style="width: 95%; margin-top: 5px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;" 
+                                value="${teacher.phone || ''}" placeholder="رقم الجوال" dir="ltr"
+                                onchange="updateTeacherPhone(${teacherIndex}, this.value)">
+
+                            <div style="display: flex; gap: 5px; justify-content: center; margin-top: 5px;">
+                                <button class="btn-action btn-warning" onclick="openInquiry(${teacherIndex})">مساءلة</button>
+                                <button class="btn-action btn-info" onclick="openEvaluation(${teacherIndex})">تقييم الأداء</button>
+<button class="btn-action btn-info" onclick="openAchievementFile(${teacherIndex})">ملف الإنجاز</button>
+                                <button class="btn-action btn-danger" onclick="deleteTeacher(${teacherIndex})">حذف</button>
+                                ${parseFloat(calculateTeacherTotals(teacher).completionRate) < 50 
+        ? `<button class="btn-action btn-warning" onclick="sendEmailToTeacher(${teacherIndex})">
+            إرسال مساءلة</button>` 
+        : `<button class="btn-action btn-info" onclick="sendEmailToTeacher(${teacherIndex})">
+            إرسال إحصائية</button>`
+    }
+</div>
+                        </div>
+                    </td>
+                    <td>${period.periodName}</td>
+                    <td data-value="${period.totalLessons}"><input type="number" class="totalLessons" value="${period.totalLessons}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'totalLessons', this.value)"></td>
+                    <td data-value="${period.preparedLessons}"><input type="number" class="preparedLessons" value="${period.preparedLessons}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'preparedLessons', this.value)"></td>
+                    <td data-value="${period.unpreparedLessons}"><input type="number" class="unpreparedLessons" value="${period.unpreparedLessons}" readonly></td>
+                    <td data-value="${period.assignments}"><input type="number" class="assignments" value="${period.assignments}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'assignments', this.value)"></td>
+                    <td data-value="${period.enrichments}"><input type="number" class="enrichments" value="${period.enrichments}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'enrichments', this.value)"></td>
+                    <td data-value="${period.activities}"><input type="number" class="activities" value="${period.activities}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'activities', this.value)"></td>
+                    <td data-value="${period.weeklyPlans}"><input type="number" class="weeklyPlans" value="${period.weeklyPlans}" readonly></td>
+                    <td data-value="${period.completionRate}"><input type="text" class="completionRate" value="${period.completionRate}" readonly></td>
+                `;
+            } else {
+                row.innerHTML = `
+                    <td>${period.periodName}</td>
+                    <td data-value="${period.totalLessons}"><input type="number" class="totalLessons" value="${period.totalLessons}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'totalLessons', this.value)"></td>
+                    <td data-value="${period.preparedLessons}"><input type="number" class="preparedLessons" value="${period.preparedLessons}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'preparedLessons', this.value)"></td>
+                    <td data-value="${period.unpreparedLessons}"><input type="number" class="unpreparedLessons" value="${period.unpreparedLessons}" readonly></td>
+                    <td data-value="${period.assignments}"><input type="number" class="assignments" value="${period.assignments}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'assignments', this.value)"></td>
+                    <td data-value="${period.enrichments}"><input type="number" class="enrichments" value="${period.enrichments}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'enrichments', this.value)"></td>
+                    <td data-value="${period.activities}"><input type="number" class="activities" value="${period.activities}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'activities', this.value)"></td>
+                    <td data-value="${period.weeklyPlans}"><input type="number" class="weeklyPlans" value="${period.weeklyPlans}" readonly></td>
+                    <td data-value="${period.completionRate}"><input type="text" class="completionRate" value="${period.completionRate}" readonly></td>
+                `;
+            }
+            tableBody.appendChild(row);
+        }
+
+        // إضافة صف مجاميع المعلم
+        // إضافة صف مجاميع المعلم
+const teacherTotals = calculateTeacherTotals(teacher);
+
+const teacherTotalsRow = document.createElement('tr');
+teacherTotalsRow.className = 'teacher-totals-row';
+teacherTotalsRow.innerHTML = `
+    <td colspan="3">مجموع المعلم: ${teacher.name}</td>
+    <td>${teacherTotals.totalLessons}</td>
+    <td>${teacherTotals.preparedLessons}</td>
+    <td>${teacherTotals.unpreparedLessons}</td>
+    <td>${teacherTotals.assignments}</td>
+    <td>${teacherTotals.enrichments}</td>
+    <td>${teacherTotals.activities}</td>
+    <td>${teacherTotals.weeklyPlans}</td>
+    <td>${teacherTotals.completionRate}%</td>
+`;
+tableBody.appendChild(teacherTotalsRow);
+
+// إضافة صف الملاحظات
+const notesRow = document.createElement('tr');
+notesRow.className = 'notes-row';
+notesRow.innerHTML = `
+    <td colspan="11">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px;">
+            <div style="font-weight: bold;">ملاحظات مدير المدرسة:</div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="excuse_${teacherIndex}" value="accepted"> عذره مقبول
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="excuse_${teacherIndex}" value="not_accepted"> عذره غير مقبول
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="accountability_${teacherIndex}"> يعطى مساءلة
+                </label>
+                <button class="print-notes" onclick="printTeacherNotes(${teacherIndex})">طباعة</button>
+            </div>
+        </div>
+    </td>
+`;
+tableBody.appendChild(notesRow);
+
+    }
+
+    updateAllTotals();
+}
+function printTeacherNotes(teacherIndex) {
+    const teacher = teachersData[teacherIndex];
+    const totals = calculateTeacherTotals(teacher);
+    
+    // تحديد حالة الملاحظات المحددة
+    const excuseAccepted = document.querySelector(`input[name="excuse_${teacherIndex}"][value="accepted"]`).checked;
+    const excuseNotAccepted = document.querySelector(`input[name="excuse_${teacherIndex}"][value="not_accepted"]`).checked;
+    const needsAccountability = document.querySelector(`input[name="accountability_${teacherIndex}"]`).checked;
+
+    // إنشاء محتوى الطباعة
+    const printContent = `
+        <html dir="rtl">
+        <head>
+            <title>ملاحظات المعلم - ${teacher.name}</title>
+            <style>
+                @media print {
+                    @page {
+                        size: A4;
+                        margin: 2cm;
+                    }
+                }
+                body {
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    padding: 20px;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 30px;
+                }
+                .school-info {
+                    margin-bottom: 20px;
+                }
+                .teacher-info {
+                    margin-bottom: 30px;
+                }
+                .stats-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 30px;
+                }
+                .stats-table th, .stats-table td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: center;
+                }
+                .stats-table th {
+                    background-color: #f5f5f5;
+                }
+                .notes-section {
+                    margin-bottom: 30px;
+                }
+                .signature-section {
+                    margin-top: 50px;
+                    display: flex;
+                    justify-content: space-between;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h2>المملكة العربية السعودية</h2>
+                <h3>وزارة التعليم</h3>
+                <h4>تقرير متابعة أداء المعلم</h4>
+            </div>
+
+            <div class="school-info">
+                <p>التاريخ: ${new Date().toLocaleDateString('ar-SA')}</p>
+            </div>
+
+            <div class="teacher-info">
+                <p><strong>اسم المعلم:</strong> ${teacher.name}</p>
+                <p><strong>البريد الإلكتروني:</strong> ${teacher.email || 'غير محدد'}</p>
+                <p><strong>رقم الجوال:</strong> ${teacher.phone || 'غير محدد'}</p>
+            </div>
+
+            <table class="stats-table">
+                <tr>
+                    <th>إجمالي الدروس</th>
+                    <th>الدروس المحضرة</th>
+                    <th>الدروس غير المحضرة</th>
+                    <th>نسبة الإنجاز</th>
+                </tr>
+                <tr>
+                    <td>${totals.totalLessons}</td>
+                    <td>${totals.preparedLessons}</td>
+                    <td>${totals.unpreparedLessons}</td>
+                    <td>${totals.completionRate}%</td>
+                </tr>
+            </table>
+
+            <div class="notes-section">
+                <h3>ملاحظات مدير المدرسة:</h3>
+                <p>${excuseAccepted ? '✓ عذر المعلم مقبول' : ''}</p>
+                <p>${excuseNotAccepted ? '✓ عذر المعلم غير مقبول' : ''}</p>
+                <p>${needsAccountability ? '✓ يحتاج إلى مساءلة' : ''}</p>
+                ${totals.completionRate < 50 ? 
+                    '<p style="color: red;">* نسبة الإنجاز أقل من 50% مما يستدعي المتابعة والمساءلة</p>' : ''}
+            </div>
+
+            <div class="signature-section">
+                <div>
+                    <p>توقيع المعلم: .........................</p>
+                    <p>التاريخ: .........................</p>
+                </div>
+                <div>
+                    <p>توقيع مدير المدرسة: .........................</p>
+                    <p>التاريخ: .........................</p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+
+    // إنشاء نافذة جديدة للطباعة
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+
+    // انتظار تحميل المحتوى ثم طباعة
+    printWindow.onload = function() {
+        printWindow.print();
+        // إغلاق النافذة بعد الطباعة (اختياري)
+        // printWindow.close();
+    };
+}
+
+
+
+        function updateAllTotals() {
+            let totalLessonsSum = 0, preparedLessonsSum = 0, unpreparedLessonsSum = 0;
+            let assignmentsSum = 0, enrichmentsSum = 0, activitiesSum = 0, weeklyPlansSum = 0;
+            let completionRateSum = 0, teacherCount = teachersData.length;
+            
+            teachersData.forEach(teacher => {
+                const teacherTotals = calculateTeacherTotals(teacher);
+                totalLessonsSum += teacherTotals.totalLessons;
+                preparedLessonsSum += teacherTotals.preparedLessons;
+                unpreparedLessonsSum += teacherTotals.unpreparedLessons;
+                assignmentsSum += teacherTotals.assignments;
+                enrichmentsSum += teacherTotals.enrichments;
+                activitiesSum += teacherTotals.activities;
+                weeklyPlansSum += teacherTotals.weeklyPlans;
+                completionRateSum += parseFloat(teacherTotals.completionRate);
+            });
+            
+            const completionRateAverage = teacherCount > 0 ? (completionRateSum / teacherCount).toFixed(2) : 0;
+            
+            document.getElementById('totalLessonsSum').textContent = totalLessonsSum;
+            document.getElementById('preparedLessonsSum').textContent = preparedLessonsSum;
+            document.getElementById('unpreparedLessonsSum').textContent = unpreparedLessonsSum;
+            document.getElementById('assignmentsSum').textContent = assignmentsSum;
+            document.getElementById('enrichmentsSum').textContent = enrichmentsSum;
+            document.getElementById('activitiesSum').textContent = activitiesSum;
+            document.getElementById('weeklyPlansSum').textContent = weeklyPlansSum;
+            document.getElementById('completionRateAverage').textContent = completionRateAverage + "%";
+        }
+
+        function addTeacher() {
+            const newTeacher = {
+                name: "معلم جديد",
+               email: "",
+               isNewlyAdded: true,
+                periods: [
+                    {
+                        periodName: "من 14-2 الى 28-4",
+                        totalLessons: 0,
+                        preparedLessons: 0,
+                        unpreparedLessons: 0,
+                        assignments: 0,
+                        enrichments: 0,
+                        activities: 0,
+                        weeklyPlans: 0,
+                        completionRate: "0%"
+                    },
+                    {
+                        periodName: "من 15-5 الى 14-8",
+                        totalLessons: 0,
+                        preparedLessons: 0,
+                        unpreparedLessons: 0,
+                        assignments: 0,
+                        enrichments: 0,
+                        activities: 0,
+                        weeklyPlans: 0,
+                        completionRate: "0%"
+                    },
+                    {
+                        periodName: "من 2-9 الى 1-12",
+                        totalLessons: 0,
+                        preparedLessons: 0,
+                        unpreparedLessons: 0,
+                        assignments: 0,
+                        enrichments: 0,
+                        activities: 0,
+                        weeklyPlans: 0,
+                        completionRate: "0%"
+                    }
+                ]
+            };
+            
+            teachersData.push(newTeacher);
+            saveData();
+            renderTable();
+        }
+
+        // فتح نافذة المساءلة
+        function openInquiry(teacherIndex) {
+    const teacher = teachersData[teacherIndex];
+    const stats = calculateTeacherTotals(teacher);
+    
+    localStorage.setItem('selectedTeacherData', JSON.stringify({
+        name: teacher.name,
+        totalLessons: stats.totalLessons,
+        preparedLessons: stats.preparedLessons,
+        homework: stats.assignments,
+        enrichment: stats.enrichments,
+        activities: stats.activities
+    }));
+    
+    window.location.href = 'مساءلة.html?id=' + teacherIndex;
+}
+
+
+        // فتح نافذة تقييم الأداء
+        function openEvaluation(teacherIndex) {
+    const teacher = teachersData[teacherIndex];
+    
+    // تخزين بيانات المعلم بالتنسيق الذي تتوقعه صفحة تقييم الأداء
+    localStorage.setItem('selectedTeacherData', JSON.stringify({
+        name: teacher.name,
+        index: teacherIndex
+    }));
+    
+    // الانتقال إلى صفحة تقييم الأداء باسم الملف الصحيح
+    window.location.href = 'تقييم الاداء.html?id=' + teacherIndex;
+}
+function deleteTeacher(teacherIndex) {
+    if (confirm('هل أنت متأكد من حذف هذا المعلم وجميع بياناته؟')) {
+        teachersData.splice(teacherIndex, 1);
+        sortTeachersAlphabetically();
+        saveData(); // حفظ البيانات بعد الحذف
+        renderTable(); // إعادة عرض الجدول
+    }
+}
+// أضف هذه الدالة بعد دالة deleteTeacher
+function sendEmailToTeacher(teacherIndex) {
+    const teacher = teachersData[teacherIndex];
+    const stats = calculateTeacherTotals(teacher);
+    
+    // تخزين المعلم المختار
+    currentWhatsappTeacher = teacher;
+    
+    // إنشاء محتوى الرسالة 
+    whatsappContent = generateWhatsappContent(teacher);
+    
+    // إظهار نافذة إدخال رقم الهاتف
+    showPhoneModal(teacher);
+}
+
+
+        // إعداد مستمعي الأحداث
+        document.getElementById('addTeacherBtn').addEventListener('click', addTeacher);
+        document.getElementById('printBtn').addEventListener('click', () => {
+            window.print();
+        });
+        document.getElementById('saveBtn').addEventListener('click', saveData);
+document.getElementById('showCodeBtn').onclick = function() {
+    const codeContainer = document.getElementById('codeContainer');
+    const codeDisplay = document.getElementById('codeDisplay');
+    
+    if (codeContainer.style.display !== 'block') {
+        // عند فتح الكود، نعرض البيانات الحالية
+        codeContainer.style.display = 'block';
+        codeDisplay.textContent = 'let teachersData = ' + JSON.stringify(teachersData, null, 4) + ';';
+        
+        // إضافة تفاعل لتحديث البيانات فورياً
+        codeDisplay.contentEditable = true; // جعل النص قابل للتعديل
+        
+        // عند التعديل على الكود المعروض
+        codeDisplay.addEventListener('input', function() {
+            try {
+                // محاولة تحليل الكود المدخل كـ JSON
+                const codeText = this.textContent;
+                if (codeText.startsWith('let teachersData =')) {
+                    const jsonStr = codeText.substring(codeText.indexOf('=') + 1).trim();
+                    // إذا كان الكود صالح، نحدث البيانات
+                    const newData = JSON.parse(jsonStr.endsWith(';') ? jsonStr.slice(0, -1) : jsonStr);
+                    teachersData = newData;
+                    renderTable(); // إعادة عرض البيانات المحدثة
+                    saveData(); // حفظ البيانات المحدثة
+                }
+            } catch (e) {
+                // نتجاهل أخطاء التحليل أثناء الكتابة
+                console.log('جاري التعديل...');
+            }
+        });
+        
+        // إضافة زر تحديث البيانات تحت العرض
+        const updateBtn = document.createElement('button');
+        updateBtn.className = 'btn btn-info';
+        updateBtn.textContent = 'تحديث البيانات من الكود';
+        updateBtn.style.margin = '10px 0';
+        updateBtn.onclick = function() {
+            try {
+                const codeText = codeDisplay.textContent;
+                if (codeText.startsWith('let teachersData =')) {
+                    const jsonStr = codeText.substring(codeText.indexOf('=') + 1).trim();
+                    const newData = JSON.parse(jsonStr.endsWith(';') ? jsonStr.slice(0, -1) : jsonStr);
+                    teachersData = newData;
+                    renderTable();
+                    saveData();
+                    alert('تم تحديث البيانات بنجاح!');
+                }
+            } catch (e) {
+                alert('حدث خطأ في تحليل البيانات: ' + e.message);
+            }
+        };
+        
+        // إضافة الزر بعد عنصر عرض الكود
+        codeContainer.appendChild(updateBtn);
+    } else {
+        // عند إخفاء الكود
+        codeContainer.innerHTML = ''; // مسح المحتويات بما فيها الزر المضاف
+        codeContainer.appendChild(codeDisplay); // إعادة عنصر عرض الكود
+        codeContainer.style.display = 'none';
+    }
+};
+
+document.getElementById('exportBtn').addEventListener('click', exportData);
+document.getElementById('importBtn').addEventListener('click', function() {
+    document.getElementById('importFile').click();
+});
+document.getElementById('importFile').addEventListener('change', importData);
+// دالة تصدير البيانات
+function exportData() {
+    const dataStr = JSON.stringify(teachersData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = 'teachers_data.json';
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+}
+
+// دالة استيراد البيانات
+function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            teachersData = data;
+            saveData();
+            renderTable();
+            alert('تم استيراد البيانات بنجاح');
+        } catch (error) {
+            alert('حدث خطأ أثناء استيراد البيانات');
+            console.error(error);
+        }
+    };
+    reader.readAsText(file);
+}
+let currentTeacher = null;
+let emailContent = null;
+
+// إنشاء محتوى الرسالة لمعلم معين
+function generateEmailContent(teacher) {
+    const stats = calculateTeacherTotals(teacher);
+    
+    const subject = `إحصائيات منصة مدرستي - ${teacher.name}`;
+    
+    const body = `السلام عليكم ورحمة الله وبركاته،
+    
+الأستاذ الفاضل / ${teacher.name}
+
+نرسل لكم إحصائيات أدائكم في منصة مدرستي:
+
+إجمالي الدروس: ${stats.totalLessons}
+الدروس المعدة: ${stats.preparedLessons}
+الواجبات: ${stats.assignments}
+الإثراءات: ${stats.enrichments}
+الأنشطة: ${stats.activities}
+الخطط الأسبوعية: ${stats.weeklyPlans}
+نسبة الإنجاز الكلية: ${stats.completionRate}%
+
+نشكركم على جهودكم وتعاونكم،
+إدارة المدرسة`;
+    
+    return { subject, body };
+}
+
+// إنشاء محتوى مساءلة لمعلم مقصر
+function generateDefaulterContent(teacher) {
+    const stats = calculateTeacherTotals(teacher);
+    
+    const subject = `مساءلة بخصوص نسبة الإنجاز في منصة مدرستي - ${teacher.name}`;
+    
+    const body = `
+<div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+    <h2 style="color: #800000; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px;">مساءلة خطية</h2>
+    
+    <p>السلام عليكم ورحمة الله وبركاته،</p>
+    
+    <p>الأستاذ / <strong>${teacher.name}</strong></p>
+    
+    <p>نود إشعاركم بضرورة رفع نسبة الإنجاز في منصة مدرستي، حيث أن نسبة الإنجاز الحالية <strong>(${stats.completionRate}%)</strong> أقل من المطلوب.</p>
+    
+    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 15px 0;">
+        <p style="margin: 5px 0;"><strong>بيانات المساءلة:</strong></p>
+        <p style="margin: 5px 0;">- إجمالي الدروس: ${stats.totalLessons}</p>
+        <p style="margin: 5px 0;">- الدروس المعدة: ${stats.preparedLessons}</p>
+        <p style="margin: 5px 0;">- الدروس غير المعدة: ${stats.unpreparedLessons}</p>
+        <p style="margin: 5px 0;">- نسبة الإنجاز: ${stats.completionRate}%</p>
+    </div>
+    
+    <div style="margin-top: 15px;">
+        <p><strong>ملاحظات مدير المدرسة:</strong></p>
+        <div style="margin: 10px 20px;">
+            ☐ عذره مقبول<br>
+            ☐ عذره غير مقبول<br>
+            ☐ يعطى فرصة للتحسين
+        </div>
+    </div>
+    
+    <p>نأمل منكم العمل على رفع نسبة الإنجاز في أقرب وقت ممكن.</p>
+    
+    <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+        <div>
+            <p><strong>المعلم:</strong> ${teacher.name}</p>
+            <div>☐ تم الاطلاع</div>
+        </div>
+        <div>
+            <p><strong>مدير المدرسة:</strong> محمد حسين منصور حوذان</p>
+            <div>☑ تم الاعتماد</div>
+        </div>
+    </div>
+    
+    <div style="margin-top: 20px; text-align: center; color: #777; font-size: 90%;">
+        تاريخ المساءلة: ${new Date().toLocaleDateString('ar-SA')}
+    </div>
+</div>`;
+    
+    return { subject, body };
+}
+
+
+// عرض نافذة إعدادات البريد
+function showEmailModal(isDefaulters = false) {
+    document.getElementById('emailModal').style.display = 'block';
+    
+    // تحديث عنوان النافذة
+    const modalTitle = document.querySelector('#emailModal h3');
+    if (modalTitle) {
+        if (isDefaulters) {
+            modalTitle.textContent = 'إرسال مساءلات للمعلمين المقصرين';
+        } else {
+            modalTitle.textContent = 'إرسال إحصائيات للمعلمين';
+        }
+    }
+    
+    // قيمة افتراضية لبريد المدير
+    const defaultEmail = "principal@school.edu.sa";
+    const savedEmail = localStorage.getItem('senderEmail') || defaultEmail;
+    document.getElementById('senderEmail').value = savedEmail;
+    
+    // تحضير معاينة مع مربعات اختيار
+    let preview = "";
+    
+    if (isDefaulters) {
+        preview += "<h4>اختر المعلمين المقصرين لإرسال المساءلات:</h4>";
+        preview += "<div style='text-align: right; margin-bottom: 10px;'>";
+        preview += "<button id='selectAllBtn' class='btn btn-sm btn-secondary' style='margin-left: 10px;'>تحديد الكل</button>";
+        preview += "<button id='deselectAllBtn' class='btn btn-sm btn-secondary'>إلغاء تحديد الكل</button>";
+        preview += "</div><div style='max-height: 200px; overflow-y: auto;'>";
+        
+        let defaultersCount = 0;
+        teachersData.forEach((teacher, index) => {
+            const teacherTotals = calculateTeacherTotals(teacher);
+            if (parseFloat(teacherTotals.completionRate) < 50) {
+                defaultersCount++;
+                preview += `<div><input type="checkbox" id="teacher_${index}" class="teacher-checkbox" value="${index}" checked> 
+                            <label for="teacher_${index}">${teacher.name} - نسبة الإنجاز: ${teacherTotals.completionRate}%</label></div>`;
+            }
+        });
+        preview += "</div>";
+        
+        if (defaultersCount === 0) {
+            preview = "<p>لا يوجد معلمين مقصرين (نسبة الإنجاز أقل من 50%)</p>";
+        }
+    } else {
+        preview += "<h4>اختر المعلمين لإرسال الإحصائيات:</h4>";
+        preview += "<div style='text-align: right; margin-bottom: 10px;'>";
+        preview += "<button id='selectAllBtn' class='btn btn-sm btn-secondary' style='margin-left: 10px;'>تحديد الكل</button>";
+        preview += "<button id='deselectAllBtn' class='btn btn-sm btn-secondary'>إلغاء تحديد الكل</button>";
+        preview += "</div><div style='max-height: 200px; overflow-y: auto;'>";
+        
+        teachersData.forEach((teacher, index) => {
+            preview += `<div><input type="checkbox" id="teacher_${index}" class="teacher-checkbox" value="${index}" checked> 
+                        <label for="teacher_${index}">${teacher.name}</label></div>`;
+        });
+        preview += "</div>";
+    }
+    
+    document.getElementById('emailPreview').innerHTML = preview;
+    
+    // إضافة مستمعي أحداث لأزرار التحديد
+    setTimeout(() => {
+        document.getElementById('selectAllBtn')?.addEventListener('click', function() {
+            document.querySelectorAll('.teacher-checkbox').forEach(checkbox => checkbox.checked = true);
+        });
+        
+        document.getElementById('deselectAllBtn')?.addEventListener('click', function() {
+            document.querySelectorAll('.teacher-checkbox').forEach(checkbox => checkbox.checked = false);
+        });
+    }, 100);
+    
+    // تحديد الإجراء عند النقر على زر الإرسال
+    if (isDefaulters) {
+        document.getElementById('confirmEmailBtn').onclick = startSendingSelectedDefaulters;
+    } else {
+        document.getElementById('confirmEmailBtn').onclick = startSendingSelectedEmails;
+    }
+}
+
+
+// إخفاء نافذة إعدادات البريد
+function hideEmailModal() {
+    document.getElementById('emailModal').style.display = 'none';
+}
+
+// عرض نافذة إدخال بريد المستلم
+function showRecipientModal(teacher, isDefaulter = false) {
+    currentTeacher = teacher;
+    
+    if (isDefaulter) {
+        emailContent = generateDefaulterContent(teacher);
+    } else {
+        emailContent = generateEmailContent(teacher);
+    }
+    
+    document.getElementById('recipientModalTitle').textContent = `أدخل البريد الإلكتروني للمعلم: ${teacher.name}`;
+    document.getElementById('recipientModal').style.display = 'block';
+    
+    // استخدام البريد المخزن للمعلم إذا كان متوفرًا
+    if (teacher.email) {
+        document.getElementById('recipientEmail').value = teacher.email;
+    } else {
+        document.getElementById('recipientEmail').value = '';
+    }
+    
+    document.getElementById('recipientEmail').focus();
+}
+
+// إخفاء نافذة إدخال بريد المستلم
+function hideRecipientModal() {
+    document.getElementById('recipientModal').style.display = 'none';
+    currentTeacher = null;
+    emailContent = null;
+}
+
+// بدء عملية إرسال الإحصائيات لجميع المعلمين
+function startSendingAllEmails() {
+    const senderEmail = document.getElementById('senderEmail').value;
+    localStorage.setItem('senderEmail', senderEmail);
+    
+    hideEmailModal();
+    
+    // إرسال الإحصائية للمعلم الأول
+    if (teachersData.length > 0) {
+        showRecipientModal(teachersData[0], false);
+    } else {
+        alert('لا يوجد معلمين في القائمة');
+    }
+}
+
+// بدء عملية إرسال المساءلات للمعلمين المقصرين
+function startSendingDefaulters() {
+    const senderEmail = document.getElementById('senderEmail').value;
+    localStorage.setItem('senderEmail', senderEmail);
+    
+    hideEmailModal();
+    
+    // بناء قائمة المقصرين
+    const defaulters = teachersData.filter(teacher => {
+        const teacherTotals = calculateTeacherTotals(teacher);
+        return parseFloat(teacherTotals.completionRate) < 50;
+    });
+    
+    if (defaulters.length > 0) {
+        showRecipientModal(defaulters[0], true);
+    } else {
+        alert('لا يوجد معلمين مقصرين (نسبة الإنجاز أقل من 50%)');
+    }
+}
+
+// إرسال البريد للمعلم الحالي
+function sendEmailToCurrentTeacher() {
+    if (!currentTeacher) return;
+    
+    // إنشاء محتوى البريد إذا لم يكن موجوداً
+    if (!emailContent) {
+        const isDefaulter = parseFloat(calculateTeacherTotals(currentTeacher).completionRate) < 50;
+        emailContent = isDefaulter ? 
+            generateDefaulterContent(currentTeacher) : 
+            generateEmailContent(currentTeacher);
+    }
+    
+    const recipientEmail = document.getElementById('recipientEmail').value;
+    if (!recipientEmail) {
+        alert('الرجاء إدخال البريد الإلكتروني للمستلم');
+        return;
+    }
+    
+    // حفظ البريد الإلكتروني للمعلم للاستخدام المستقبلي
+    if (!currentTeacher.email) {
+        currentTeacher.email = recipientEmail;
+        saveData();
+    }
+    
+    const senderEmail = localStorage.getItem('senderEmail') || '';
+    
+    // إنشاء رابط mailto
+    const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(emailContent.subject)}&body=${encodeURIComponent(emailContent.body)}`;
+    
+    // فتح تطبيق البريد الافتراضي
+    window.open(mailtoLink, '_blank');
+    
+    hideRecipientModal();
+    
+    // التحقق مما إذا كانت هناك حاجة للانتقال إلى المعلم التالي
+    handleNextTeacher();
+}
+
+// الانتقال إلى المعلم التالي في القائمة
+// الانتقال إلى المعلم التالي في القائمة
+function handleNextTeacher() {
+    if (!currentTeacher || !window.selectedTeachersQueue) return;
+    
+    // البحث عن المعلم الحالي في القائمة المختارة
+    const currentIndex = window.selectedTeachersQueue.findIndex(t => t === currentTeacher);
+    
+    if (currentIndex !== -1 && currentIndex < window.selectedTeachersQueue.length - 1) {
+        // عرض نافذة البريد للمعلم التالي
+        setTimeout(() => {
+            const isDefaulter = emailContent && emailContent.subject ? 
+                emailContent.subject.includes('مساءلة') :
+                parseFloat(calculateTeacherTotals(currentTeacher).completionRate) < 50;
+                
+            showRecipientModal(window.selectedTeachersQueue[currentIndex + 1], isDefaulter);
+        }, 500);
+    } else {
+        const messageType = emailContent && emailContent.subject && emailContent.subject.includes('مساءلة') ? 
+            'المساءلات' : 'الإحصائيات';
+        alert(`تم الانتهاء من إرسال ${messageType} للمعلمين المختارين`);
+        window.selectedTeachersQueue = null; // تنظيف القائمة
+    }
+}
+// دالة لترتيب المعلمين أبجديًا
+function sortTeachersAlphabetically() {
+    teachersData.sort((a, b) => {
+        return a.name.localeCompare(b.name, 'ar');
+    });
+    saveData();
+    renderTable();
+}
+
+// دالة لإظهار نافذة إضافة معلم جديد
+function showAddTeacherModal() {
+    document.getElementById('addTeacherModal').style.display = 'block';
+    document.getElementById('newTeacherName').value = '';
+    document.getElementById('newTeacherName').focus();
+}
+
+// دالة لإخفاء نافذة إضافة معلم جديد
+function hideAddTeacherModal() {
+    document.getElementById('addTeacherModal').style.display = 'none';
+}
+
+// تعديل دالة إضافة معلم جديد
+function addTeacher() {
+    // عرض نافذة إضافة معلم جديد
+    document.getElementById('addTeacherModal').style.display = 'block';
+}
+
+function confirmAddTeacher() {
+    const teacherName = document.getElementById('newTeacherName').value.trim();
+    
+    if (!teacherName) {
+        alert('الرجاء إدخال اسم المعلم');
+        return;
+    }
+    
+    const newTeacher = {
+        name: teacherName,
+        email: "",
+        isNewlyAdded: true,
+        periods: [
+            {
+                periodName: "من 14-2 الى 28-4",
+                totalLessons: 0,
+                preparedLessons: 0,
+                unpreparedLessons: 0,
+                assignments: 0,
+                enrichments: 0,
+                activities: 0,
+                weeklyPlans: 0,
+                completionRate: "0%"
+            },
+            {
+                periodName: "من 15-5 الى 14-8",
+                totalLessons: 0,
+                preparedLessons: 0,
+                unpreparedLessons: 0,
+                assignments: 0,
+                enrichments: 0,
+                activities: 0,
+                weeklyPlans: 0,
+                completionRate: "0%"
+            },
+            {
+                periodName: "من 2-9 الى 1-12",
+                totalLessons: 0,
+                preparedLessons: 0,
+                unpreparedLessons: 0,
+                assignments: 0,
+                enrichments: 0,
+                activities: 0,
+                weeklyPlans: 0,
+                completionRate: "0%"
+            }
+        ]
+    };
+    
+    teachersData.push(newTeacher);
+    hideAddTeacherModal();
+    sortTeachersAlphabetically();
+    saveData();
+    renderTable();
+}
+
+function hideAddTeacherModal() {
+    document.getElementById('addTeacherModal').style.display = 'none';
+    document.getElementById('newTeacherName').value = '';
+}
+
+
+
+
+        
+document.addEventListener('DOMContentLoaded', function() {
+    // تحميل البيانات المحفوظة أولاً
+    loadSavedData();
+    // ترتيب المعلمين أبجديًا عند تحميل الصفحة
+
+    // إزالة مستمعات الأحداث القديمة وإضافة مستمعات جديدة
+    const addTeacherBtn = document.getElementById('addTeacherBtn');
+    const newAddBtn = addTeacherBtn.cloneNode(true);
+    addTeacherBtn.parentNode.replaceChild(newAddBtn, addTeacherBtn);
+    newAddBtn.onclick = addTeacher;
+    
+    // تكرار نفس العملية مع زر الطباعة
+    const printBtn = document.getElementById('printBtn');
+    const newPrintBtn = printBtn.cloneNode(true);
+    printBtn.parentNode.replaceChild(newPrintBtn, printBtn);
+    newPrintBtn.onclick = function() {
+        console.log("بدء الطباعة...");
+        window.print();
+    };
+    
+    document.getElementById('saveBtn').onclick = saveData;
+    document.getElementById('exportBtn').onclick = exportData;
+    document.getElementById('importBtn').onclick = function() {
+        document.getElementById('importFile').click();
+    };
+    
+    const oldSaveBtn = document.getElementById('saveBtn');
+    const newSaveBtn = oldSaveBtn.cloneNode(true);
+    oldSaveBtn.parentNode.replaceChild(newSaveBtn, oldSaveBtn);
+    newSaveBtn.onclick = saveData;
+    
+    const oldExportBtn = document.getElementById('exportBtn');
+    const newExportBtn = oldExportBtn.cloneNode(true);
+    oldExportBtn.parentNode.replaceChild(newExportBtn, oldExportBtn);
+    newExportBtn.onclick = exportData;
+    
+    const oldImportBtn = document.getElementById('importBtn');
+    const newImportBtn = oldImportBtn.cloneNode(true);
+    oldImportBtn.parentNode.replaceChild(newImportBtn, oldImportBtn);
+    newImportBtn.onclick = function() {
+        document.getElementById('importFile').click();
+    };
+    
+    // حذف مستمعات الأحداث المكررة الأخرى للتأكد
+    document.getElementById('showCodeBtn').onclick = function() {
+        const codeContainer = document.getElementById('codeContainer');
+        const codeDisplay = document.getElementById('codeDisplay');
+        
+        if (codeContainer.style.display !== 'block') {
+            // عند فتح الكود، نعرض البيانات الحالية
+            codeContainer.style.display = 'block';
+            codeDisplay.textContent = 'let teachersData = ' + JSON.stringify(teachersData, null, 4) + ';';
+            
+            // إضافة تفاعل لتحديث البيانات فورياً
+            codeDisplay.contentEditable = true; // جعل النص قابل للتعديل
+            
+            // عند التعديل على الكود المعروض
+            codeDisplay.addEventListener('input', function() {
+                try {
+                    const codeText = this.textContent;
+                    if (codeText.startsWith('let teachersData =')) {
+                        const jsonStr = codeText.substring(codeText.indexOf('=') + 1).trim();
+                        const newData = JSON.parse(jsonStr.endsWith(';') ? jsonStr.slice(0, -1) : jsonStr);
+                        teachersData = newData;
+                        renderTable();
+                        saveData();
+                    }
+                } catch (e) {
+                    console.log('جاري التعديل...');
+                }
+            });
+            
+            // إضافة زر تحديث البيانات تحت العرض
+            const updateBtn = document.createElement('button');
+            updateBtn.className = 'btn btn-info';
+            updateBtn.textContent = 'تحديث البيانات من الكود';
+            updateBtn.style.margin = '10px 0';
+            updateBtn.onclick = function() {
+                try {
+                    const codeText = codeDisplay.textContent;
+                    if (codeText.startsWith('let teachersData =')) {
+                        const jsonStr = codeText.substring(codeText.indexOf('=') + 1).trim();
+                        const newData = JSON.parse(jsonStr.endsWith(';') ? jsonStr.slice(0, -1) : jsonStr);
+                        teachersData = newData;
+                        renderTable();
+                        saveData();
+                        alert('تم تحديث البيانات بنجاح!');
+                    }
+                } catch (e) {
+                    alert('حدث خطأ في تحليل البيانات: ' + e.message);
+                }
+            };
+            
+            codeContainer.appendChild(updateBtn);
+        } else {
+            codeContainer.innerHTML = '';
+            codeContainer.appendChild(codeDisplay);
+            codeContainer.style.display = 'none';
+        }
+    };
+    
+    // تعيين مستمعي الأحداث الباقية
+    document.getElementById('importFile').addEventListener('change', importData);
+    document.getElementById('sendEmailsBtn').onclick = function() {
+        showEmailModal(false);
+    };
+    document.getElementById('sendDefaultersBtn').onclick = function() {
+        showEmailModal(true);
+    };
+    document.getElementById('cancelEmailBtn').onclick = hideEmailModal;
+    document.getElementById('cancelRecipientBtn').onclick = hideRecipientModal;
+    document.getElementById('confirmRecipientBtn').onclick = sendEmailToCurrentTeacher;
+    document.getElementById('sendWhatsappBtn').onclick = showWhatsappModal;
+    document.getElementById('cancelWhatsappBtn').onclick = hideWhatsappModal;
+    document.getElementById('confirmWhatsappBtn').onclick = startSendingSelectedWhatsapp;
+    document.getElementById('cancelPhoneBtn').onclick = hidePhoneModal;
+    document.getElementById('confirmPhoneBtn').onclick = sendWhatsappToCurrentTeacher;
+    
+    // استخدام Enter في نافذة البريد
+    document.getElementById('recipientEmail').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            sendEmailToCurrentTeacher();
+        }
+    });
+    
+    // استخدام Enter في نافذة رقم الجوال
+    document.getElementById('phoneNumber').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            sendWhatsappToCurrentTeacher();
+        }
+    });
+const newsContainer = document.querySelector('.news-container');
+    const newsScroll = document.querySelector('.news-scroll');
+    
+    if (newsContainer && newsScroll) {
+        newsContainer.addEventListener('mouseenter', function() {
+            newsScroll.style.animationPlayState = 'paused';
+        });
+        
+        newsContainer.addEventListener('mouseleave', function() {
+            newsScroll.style.animationPlayState = 'running';
+        });
+    }
+
+});
+
+
+
+function checkData() {
+    console.log('بيانات المعلمين:', teachersData);
+    console.log('عدد المعلمين:', teachersData.length);
+    alert('عدد المعلمين: ' + teachersData.length);
+    renderTable(); // إعادة رسم الجدول
+}
+function cleanupTeachersData() {
+    const cleanedTeachers = [];
+    
+    for (const teacher of teachersData) {
+        // تحقق من وجود بيانات للمعلم أو معلومات مهمة
+        let hasData = false;
+        for (const period of teacher.periods) {
+            if (period.totalLessons > 0 || period.preparedLessons > 0 || 
+                period.assignments > 0 || period.enrichments > 0 || 
+                period.activities > 0) {
+                hasData = true;
+                break;
+            }
+        }
+        
+        // احتفظ فقط بالمعلمين الذين لديهم بيانات أو معلومات مهمة
+        if (hasData || teacher.name !== "معلم جديد" || teacher.isNewlyAdded || teacher.email || teacher.phone) {
+            cleanedTeachers.push(teacher);
+        }
+    }
+    
+    teachersData = cleanedTeachers;
+    saveData();
+    renderTable();
+    alert('تم تنظيف قائمة المعلمين بنجاح');
+}
+
+// بدء عملية إرسال الإحصائيات للمعلمين المختارين
+function startSendingSelectedEmails() {
+    const senderEmail = document.getElementById('senderEmail').value;
+    localStorage.setItem('senderEmail', senderEmail);
+    
+    // جمع المعلمين المختارين
+    const selectedTeachers = [];
+    document.querySelectorAll('.teacher-checkbox:checked').forEach(checkbox => {
+        const index = parseInt(checkbox.value);
+        if (!isNaN(index) && teachersData[index]) {
+            selectedTeachers.push(teachersData[index]);
+        }
+    });
+    
+    // إخفاء النافذة
+    hideEmailModal();
+    
+    // التحقق من وجود معلمين مختارين
+    if (selectedTeachers.length > 0) {
+        // تخزين القائمة في متغير عام
+        window.selectedTeachersQueue = selectedTeachers;
+        // بدء عملية الإرسال بالمعلم الأول
+        showRecipientModal(selectedTeachers[0], false);
+    } else {
+        alert('لم يتم اختيار أي معلم');
+    }
+}
+
+// بدء عملية إرسال المساءلات للمقصرين المختارين
+function startSendingSelectedDefaulters() {
+    const senderEmail = document.getElementById('senderEmail').value;
+    localStorage.setItem('senderEmail', senderEmail);
+    
+    // جمع المعلمين المختارين (المقصرين)
+    const selectedDefaulters = [];
+    document.querySelectorAll('.teacher-checkbox:checked').forEach(checkbox => {
+        const index = parseInt(checkbox.value);
+        if (!isNaN(index) && teachersData[index]) {
+            const teacherTotals = calculateTeacherTotals(teachersData[index]);
+            if (parseFloat(teacherTotals.completionRate) < 50) {
+                selectedDefaulters.push(teachersData[index]);
+            }
+        }
+    });
+    
+    // إخفاء النافذة
+    hideEmailModal();
+    
+    // التحقق من وجود معلمين مختارين
+    if (selectedDefaulters.length > 0) {
+        // تخزين القائمة في متغير عام
+        window.selectedTeachersQueue = selectedDefaulters;
+        // بدء عملية الإرسال بالمعلم الأول
+        showRecipientModal(selectedDefaulters[0], true);
+    } else {
+        alert('لم يتم اختيار أي معلم مقصر');
+    }
+}
+// متغيرات عامة للواتساب
+let currentWhatsappTeacher = null;
+let whatsappContent = null;
+
+// إنشاء محتوى رسالة الواتساب للمعلم
+function generateWhatsappContent(teacher) {
+    const stats = calculateTeacherTotals(teacher);
+    const isDefaulter = parseFloat(stats.completionRate) < 50;
+    
+    let message;
+    
+    if (isDefaulter) {
+        message = `*مساءلة خطية خاصة بإعداد الدروس بمنصة مدرستي*
+
+الأستاذ / ${teacher.name}
+
+*بيانات المساءلة:*
+- عدد الدروس الكلي: ${stats.totalLessons}
+- الدروس المعدة: ${stats.preparedLessons}
+- الدروس الغير معدة: ${stats.unpreparedLessons}
+- نسبة الإنجاز: ${stats.completionRate}%
+
+التاريخ: ${new Date().toLocaleDateString('ar-SA')}
+
+*ملاحظات مدير المدرسة:*
+□ عذره مقبول
+□ عذره غير مقبول
+□ يعطى فرصة للتحسين
+
+*تأكيد الاطلاع والاعتماد:*
+□ تم اطلاع المعلم (يرجى وضع علامة ✓ عند الاطلاع)
+✓ تم اعتماد المدير: محمد حسين منصور حوذان
+
+نأمل منكم الرد على هذه المساءلة وبيان سبب التقصير في أقرب وقت ممكن.`;
+    } else {
+        message = `السلام عليكم،
+الأستاذ / ${teacher.name}
+
+*إحصائيات منصة مدرستي:*
+- عدد الدروس الكلي: ${stats.totalLessons}
+- الدروس المعدة: ${stats.preparedLessons}
+- الدروس الغير معدة: ${stats.unpreparedLessons}
+- عدد الواجبات: ${stats.assignments}
+- عدد الإثراءات: ${stats.enrichments}
+- عدد الأنشطة: ${stats.activities}
+- الخطط الأسبوعية: ${stats.weeklyPlans}
+- نسبة الإنجاز للدروس: ${stats.completionRate}%
+
+نشكركم على جهودكم، ونأمل استمرار العمل بنفس المستوى.
+إدارة المدرسة`;
+    }
+
+    return message;
+}
+
+
+
+// عرض نافذة إعدادات الواتساب
+function showWhatsappModal() {
+    document.getElementById('whatsappModal').style.display = 'block';
+    
+    // تحضير المعاينة مع مربعات الاختيار
+    let preview = "<h4>اختر المعلمين لإرسال رسائل الواتساب:</h4>";
+    preview += "<div style='text-align: right; margin-bottom: 10px;'>";
+    preview += "<button id='selectAllWhatsapp' class='btn btn-sm btn-secondary' style='margin-left: 10px;'>تحديد الكل</button>";
+    preview += "<button id='deselectAllWhatsapp' class='btn btn-sm btn-secondary'>إلغاء تحديد الكل</button>";
+    preview += "</div><div style='max-height: 200px; overflow-y: auto;'>";
+    
+    // إضافة معلمين فقط إذا كان لديهم بيانات
+    let hasTeachers = false;
+    teachersData.forEach((teacher, index) => {
+        // التحقق من وجود بيانات للمعلم قبل إضافته
+        const stats = calculateTeacherTotals(teacher);
+        if (stats.totalLessons > 0 || teacher.name !== "معلم جديد") {
+            hasTeachers = true;
+            preview += `<div><input type="checkbox" id="whatsapp_teacher_${index}" class="whatsapp-teacher-checkbox" value="${index}" checked> 
+                      <label for="whatsapp_teacher_${index}">${teacher.name}</label></div>`;
+        }
+    });
+    
+    if (!hasTeachers) {
+        preview += "<p>لا يوجد معلمين بالبيانات</p>";
+    }
+    
+    preview += "</div>";
+    document.getElementById('whatsappPreview').innerHTML = preview;
+    
+    // استخدام قالب رسالة عام محدث مع كل المعلومات المطلوبة
+document.getElementById('whatsappMessage').value = `السلام عليكم،
+الأستاذ / {name}
+
+إحصائيات منصة مدرستي:
+- عدد الدروس الكلي: {totalLessons}
+- الدروس المعدة: {preparedLessons}
+- الدروس الغير معدة: {unpreparedLessons}
+- عدد الواجبات: {assignments}
+- عدد الإثراءات: {enrichments}
+- عدد الأنشطة: {activities}
+- الخطط الأسبوعية: {weeklyPlans}
+- نسبة الإنجاز للدروس: {completionRate}%
+
+شكراً لجهودكم،
+إدارة المدرسة`;
+
+    
+    // إضافة مستمعي أحداث للأزرار
+    setTimeout(() => {
+        document.getElementById('selectAllWhatsapp')?.addEventListener('click', function() {
+            document.querySelectorAll('.whatsapp-teacher-checkbox').forEach(checkbox => checkbox.checked = true);
+        });
+        
+        document.getElementById('deselectAllWhatsapp')?.addEventListener('click', function() {
+            document.querySelectorAll('.whatsapp-teacher-checkbox').forEach(checkbox => checkbox.checked = false);
+        });
+    }, 100);
+}
+
+
+// إخفاء نافذة إعدادات الواتساب
+function hideWhatsappModal() {
+    document.getElementById('whatsappModal').style.display = 'none';
+}
+
+// عرض نافذة إدخال رقم الجوال
+function showPhoneModal(teacher) {
+    currentWhatsappTeacher = teacher;
+    
+    // تخزين نص الرسالة المخصص للمعلم الحالي
+    const stats = calculateTeacherTotals(teacher);
+    whatsappContent = document.getElementById('whatsappMessage').value
+        .replace(/{name}/g, teacher.name)
+        .replace(/{totalLessons}/g, stats.totalLessons)
+        .replace(/{preparedLessons}/g, stats.preparedLessons)
+        .replace(/{unpreparedLessons}/g, stats.unpreparedLessons)
+        .replace(/{assignments}/g, stats.assignments)
+        .replace(/{enrichments}/g, stats.enrichments)
+        .replace(/{activities}/g, stats.activities)
+        .replace(/{weeklyPlans}/g, stats.weeklyPlans)
+        .replace(/{completionRate}/g, stats.completionRate);
+    
+    document.getElementById('phoneModalTitle').textContent = `أدخل رقم جوال المعلم: ${teacher.name}`;
+    document.getElementById('phoneModal').style.display = 'block';
+    
+    if (teacher.phone) {
+        document.getElementById('phoneNumber').value = teacher.phone;
+    } else {
+        document.getElementById('phoneNumber').value = '';
+    }
+    
+    document.getElementById('phoneNumber').focus();
+}
+
+
+
+// إخفاء نافذة إدخال رقم الجوال
+function hidePhoneModal() {
+    document.getElementById('phoneModal').style.display = 'none';
+    currentWhatsappTeacher = null;
+}
+
+// إرسال رسالة واتساب للمعلم الحالي
+function sendWhatsappToCurrentTeacher() {
+    if (!currentWhatsappTeacher) return;
+    
+    const phoneNumber = document.getElementById('phoneNumber').value.trim();
+    if (!phoneNumber) {
+        alert('الرجاء إدخال رقم الجوال');
+        return;
+    }
+    
+    // تنسيق رقم الهاتف (إزالة أي أحرف غير رقمية وإضافة رمز الدولة إذا لزم الأمر)
+    let formattedNumber = phoneNumber.replace(/\D/g, '');
+    if (formattedNumber.startsWith('0')) {
+        formattedNumber = '966' + formattedNumber.substring(1);
+    }
+    
+    // حفظ رقم الجوال للمعلم للاستخدام المستقبلي
+    currentWhatsappTeacher.phone = phoneNumber;
+    saveData();
+    
+    // إنشاء رابط واتساب
+    const encodedText = encodeURIComponent(whatsappContent);
+    const whatsappUrl = `https://wa.me/${formattedNumber}?text=${encodedText}`;
+    
+    // فتح رابط واتساب
+    window.open(whatsappUrl, '_blank');
+    
+    hidePhoneModal();
+    
+    // التحقق مما إذا كانت هناك حاجة للانتقال إلى المعلم التالي
+    handleNextWhatsappTeacher();
+}
+
+// بدء عملية إرسال رسائل الواتساب للمعلمين المختارين
+function startSendingSelectedWhatsapp() {
+    // جمع المعلمين المختارين
+    const selectedTeachers = [];
+    document.querySelectorAll('.whatsapp-teacher-checkbox:checked').forEach(checkbox => {
+        const index = parseInt(checkbox.value);
+        if (!isNaN(index) && teachersData[index]) {
+            selectedTeachers.push(teachersData[index]);
+        }
+    });
+    
+    // إخفاء النافذة
+    hideWhatsappModal();
+    
+    // التحقق من وجود معلمين مختارين
+    if (selectedTeachers.length > 0) {
+        console.log("المعلمين المختارين:", selectedTeachers.map(t => t.name).join(', '));
+        // تخزين القائمة في متغير عام
+        window.selectedWhatsappQueue = selectedTeachers;
+        // بدء عملية الإرسال بالمعلم الأول
+        showPhoneModal(selectedTeachers[0]);
+    } else {
+        alert('لم يتم اختيار أي معلم');
+    }
+}
+function showAddTeacherModal() {
+    document.getElementById('addTeacherModal').style.display = 'block';
+    document.getElementById('newTeacherName').value = '';
+    document.getElementById('newTeacherName').focus();
+}
+
+function hideAddTeacherModal() {
+    document.getElementById('addTeacherModal').style.display = 'none';
+}
+
+function confirmAddTeacher() {
+    const teacherName = document.getElementById('newTeacherName').value.trim();
+    if (!teacherName) {
+        alert('الرجاء إدخال اسم المعلم');
+        return;
+    }
+    
+    const newTeacher = {
+        name: teacherName,
+        email: "",
+        isNewlyAdded: true,
+        periods: [
+            {
+                periodName: "من 14-2 الى 28-4",
+                totalLessons: 0,
+                preparedLessons: 0,
+                unpreparedLessons: 0,
+                assignments: 0,
+                enrichments: 0,
+                activities: 0,
+                weeklyPlans: 0,
+                completionRate: "0%"
+            },
+            {
+                periodName: "من 15-5 الى 14-8",
+                totalLessons: 0,
+                preparedLessons: 0,
+                unpreparedLessons: 0,
+                assignments: 0,
+                enrichments: 0,
+                activities: 0,
+                weeklyPlans: 0,
+                completionRate: "0%"
+            },
+            {
+                periodName: "من 2-9 الى 1-12",
+                totalLessons: 0,
+                preparedLessons: 0,
+                unpreparedLessons: 0,
+                assignments: 0,
+                enrichments: 0,
+                activities: 0,
+                weeklyPlans: 0,
+                completionRate: "0%"
+            }
+        ]
+    };
+    
+    teachersData.push(newTeacher);
+    hideAddTeacherModal();
+    sortTeachersAlphabetically();
+    saveData();
+    renderTable();
+}
+
+
+
+// الانتقال إلى المعلم التالي في قائمة الواتساب
+function handleNextWhatsappTeacher() {
+    if (!currentWhatsappTeacher || !window.selectedWhatsappQueue) return;
+    
+    // البحث عن المعلم الحالي في القائمة المختارة
+    const currentIndex = window.selectedWhatsappQueue.findIndex(t => t === currentWhatsappTeacher);
+    
+    if (currentIndex !== -1 && currentIndex < window.selectedWhatsappQueue.length - 1) {
+        // عرض نافذة الواتساب للمعلم التالي
+        setTimeout(() => {
+            showPhoneModal(window.selectedWhatsappQueue[currentIndex + 1]);
+        }, 500);
+    } else {
+        alert('تم الانتهاء من إرسال رسائل الواتساب للمعلمين المختارين');
+        window.selectedWhatsappQueue = null; // تنظيف القائمة
+    }
+}
+
+// تحديث دالة updateTeacherData لتخزين رقم الجوال
+function updateTeacherPhone(teacherIndex, newPhone) {
+    teachersData[teacherIndex].phone = newPhone;
+    saveData();
+}
+function goToAbsenceSystem() {
+    localStorage.setItem('teachersForAbsence', JSON.stringify(teachersData));
+    window.location.href = 'attendance.html'; // تم إصلاح المسار هنا
+}
+function goToDelaySystem() {
+    // تخزين بيانات المعلمين الحاليين في localStorage
+    localStorage.setItem('teachersForDelay', JSON.stringify(teachersData));
+    
+    // الانتقال إلى صفحة نظام التأخير
+    window.location.href = 'delay.html';
+}
+
+// إضافة مربع إدخال رقم الجوال لكل معلم في جزء تعديل اسم المعلم
+function renderTeacherPhoneInput(teacherIndex) {
+    return `<input type="tel" class="teacherPhoneInput" style="width: 95%; margin-top: 5px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;" 
+           value="${teachersData[teacherIndex].phone || ''}" placeholder="رقم الجوال" dir="ltr"
+           onchange="updateTeacherPhone(${teacherIndex}, this.value)">`;
+}
+
+    </script>
+<!-- نافذة إعدادات البريد الإلكتروني -->
+<div id="emailModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+  <div style="background: white; width: 80%; max-width: 600px; margin: 100px auto; padding: 20px; border-radius: 8px; direction: rtl; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+    <h3 style="margin-bottom: 20px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px;">إعدادات إرسال البريد الإلكتروني</h3>
+    
+    <div style="margin-bottom: 15px;">
+      <label for="senderEmail" style="display: block; margin-bottom: 5px; font-weight: bold;">البريد الإلكتروني المرسل:</label>
+      <input type="email" id="senderEmail" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;" placeholder="أدخل بريدك الإلكتروني" value="">
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; margin-bottom: 10px; font-weight: bold;">معاينة:</label>
+      <div id="emailPreview" style="width: 100%; height: 150px; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; overflow-y: auto; background-color: #f9f9f9;"></div>
+    </div>
+    
+    <div style="text-align: left;">
+      <button id="cancelEmailBtn" class="btn btn-secondary">إلغاء</button>
+      <button id="confirmEmailBtn" class="btn btn-primary">إرسال</button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة إدخال بريد المستلم -->
+<div id="recipientModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+  <div style="background: white; width: 80%; max-width: 400px; margin: 150px auto; padding: 20px; border-radius: 8px; direction: rtl; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+    <h4 id="recipientModalTitle" style="margin-bottom: 15px;">أدخل بريد المستلم</h4>
+    
+    <div style="margin-bottom: 15px;">
+      <input type="email" id="recipientEmail" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" placeholder="example@email.com">
+    </div>
+    
+    <div style="text-align: left;">
+      <button id="cancelRecipientBtn" class="btn btn-secondary">إلغاء</button>
+      <button id="confirmRecipientBtn" class="btn btn-primary">إرسال</button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة إعدادات الواتساب -->
+<div id="whatsappModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+  <div style="background: white; width: 80%; max-width: 600px; margin: 100px auto; padding: 20px; border-radius: 8px; direction: rtl; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+    <h3 style="margin-bottom: 20px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px;">إرسال رسائل واتساب</h3>
+    
+    <div style="margin-bottom: 15px;">
+      <label for="whatsappMessage" style="display: block; margin-bottom: 5px; font-weight: bold;">نص الرسالة:</label>
+      <textarea id="whatsappMessage" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; height: 100px;" placeholder="أدخل نص الرسالة هنا"></textarea>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; margin-bottom: 10px; font-weight: bold;">اختر المعلمين:</label>
+      <div id="whatsappPreview" style="width: 100%; height: 150px; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; overflow-y: auto; background-color: #f9f9f9;"></div>
+    </div>
+    
+    <div style="text-align: left;">
+      <button id="cancelWhatsappBtn" class="btn btn-secondary">إلغاء</button>
+      <button id="confirmWhatsappBtn" class="btn btn-primary">إرسال</button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة إدخال رقم الجوال -->
+<div id="phoneModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+  <div style="background: white; width: 80%; max-width: 400px; margin: 150px auto; padding: 20px; border-radius: 8px; direction: rtl; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+    <h4 id="phoneModalTitle" style="margin-bottom: 15px;">أدخل رقم الجوال</h4>
+    
+    <div style="margin-bottom: 15px;">
+      <input type="tel" id="phoneNumber" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" placeholder="05xxxxxxxx" dir="ltr">
+    </div>
+    
+    <div style="text-align: left;">
+      <button id="cancelPhoneBtn" class="btn btn-secondary">إلغاء</button>
+      <button id="confirmPhoneBtn" class="btn btn-primary">إرسال</button>
+    </div>
+  </div>
+</div>
+<<!-- شريط أخبار المدرسة -->
+<div id="newsBar">
+    <div class="news-logo" style="background-color: #800000; color: white;">
+        <div style="padding: 5px 10px; font-weight: bold; text-align: center;">أخبار المدرسة</div>
+    </div>
+    <div class="news-container">
+        <div class="news-scroll" id="school-news-marquee">
+            <!-- سيتم تحميل الأخبار ديناميكيًا من localStorage -->
+        </div>
+    </div>
+    <!-- زر تعديل الأخبار -->
+    <div style="position: absolute; top: -30px; left: 10px;">
+        <button id="editNewsBtn" class="btn btn-sm" style="background-color: #800000; color: white; font-size: 12px; padding: 3px 8px;">
+            تعديل الأخبار
+        </button>
+    </div>
+</div>
+
+<!-- نافذة تعديل الأخبار -->
+<div id="newsEditorModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 2000;">
+    <div style="background: white; width: 90%; max-width: 800px; margin: 50px auto; padding: 20px; border-radius: 8px; direction: rtl; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+        <h3 style="margin-bottom: 20px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px;">تعديل أخبار المدرسة</h3>
+        
+        <div style="margin-bottom: 15px;">
+            <p style="margin-bottom: 10px;">أدخل كل خبر في سطر منفصل.</p>
+            <p style="margin-bottom: 10px; color: #800000;"><strong>لإضافة رابط للخبر:</strong> اكتب نص الخبر ثم <code>||</code> ثم الرابط.</p>
+            <p style="margin-bottom: 10px; color: #555;"><em>مثال:</em> 🔴 العشرة الأوائل بمدرسة سعيد بن الحارث || main35.html?section=top10</p>
+            <textarea id="newsContent" style="width: 100%; height: 200px; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; direction: rtl;" placeholder="🔴 أدخل أخبار المدرسة هنا، كل خبر في سطر منفصل"></textarea>
+        </div>
+
+        <div style="background-color: #f8f8f8; border: 1px solid #ddd; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+            <h4 style="margin-top: 0; color: #800000;">كيفية استخدام الروابط الداخلية:</h4>
+            <p style="margin-bottom: 5px;">- للعودة للصفحة الرئيسية: <code>نص الخبر || main35.html</code></p>
+            <p style="margin-bottom: 5px;">- لفتح قسم معين في نفس الصفحة: <code>نص الخبر || main35.html?section=top10</code></p>
+            <p style="margin-bottom: 0;"><em>ملاحظة:</em> سيتم التعامل مع رابط main35.html بشكل خاص لعرض المحتوى المناسب</p>
+        </div>
+        
+        <div style="margin-bottom: 10px;">
+            <input type="checkbox" id="keepEditingBtn" checked>
+            <label for="keepEditingBtn">إظهار زر التعديل دائمًا</label>
+        </div>
+        
+        <div style="text-align: left;">
+            <button id="cancelNewsBtn" class="btn btn-secondary">إلغاء</button>
+            <button id="saveNewsBtn" class="btn btn-primary" style="background-color: #800000; margin-left: 10px;">حفظ الأخبار</button>
+        </div>
+    </div>
+</div>
+
+<!-- قسم عرض محتوى الأقسام المختلفة -->
+<div id="dynamicContentSection" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff;">
+    <h3 id="dynamicContentTitle" style="color: #800000; border-bottom: 1px solid #eee; padding-bottom: 10px;"></h3>
+    <div id="dynamicContentBody"></div>
+    <button onclick="closeDynamicContent()" class="btn btn-secondary" style="margin-top: 15px;">إغلاق</button>
+</div>
+
+<script>
+// كود شريط أخبار المدرسة
+document.addEventListener('DOMContentLoaded', function() {
+    const newsMarquee = document.getElementById('school-news-marquee');
+    const editNewsBtn = document.getElementById('editNewsBtn');
+    const newsEditorModal = document.getElementById('newsEditorModal');
+    const newsContent = document.getElementById('newsContent');
+    const saveNewsBtn = document.getElementById('saveNewsBtn');
+    const cancelNewsBtn = document.getElementById('cancelNewsBtn');
+    const keepEditingBtn = document.getElementById('keepEditingBtn');
+    const dynamicContentSection = document.getElementById('dynamicContentSection');
+    const dynamicContentTitle = document.getElementById('dynamicContentTitle');
+    const dynamicContentBody = document.getElementById('dynamicContentBody');
+    
+    // أخبار افتراضية للمرة الأولى
+    const defaultNews = [
+        "🔴 تنبيه: اختبارات منتصف الفصل تبدأ الأسبوع القادم",
+        "🔴 العشرة الأوائل بمدرسة سعيد بن الحارث || main35.html?section=top10", 
+        "🔴 جدول الاختبارات النهائية || main35.html?section=exams",
+        "🔴 تذكير: اجتماع أولياء الأمور يوم الخميس القادم الساعة 7 مساءً",
+        "🔴 عرض مشاريع الطلاب || main35.html?section=projects"
+    ];
+    
+    // محتوى الأقسام المختلفة
+    const sectionContent = {
+        'top10': {
+            'title': 'الطلاب العشرة الأوائل في مدرسة سعيد بن الحارث',
+            'content': `
+                <style>
+                    .top-students { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    .top-students th, .top-students td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+                    .top-students th { background-color: #800000; color: white; }
+                    .top-students tr:nth-child(even) { background-color: #f2f2f2; }
+                </style>
+                <table class="top-students">
+                    <tr>
+                        <th>المركز</th>
+                        <th>اسم الطالب</th>
+                        <th>الصف</th>
+                        <th>المعدل</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>أحمد محمد السعيد</td>
+                        <td>الثالث أ</td>
+                        <td>99.8%</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>عبدالله خالد الحربي</td>
+                        <td>الثالث ب</td>
+                        <td>99.5%</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>فهد سعد القحطاني</td>
+                        <td>الثالث أ</td>
+                        <td>99.3%</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>عمر أحمد الشمري</td>
+                        <td>الثالث ج</td>
+                        <td>98.9%</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>خالد محمد العتيبي</td>
+                        <td>الثالث ب</td>
+                        <td>98.7%</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>سعود سعد الدوسري</td>
+                        <td>الثالث أ</td>
+                        <td>98.5%</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>ماجد سلطان العنزي</td>
+                        <td>الثالث ج</td>
+                        <td>98.2%</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>بندر سالم الغامدي</td>
+                        <td>الثالث ب</td>
+                        <td>98.0%</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>سلطان فهد المطيري</td>
+                        <td>الثالث أ</td>
+                        <td>97.8%</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>عبدالرحمن ناصر السبيعي</td>
+                        <td>الثالث ج</td>
+                        <td>97.5%</td>
+                    </tr>
+                </table>
+                <p style="text-align: center; font-weight: bold; color: #800000;">نتقدم بالتهنئة لجميع الطلاب المتفوقين ونتمنى لهم مزيداً من التقدم والنجاح</p>
+            `
+        },
+        'exams': {
+            'title': 'جدول الاختبارات النهائية للفصل الدراسي الحالي',
+            'content': `
+                <style>
+                    .exam-schedule { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    .exam-schedule th, .exam-schedule td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+                    .exam-schedule th { background-color: #800000; color: white; }
+                    .exam-schedule .day { background-color: #f8f8f8; font-weight: bold; }
+                </style>
+                <table class="exam-schedule">
+                    <tr>
+                        <th>اليوم</th>
+                        <th>التاريخ</th>
+                        <th>المادة الأولى<br>(8:00 - 10:00)</th>
+                        <th>المادة الثانية<br>(10:30 - 12:30)</th>
+                    </tr>
+                    <tr>
+                        <td class="day">الأحد</td>
+                        <td>1445/06/15</td>
+                        <td>اللغة العربية</td>
+                        <td>الدراسات الاجتماعية</td>
+                    </tr>
+                    <tr>
+                        <td class="day">الاثنين</td>
+                        <td>1445/06/16</td>
+                        <td>العلوم</td>
+                        <td>اللغة الإنجليزية</td>
+                    </tr>
+                    <tr>
+                        <td class="day">الثلاثاء</td>
+                        <td>1445/06/17</td>
+                        <td>الرياضيات</td>
+                        <td>التربية الإسلامية</td>
+                    </tr>
+                    <tr>
+                        <td class="day">الأربعاء</td>
+                        <td>1445/06/18</td>
+                        <td>الحاسب الآلي</td>
+                        <td>المهارات الحياتية</td>
+                    </tr>
+                </table>
+                <div style="background-color: #fff3cd; border: 1px solid #ffeeba; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                    <p style="margin: 0; color: #856404;"><strong>تنبيهات هامة:</strong></p>
+                    <ul style="color: #856404; margin-top: 5px;">
+                        <li>الحضور قبل موعد الاختبار بـ 15 دقيقة على الأقل</li>
+                        <li>إحضار جميع أدوات الاختبار (أقلام، آلة حاسبة، مسطرة)</li>
+                        <li>يمنع استخدام الهاتف الجوال منعاً باتاً</li>
+                        <li>يُسمح بدخول الطالب للاختبار حتى 15 دقيقة من بدء الاختبار</li>
+                    </ul>
+                </div>
+            `
+        },
+        'projects': {
+            'title': 'مشاريع الطلاب المتميزة للفصل الدراسي الحالي',
+            'content': `
+                <style>
+                    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+                    .project-card { border: 1px solid #ddd; border-radius: 5px; padding: 15px; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+                    .project-title { color: #800000; margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+                    .project-students { color: #555; font-style: italic; margin-bottom: 10px; }
+                </style>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <h4 class="project-title">نظام الري الذكي</h4>
+                        <div class="project-students">الطلاب: أحمد السعيد، خالد العتيبي</div>
+                        <p>مشروع يستخدم التقنية لتوفير المياه في الزراعة من خلال الاستشعار عن بعد وتوزيع المياه بحسب حاجة النباتات.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h4 class="project-title">تطبيق القراءة التفاعلي</h4>
+                        <div class="project-students">الطلاب: عبدالله الحربي، سلطان المطيري</div>
+                        <p>تطبيق على الهواتف الذكية يشجع الطلاب على القراءة من خلال تحويلها لنشاط تفاعلي وتحفيزي.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h4 class="project-title">معرض الفلك الافتراضي</h4>
+                        <div class="project-students">الطلاب: فهد القحطاني، ماجد العنزي</div>
+                        <p>معرض افتراضي يعرض معلومات عن الكواكب والنجوم باستخدام تقنية الواقع المعزز.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h4 class="project-title">روبوت جمع النفايات</h4>
+                        <div class="project-students">الطلاب: عمر الشمري، بندر الغامدي</div>
+                        <p>روبوت مبرمج لفرز وجمع النفايات في المدرسة ويصنفها حسب نوع المخلفات.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h4 class="project-title">تطبيق لتعليم اللغة العربية</h4>
+                        <div class="project-students">الطلاب: سعود الدوسري، عبدالرحمن السبيعي</div>
+                        <p>تطبيق تفاعلي يساعد في تعليم اللغة العربية للأطفال بطريقة ممتعة ومبسطة.</p>
+                    </div>
+                </div>
+                
+                <p style="text-align: center; margin-top: 20px; font-weight: bold;">سيتم عرض المشاريع في معرض المدرسة السنوي يوم الخميس القادم</p>
+            `
+        }
+    };
+    
+    // التحقق من وجود معلمة section في الرابط عند تحميل الصفحة
+    function checkUrlForSectionParam() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const section = urlParams.get('section');
+        
+        if (section && sectionContent[section]) {
+            showDynamicContent(section);
+        }
+    }
+    
+    // تحميل الإعدادات
+    const shouldShowEditButton = localStorage.getItem('showNewsEditButton') !== 'false';
+    keepEditingBtn.checked = shouldShowEditButton;
+    editNewsBtn.style.display = shouldShowEditButton ? 'block' : 'none';
+    
+    // تحميل الأخبار المخزنة أو استخدام الأخبار الافتراضية
+    function loadNews() {
+        let savedNews = localStorage.getItem('schoolNewsItems');
+        const newsItems = savedNews ? JSON.parse(savedNews) : defaultNews;
+        
+        // عرض الأخبار
+        newsMarquee.innerHTML = '';
+        newsItems.forEach(item => {
+            // التحقق مما إذا كان الخبر يحتوي على رابط
+            if (item.includes('||')) {
+                const [newsText, newsLink] = item.split('||').map(part => part.trim());
+                const span = document.createElement('span');
+                
+                // إنشاء رابط داخل النص
+                const link = document.createElement('a');
+                link.textContent = newsText;
+                link.style.textDecoration = 'underline';
+                link.style.color = 'inherit';
+                link.style.cursor = 'pointer';
+                
+                // التعامل مع روابط داخلية تحتوي على main35.html
+                if (newsLink.includes('main35.html')) {
+                    link.href = 'javascript:void(0)';
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // استخراج معلمة section إن وجدت
+                        const urlParts = newsLink.split('?');
+                        if (urlParts.length > 1) {
+                            const params = new URLSearchParams(urlParts[1]);
+                            const section = params.get('section');
+                            if (section && sectionContent[section]) {
+                                showDynamicContent(section);
+                                // تحديث رابط الصفحة بدون إعادة تحميل
+                                window.history.pushState({}, '', `?section=${section}`);
+                            } else {
+                                // إذا كان القسم غير موجود، أظهر تنبيه
+                                alert('محتوى القسم غير متوفر');
+                            }
+                        } else {
+                            // إعادة تحميل الصفحة إذا لم يكن هناك معلمات
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    // رابط خارجي عادي
+                    link.href = newsLink;
+                    link.target = '_blank';
+                }
+                
+                span.appendChild(link);
+                newsMarquee.appendChild(span);
+            } else {
+                // خبر عادي بدون رابط
+                const span = document.createElement('span');
+                span.textContent = item;
+                newsMarquee.appendChild(span);
+            }
+        });
+        
+        return newsItems;
+    }
+    
+    // عرض محتوى قسم معين
+    window.showDynamicContent = function(sectionId) {
+        if (sectionContent[sectionId]) {
+            const section = sectionContent[sectionId];
+            dynamicContentTitle.textContent = section.title;
+            dynamicContentBody.innerHTML = section.content;
+            dynamicContentSection.style.display = 'block';
+            
+            // التمرير إلى قسم المحتوى
+            dynamicContentSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+    
+    // إغلاق عرض المحتوى الديناميكي
+    window.closeDynamicContent = function() {
+        dynamicContentSection.style.display = 'none';
+        // إزالة المعلمات من الرابط
+        window.history.pushState({}, '', window.location.pathname);
+    }
+    
+    // تحميل الأخبار عند تحميل الصفحة
+    const currentNews = loadNews();
+    
+    // التحقق من معلمات الرابط عند التحميل
+    checkUrlForSectionParam();
+    
+    // فتح نافذة التعديل
+    editNewsBtn.addEventListener('click', function() {
+        newsContent.value = currentNews.join('\n');
+        newsEditorModal.style.display = 'block';
+    });
+    
+    // إغلاق نافذة التعديل
+    cancelNewsBtn.addEventListener('click', function() {
+        newsEditorModal.style.display = 'none';
+    });
+    
+    // حفظ الأخبار الجديدة
+    saveNewsBtn.addEventListener('click', function() {
+        const newNewsText = newsContent.value;
+        const newNewsItems = newNewsText.split('\n')
+            .map(item => item.trim())
+            .filter(item => item); // إزالة الأسطر الفارغة
+        
+        // حفظ الأخبار الجديدة
+        localStorage.setItem('schoolNewsItems', JSON.stringify(newNewsItems));
+        
+        // حفظ إعدادات زر التعديل
+        localStorage.setItem('showNewsEditButton', keepEditingBtn.checked);
+        editNewsBtn.style.display = keepEditingBtn.checked ? 'block' : 'none';
+        
+        // إعادة تحميل الأخبار
+        loadNews();
+        
+        // إغلاق النافذة
+        newsEditorModal.style.display = 'none';
+    });
+    
+    // التحكم في حركة الشريط
+    const newsContainer = document.querySelector('.news-container');
+    const newsScroll = document.querySelector('.news-scroll');
+    
+    if (newsContainer && newsScroll) {
+        newsContainer.addEventListener('mouseenter', function() {
+            newsScroll.style.animationPlayState = 'paused';
+        });
+        
+        newsContainer.addEventListener('mouseleave', function() {
+            newsScroll.style.animationPlayState = 'running';
+        });
+    }
+});
+// إصلاح مشكلة زر المساءلة المفقود
+window.fixEmailButtonsDisplay = function() {
+    // البحث عن جميع أزرار المساءلة/البريد
+    document.querySelectorAll('.edit-teacher-name').forEach((teacherCell, index) => {
+        // الحصول على اسم المعلم من الخلية
+        const teacherName = teachersData[index].name;
+        const teacherStats = calculateTeacherTotals(teachersData[index]);
+        const completionRate = parseFloat(teacherStats.completionRate);
+        
+        // الحصول على الزر الموجود
+        const emailButton = teacherCell.querySelector('button:last-child');
+        if (emailButton) {
+            // تغيير نوع الزر ونصه بناءً على نسبة الإنجاز
+            if (completionRate < 50) {
+                emailButton.className = "btn-action btn-warning";
+                emailButton.textContent = "إرسال مساءلة";
+            } else {
+                emailButton.className = "btn-action btn-info";
+                emailButton.textContent = "إرسال إحصائية";
+            }
+        }
+    });
+}
+
+
+
+// دمج وظائف DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    // تنفيذ أي كود سابق
+    loadSavedData();
+const addTeacherBtn = document.getElementById('addTeacherBtn');
+    if (addTeacherBtn) {
+        addTeacherBtn.onclick = function() {
+            showAddTeacherModal(); // عرض النافذة المنبثقة لإضافة معلم
+        };
+    }
+    
+    // تأكد من تطبيق الإصلاح
+    setTimeout(fixEmailButtonsDisplay, 200);
+});
+// تعديل دالة sendEmailToTeacher لاستخدام الواتساب بدلاً من البريد الإلكتروني
+function sendEmailToTeacher(teacherIndex) {
+    const teacher = teachersData[teacherIndex];
+    const stats = calculateTeacherTotals(teacher);
+    const isDefaulter = parseFloat(stats.completionRate) < 50;
+    
+    // استخدم دالة الواتساب مباشرة بدلاً من البريد الإلكتروني
+    // تخزين المعلم المختار
+    currentWhatsappTeacher = teacher;
+    
+    // إعداد محتوى الرسالة حسب نسبة الإنجاز
+    whatsappContent = generateWhatsappContent(teacher);
+    
+    // إظهار نافذة إدخال رقم الهاتف
+    showPhoneModal(teacher);
+}
+
+// تعديل إنشاء أزرار الإرسال في renderTable
+function updateTeacherButtons() {
+    document.querySelectorAll('.btn-action').forEach(button => {
+        if (button.textContent === 'إرسال إحصائية' || button.textContent === 'إرسال مساءلة') {
+            button.onclick = function() {
+                const teacherIndex = parseInt(this.getAttribute('data-teacher-index'));
+                sendEmailToTeacher(teacherIndex);
+            };
+        }
+    });
+}
+
+// دمج وظائف تعديل renderTable في تعريف واحد
+const originalRenderTable = renderTable;
+renderTable = function() {
+    // استدعاء الدالة الأصلية
+    originalRenderTable();
+    
+    // تحديث أزرار الإرسال بمعرفات المعلمين
+    document.querySelectorAll('.edit-teacher-name').forEach((teacherCell, index) => {
+        const emailButton = teacherCell.querySelector('button:last-child');
+        if (emailButton) {
+            emailButton.setAttribute('data-teacher-index', index);
+        }
+    });
+    
+    // تطبيق إصلاح عرض الأزرار
+    setTimeout(fixEmailButtonsDisplay, 100);
+    
+    // تحديث مستمعات الأحداث للأزرار
+    updateTeacherButtons();
+};
+
+    // تطبيق التحديثات على الأزرار
+    updateTeacherButtons();
+
+
+// تأكد من تطبيق التعديلات عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(updateTeacherButtons, 500);
+});
+// تعديل دالة إرسال رسائل واتساب لضمان تضمين المحتوى
+function sendWhatsappToCurrentTeacher() {
+    if (!currentWhatsappTeacher) return;
+    
+    const phoneNumber = document.getElementById('phoneNumber').value.trim();
+    if (!phoneNumber) {
+        alert('الرجاء إدخال رقم الجوال');
+        return;
+    }
+    
+    // تنسيق رقم الهاتف (إزالة أي أحرف غير رقمية وإضافة رمز الدولة إذا لزم الأمر)
+    let formattedNumber = phoneNumber.replace(/\D/g, '');
+    if (formattedNumber.startsWith('0')) {
+        formattedNumber = '966' + formattedNumber.substring(1);
+    }
+    
+    // حفظ رقم الجوال للمعلم للاستخدام المستقبلي
+    currentWhatsappTeacher.phone = phoneNumber;
+    saveData();
+    
+    // التأكد من إنشاء محتوى الرسالة بطريقة صحيحة
+    const stats = calculateTeacherTotals(currentWhatsappTeacher);
+    const isDefaulter = parseFloat(stats.completionRate) < 50;
+    
+    // إنشاء نص الرسالة
+    let messageContent;
+    if (isDefaulter) {
+        messageContent = `*مساءلة خطية خاصة بإعداد الدروس بمنصة مدرستي*
+
+الأستاذ / ${currentWhatsappTeacher.name}
+
+*بيانات المساءلة:*
+- عدد الدروس الكلي: ${stats.totalLessons}
+- الدروس المعدة: ${stats.preparedLessons}
+- الدروس الغير معدة: ${stats.unpreparedLessons}
+- نسبة الإنجاز: ${stats.completionRate}%
+
+التاريخ: ${new Date().toLocaleDateString('ar-SA')}
+
+*ملاحظات مدير المدرسة:*
+□ عذره مقبول
+□ عذره غير مقبول
+□ يعطى فرصة للتحسين
+
+*تأكيد الاطلاع والاعتماد:*
+□ تم اطلاع المعلم (يرجى وضع علامة ✓ عند الاطلاع)
+✓ تم اعتماد المدير: محمد حسين منصور حوذان
+
+نأمل منكم الرد على هذه المساءلة وبيان سبب التقصير في أقرب وقت ممكن.`;
+    } else {
+        messageContent = `السلام عليكم،
+الأستاذ / ${currentWhatsappTeacher.name}
+
+*إحصائيات منصة مدرستي:*
+- عدد الدروس الكلي: ${stats.totalLessons}
+- الدروس المعدة: ${stats.preparedLessons}
+- الدروس الغير معدة: ${stats.unpreparedLessons}
+- عدد الواجبات: ${stats.assignments}
+- عدد الإثراءات: ${stats.enrichments}
+- عدد الأنشطة: ${stats.activities}
+- الخطط الأسبوعية: ${stats.weeklyPlans}
+- نسبة الإنجاز للدروس: ${stats.completionRate}%
+
+نشكركم على جهودكم، ونأمل استمرار العمل بنفس المستوى.
+إدارة المدرسة`;
+    }
+    
+    // تأكد من أن هناك محتوى للإرسال
+    if (!messageContent || messageContent.trim() === '') {
+        alert('خطأ: لا يوجد محتوى للرسالة');
+        return;
+    }
+    
+    // ترميز النص وفتح رابط واتساب
+    const encodedText = encodeURIComponent(messageContent);
+    const whatsappUrl = `https://wa.me/${formattedNumber}?text=${encodedText}`;
+    
+    console.log('إرسال الرسالة:', messageContent);
+    console.log('إلى الرقم:', formattedNumber);
+    
+    window.open(whatsappUrl, '_blank');
+    
+    hidePhoneModal();
+    
+    // التحقق مما إذا كان هناك حاجة للانتقال إلى المعلم التالي
+    handleNextWhatsappTeacher();
+}
+
+// تعديل دالة showPhoneModal لعدم استبدال محتوى الرسالة
+function showPhoneModal(teacher) {
+    currentWhatsappTeacher = teacher;
+    
+    document.getElementById('phoneModalTitle').textContent = `أدخل رقم جوال المعلم: ${teacher.name}`;
+    document.getElementById('phoneModal').style.display = 'block';
+    
+    if (teacher.phone) {
+        document.getElementById('phoneNumber').value = teacher.phone;
+    } else {
+        document.getElementById('phoneNumber').value = '';
+    }
+    
+    document.getElementById('phoneNumber').focus();
+}
+// متغيرات عامة لعملية الإرسال
+let selectedPhoneNumber = '';
+let selectedTeacher = null;
+
+// عرض نافذة اختيار الملاحظات
+// إعادة تعريف دالة عرض نافذة الملاحظات مع إضافة مستمعات الأحداث في نفس الوقت
+function showRemarksModal(teacher, phoneNumber) {
+    selectedTeacher = teacher;
+    selectedPhoneNumber = phoneNumber;
+    
+    // عرض النافذة
+    document.getElementById('remarksModal').style.display = 'block';
+    
+    // إعادة تعيين مستمعات الأحداث في كل مرة تظهر فيها النافذة
+    document.getElementById('confirmRemarksBtn').onclick = function() {
+        sendInquiryWithRemarks();
+    };
+    
+    document.getElementById('cancelRemarksBtn').onclick = function() {
+        hideRemarksModal();
+    };
+}
+
+// تحسين دالة إرسال المساءلة مع الملاحظة المختارة
+function sendInquiryWithRemarks() {
+    if (!selectedTeacher || !selectedPhoneNumber) {
+        console.error('لا يوجد معلم أو رقم هاتف محدد');
+        return;
+    }
+    
+    try {
+        // الحصول على الملاحظة المختارة
+        const form = document.getElementById('remarksForm');
+        const selectedRadio = form.querySelector('input[name="remark"]:checked');
+        
+        if (!selectedRadio) {
+            alert('الرجاء اختيار ملاحظة');
+            return;
+        }
+        
+        const selectedRemark = selectedRadio.value;
+        const stats = calculateTeacherTotals(selectedTeacher);
+        
+        // تحديث مربعات الاختيار بناءً على الاختيار
+        let remarkText = '';
+        
+        if (selectedRemark === 'عذره مقبول') {
+            remarkText = '☑ عذره مقبول\n□ عذره غير مقبول\n□ يعطى فرصة للتحسين';
+        } else if (selectedRemark === 'عذره غير مقبول') {
+            remarkText = '□ عذره مقبول\n☑ عذره غير مقبول\n□ يعطى فرصة للتحسين';
+        } else {
+            remarkText = '□ عذره مقبول\n□ عذره غير مقبول\n☑ يعطى فرصة للتحسين';
+        }
+        
+        const messageContent = `*مساءلة خطية خاصة بإعداد الدروس بمنصة مدرستي*
+
+الأستاذ / ${selectedTeacher.name}
+
+*بيانات المساءلة:*
+- عدد الدروس الكلي: ${stats.totalLessons}
+- الدروس المعدة: ${stats.preparedLessons}
+- الدروس الغير معدة: ${stats.unpreparedLessons}
+- نسبة الإنجاز: ${stats.completionRate}%
+
+التاريخ: ${new Date().toLocaleDateString('ar-SA')}
+
+*ملاحظات مدير المدرسة:*
+${remarkText}
+
+*تأكيد الاطلاع والاعتماد:*
+□ تم اطلاع المعلم (يرجى وضع علامة ✓ عند الاطلاع)
+✓ تم اعتماد المدير: محمد حسين منصور حوذان
+
+نأمل منكم الرد على هذه المساءلة وبيان سبب التقصير في أقرب وقت ممكن.`;
+        
+        // التأكد من صحة رقم الهاتف
+        const formattedPhone = selectedPhoneNumber.toString().trim();
+        
+        // إرسال الرسالة
+        console.log('جاري إرسال المساءلة إلى:', formattedPhone);
+        console.log('محتوى الرسالة:', messageContent);
+        
+        const encodedText = encodeURIComponent(messageContent);
+        const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodedText}`;
+        
+        // فتح واتساب في نافذة جديدة
+        const newWindow = window.open(whatsappUrl, '_blank');
+        
+        if (!newWindow) {
+            alert('تم حظر النوافذ المنبثقة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع.');
+            return;
+        }
+        
+        // إخفاء النافذة ومعالجة المعلم التالي
+        hideRemarksModal();
+        handleNextWhatsappTeacher();
+    } catch (error) {
+        console.error('حدث خطأ أثناء إرسال المساءلة:', error);
+        alert('حدث خطأ أثناء إرسال المساءلة. يرجى المحاولة مرة أخرى.');
+    }
+}
+
+// تحسين دالة إرسال الإحصائية العادية
+function sendRegularStats(teacher, formattedNumber) {
+    try {
+        const stats = calculateTeacherTotals(teacher);
+        
+        const messageContent = `السلام عليكم،
+الأستاذ / ${teacher.name}
+
+*إحصائيات منصة مدرستي:*
+- عدد الدروس الكلي: ${stats.totalLessons}
+- الدروس المعدة: ${stats.preparedLessons}
+- الدروس الغير معدة: ${stats.unpreparedLessons}
+- عدد الواجبات: ${stats.assignments}
+- عدد الإثراءات: ${stats.enrichments}
+- عدد الأنشطة: ${stats.activities}
+- الخطط الأسبوعية: ${stats.weeklyPlans}
+- نسبة الإنجاز للدروس: ${stats.completionRate}%
+
+نشكركم على جهودكم، ونأمل استمرار العمل بنفس المستوى.
+إدارة المدرسة`;
+        
+        // التأكد من صحة رقم الهاتف
+        const cleanPhone = formattedNumber.toString().trim();
+        
+        console.log('جاري إرسال الإحصائية إلى:', cleanPhone);
+        console.log('محتوى الرسالة:', messageContent);
+        
+        // إرسال الرسالة
+        const encodedText = encodeURIComponent(messageContent);
+        const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedText}`;
+        
+        // فتح واتساب في نافذة جديدة
+        const newWindow = window.open(whatsappUrl, '_blank');
+        
+        if (!newWindow) {
+            alert('تم حظر النوافذ المنبثقة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع.');
+            return;
+        }
+        
+        // معالجة المعلم التالي
+        handleNextWhatsappTeacher();
+    } catch (error) {
+        console.error('حدث خطأ أثناء إرسال الإحصائية:', error);
+        alert('حدث خطأ أثناء إرسال الإحصائية. يرجى المحاولة مرة أخرى.');
+    }
+}
+function openAchievementFile(teacherIndex) {
+    // نقل المستخدم إلى صفحة Injaz.html مع تمرير معرف المعلم كمعلمة
+    window.location.href = 'Injaz.html?id=' + teacherIndex;
+}
+
+
+</script>
+<!-- نافذة اختيار ملاحظة المدير -->
+<div id="remarksModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+  <div style="background: white; width: 80%; max-width: 500px; margin: 150px auto; padding: 20px; border-radius: 8px; direction: rtl; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+    <h4 style="margin-bottom: 15px; color: #800000;">اختر ملاحظة المدير</h4>
+    
+    <form id="remarksForm">
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 10px; font-weight: bold;">ملاحظات مدير المدرسة:</label>
+        <div style="margin-bottom: 10px;">
+          <input type="radio" id="remark1" name="remark" value="عذره مقبول">
+          <label for="remark1">عذره مقبول</label>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <input type="radio" id="remark2" name="remark" value="عذره غير مقبول" checked>
+          <label for="remark2">عذره غير مقبول</label>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <input type="radio" id="remark3" name="remark" value="يعطى فرصة للتحسين">
+          <label for="remark3">يعطى فرصة للتحسين</label>
+        </div>
+      </div>
+      
+      <div style="text-align: left;">
+        <button type="button" id="cancelRemarksBtn" class="btn btn-secondary">إلغاء</button>
+        <button type="button" id="confirmRemarksBtn" class="btn btn-primary" style="background-color: #800000;">تأكيد وإرسال</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- نافذة إضافة معلم جديد -->
+<div id="addTeacherModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+  <div style="background: white; width: 80%; max-width: 400px; margin: 150px auto; padding: 20px; border-radius: 8px; direction: rtl; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+    <h4 style="margin-bottom: 15px;">إضافة معلم جديد</h4>
+    <div style="margin-bottom: 15px;">
+      <input type="text" id="newTeacherName" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" placeholder="اسم المعلم">
+    </div>
+    <div style="text-align: left;">
+      <button onclick="hideAddTeacherModal()" class="btn btn-secondary">إلغاء</button>
+      <button onclick="confirmAddTeacher()" class="btn btn-primary">إضافة</button>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
