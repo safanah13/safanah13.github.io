@@ -360,14 +360,15 @@ function showInstructions() {
     }
 
     // حفظ البيانات
-    fetch('data/teachers-data.json')
+    fetch('https://safanah13.github.io/teachers-data.json')
   .then(response => response.json())
   .then(data => {
     teachers = data; // تخزين البيانات في متغير teachers
     updateTable(); // تحديث الجدول بالبيانات الجديدة
   })
   .catch(error => console.error('حدث خطأ:', error));
-// أضف هذه الدالة في قسم JavaScript
+
+// دالة حذف جميع البيانات
 function deleteAllData() {
     if (confirm('هل أنت متأكد من حذف جميع البيانات؟ لا يمكن التراجع عن هذا الإجراء.')) {
         teachers = [];
@@ -377,6 +378,7 @@ function deleteAllData() {
         alert('تم حذف جميع البيانات بنجاح');
     }
 }
+
 
 
     // إضافة معلم
