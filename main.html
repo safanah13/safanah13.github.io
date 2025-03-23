@@ -413,12 +413,199 @@ input[readonly] {
 .teacher-totals-row td {
     background-color: #E6F3FF !important;
 }
+.completionRate {
+    text-align: center;
+    border: none;
+    background: transparent;
+    font-weight: bold;
+    width: 90%;
+}
+
+.teacher-totals-row td:last-child {
+    font-weight: bold;
+}
+@media print {
+    .teacher-group {
+        page-break-after: always;
+    }
+    
+    .teacher-table {
+        margin-bottom: 30px;
+        page-break-inside: avoid;
+    }
+    
+    .teacher-stats {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    
+    tr {
+        page-break-inside: avoid;
+    }
+    
+    td, th {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: center;
+    }
+    
+    .control-buttons,
+    .btn-action,
+    .edit-teacher-name,
+    #newsBar,
+    .side-links {
+        display: none !important;
+    }
+}
+
+.teacher-group {
+    margin-bottom: 30px;
+}
+
+.teacher-table {
+    margin-bottom: 20px;
+}
+@media print {
+    .notes-row .checkbox-container {
+        display: flex !important;
+        gap: 20px;
+        justify-content: flex-start;
+    }
+    
+    .notes-row .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 14px;
+    }
+    
+    .print-notes {
+        display: none !important;
+    }
+}
+@media print {
+    /* تعديل مظهر مربعات الاختيار عند الطباعة */
+    .notes-row .checkbox-container {
+        display: flex !important;
+        gap: 20px;
+        justify-content: flex-start;
+    }
+    
+    .notes-row .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 14px;
+    }
+    
+    /* إخفاء مربع الاختيار الأصلي */
+    .notes-row input[type="checkbox"] {
+        display: none !important;
+    }
+    
+    /* إظهار علامة ✓ للمربعات المحددة */
+    .notes-row input[type="checkbox"]:checked + span:before {
+        content: "✓";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 1px solid #000;
+        text-align: center;
+        line-height: 20px;
+        margin-left: 5px;
+    }
+    
+    /* إظهار مربع فارغ للمربعات غير المحددة */
+    .notes-row input[type="checkbox"] + span:before {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 1px solid #000;
+        margin-left: 5px;
+    }
+}
+ @media print {
+        .print-hide-note {
+            display: none !important;
+        }
+    }
+.print-notes {
+    background-color: #800000;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.print-notes:hover {
+    opacity: 0.9;
+}
+@media print {
+    /* تحسين عرض الجدول عند الطباعة */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        page-break-inside: auto !important;
+    }
+    
+    th, td {
+        border: 1px solid black !important;
+        padding: 8px !important;
+        text-align: center !important;
+        font-size: 12pt !important;
+    }
+    
+    /* إظهار القيم بدلاً من حقول الإدخال */
+    input[type="number"], 
+    input[type="text"] {
+        border: none !important;
+        background: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: textfield !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        text-align: center !important;
+    }
+    
+    /* تحسين تخطيط الصفحة */
+    @page {
+        margin: 1cm !important;
+        size: landscape !important;
+    }
+    
+    /* إخفاء العناصر غير الضرورية للطباعة */
+    .control-buttons,
+    .btn-action,
+    .edit-teacher-name,
+    #newsBar,
+    .side-links {
+        display: none !important;
+    }
+}
+.school-name-print {
+    display: none;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 5px;
+}
+
+@media print {
+    .school-name-print {
+        display: block !important;
+    }
+}
 
 
     </style>
 </head>
 <body>
-<div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 10px; text-align: center;">
+<div class="print-hide-note" style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 10px; text-align: center;">
     <strong>ملاحظة هامة:</strong> يرجى استخدام الأرقام الإنجليزية (1234567890) بدلاً من الأرقام العربية (١٢٣٤٥٦٧٨٩٠) لضمان عمل التطبيق بشكل صحيح.
 </div>
 
@@ -444,7 +631,7 @@ input[readonly] {
 
 <!-- عنوان الصفحة الرئيسي بتنسيق محسن -->
 <h1 style="text-align: center; font-size: 24px; margin: 15px 0; font-weight: bold;">
-    احصائية منصة مدرستي من 14-2-1446 الى 1-12-1446
+    احصائية منصة مدرستي من 14-2-1446 الى 19-9-1446
 </h1>
 
 <!-- إضافة مساحة لاسم مدير المدرسة -->
@@ -483,12 +670,13 @@ input[readonly] {
     <div class="control-buttons" style="justify-content: center;">
     <button id="addTeacherBtn" class="btn btn-add">إضافة معلم جديد</button>
     <button id="printBtn" class="btn btn-print">طباعة الإحصائيات</button>
-<button onclick="window.open('https://mjmboys-my.sharepoint.com/:x:/g/personal/p135143_mb_moe_gov_sa/ETqo91sH3o9Ds15cYbRYPAkBBp4cXiZd4WYifPDAbo7fHQ?e=dGtYzr', '_blank')" 
+    <button onclick="previewPrint()" class="btn btn-info">معاينة الطباعة</button>
+    <button onclick="window.open('https://mjmboys-my.sharepoint.com/:x:/g/personal/p135143_mb_moe_gov_sa/ETqo91sH3o9Ds15cYbRYPAkBBp4cXiZd4WYifPDAbo7fHQ?e=dGtYzr', '_blank')" 
             class="btn" 
             style="background-color: #800000; color: white; margin: 0 10px;">
         احصائيات الاستئذان
     </button>
-<button onclick="window.location.href='subjects.html'" 
+    <button onclick="window.location.href='subjects.html'" 
             class="btn" 
             style="background-color: #800000; color: white; margin: 0 10px;">
          الاسنادات
@@ -519,6 +707,11 @@ input[readonly] {
         class="btn" 
         style="background-color: #800000; color: white; margin: 0 10px;">
     الطلاب
+</button>
+<button onclick="window.location.href='index.html'" 
+        class="btn" 
+        style="background-color: #800000; color: white; margin: 0 10px;">
+    الترحيب
 </button>
 
 
@@ -682,8 +875,88 @@ function updateTeacherEmail(teacherIndex, newEmail) {
     teachersData[teacherIndex].email = newEmail;
     saveData();
 }
+function getCompletionRateColor(rate) {
+    // تحويل النسبة من نص إلى رقم
+    const percentage = parseFloat(rate.replace('%', ''));
+    
+    if (percentage < 50) {
+        return '#FF0000'; // أحمر
+    } else if (percentage >= 50 && percentage < 90) {
+        return '#0000FF'; // أزرق
+    } else {
+        return '#008000'; // أخضر
+    }
+}
+// إضافة الدالة في بداية الملف، قبل دالة renderTable
+let lastClickTime = 0;
+let lastClickedTeacher = null;
 
-                
+function openAchievementFile(teacherIndex, event) {
+    event = event || window.event;
+    event.preventDefault();
+    const teacher = teachersData[teacherIndex];
+    
+    const currentTime = new Date().getTime();
+    
+    // تحقق من النقر المزدوج (أقل من 300 مللي ثانية بين النقرات على نفس المعلم)
+    if (lastClickedTeacher === teacherIndex && currentTime - lastClickTime < 300) {
+        // تم النقر مرتين - فتح نافذة إدخال الرابط
+        const newLink = prompt("أدخل رابط ملف الإنجاز:", teacher.achievementLink || "");
+        
+        if (newLink !== null) {
+            teacher.achievementLink = newLink;
+            saveData();
+            alert("تم حفظ رابط ملف الإنجاز بنجاح");
+        }
+        
+        // إعادة تعيين المتغيرات
+        lastClickTime = 0;
+        lastClickedTeacher = null;
+    } else {
+        // النقرة الأولى - تخزين وقت النقر والمعلم
+        lastClickTime = currentTime;
+        lastClickedTeacher = teacherIndex;
+        
+        // استخدام مؤقت لتنفيذ عملية النقرة الفردية (بعد التأكد من عدم وجود نقرة ثانية)
+        setTimeout(() => {
+            if (lastClickTime === currentTime) {
+                // تم تأكيد أنها نقرة فردية
+                if (teacher.achievementLink) {
+                    window.open(teacher.achievementLink, '_blank');
+                } else {
+                    alert("لم يتم إضافة رابط ملف الإنجاز بعد. انقر نقراً مزدوجاً لإضافة الرابط.");
+                }
+            }
+        }, 300);
+    }
+}
+// إضافة دالة جديدة للتعامل مع عرض اسم المدرسة
+function updateSchoolNameForPrint(teacherIndex) {
+    const schoolNameElement = document.querySelector('.school-name-print');
+    const teacher = teachersData[teacherIndex];
+    
+    // التحقق من المدرسة المختارة للمعلم
+    let schoolName = '';
+    if (teacher.school === 'qushayri') {
+        schoolName = 'ابتدائية الإمام محمد علي القشيري لتحفيظ القرآن الكريم';
+    } else if (teacher.school === 'harith') {
+        schoolName = 'ابتدائية سعيد بن الحارث القرشي - تعليم عام';
+    } else if (teacher.school === 'warsh') {
+        schoolName = 'متوسطة الإمام ورش لتحفيظ القرآن الكريم';
+    }
+    
+    schoolNameElement.textContent = schoolName;
+}
+
+// تعديل دالة الطباعة الحالية
+document.getElementById('printBtn').addEventListener('click', function() {
+    // تحديث اسم المدرسة لكل معلم قبل الطباعة
+    teachersData.forEach((teacher, index) => {
+        updateSchoolNameForPrint(index);
+    });
+    window.print();
+});
+           
         function renderTable() {
     const tableBody = document.getElementById('tableBody');
     tableBody.innerHTML = '';
@@ -724,6 +997,13 @@ function updateTeacherEmail(teacherIndex, newEmail) {
                         <div class="edit-teacher-name">
                             <input type="text" class="teacherNameInput" value="${teacher.name}" 
                                 onchange="updateTeacherName(${teacherIndex}, this.value)">
+                                <select class="schoolSelect" onchange="updateTeacherSchool(${teacherIndex}, this.value)" 
+                    style="width: 95%; margin-top: 5px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                    <option value="سعيد والقشيري" ${teacher.school === 'سعيد والقشيري' ? 'selected' : ''}>سعيد والقشيري</option>
+                    <option value="سعيد" ${teacher.school === 'سعيد' ? 'selected' : ''}>سعيد</option>
+                    <option value="ورش" ${teacher.school === 'ورش' ? 'selected' : ''}>ورش</option>
+                    <option value="القشيري" ${teacher.school === 'القشيري' ? 'selected' : ''}>القشيري</option>
+                </select>
                             <input type="email" class="teacherEmailInput" style="width: 95%; margin-top: 5px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;" 
                                 value="${teacher.email || ''}" placeholder="البريد الإلكتروني"
                                 onchange="updateTeacherEmail(${teacherIndex}, this.value)">
@@ -734,7 +1014,11 @@ function updateTeacherEmail(teacherIndex, newEmail) {
                             <div style="display: flex; gap: 5px; justify-content: center; margin-top: 5px;">
                                 <button class="btn-action btn-warning" onclick="openInquiry(${teacherIndex})">مساءلة</button>
                                 <button class="btn-action btn-info" onclick="openEvaluation(${teacherIndex})">تقييم الأداء</button>
-<button class="btn-action btn-info" onclick="openAchievementFile(${teacherIndex})">ملف الإنجاز</button>
+                                <button class="btn-action btn-info" 
+        onclick="openAchievementFile(${teacherIndex}, event)"
+        title="انقر مرة للفتح، انقر مرتين لتعديل الرابط">
+    ملف الإنجاز   
+</button>
                                 <button class="btn-action btn-danger" onclick="deleteTeacher(${teacherIndex})">حذف</button>
                                 ${parseFloat(calculateTeacherTotals(teacher).completionRate) < 50 
         ? `<button class="btn-action btn-warning" onclick="sendEmailToTeacher(${teacherIndex})">
@@ -753,7 +1037,7 @@ function updateTeacherEmail(teacherIndex, newEmail) {
                     <td data-value="${period.enrichments}"><input type="number" class="enrichments" value="${period.enrichments}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'enrichments', this.value)"></td>
                     <td data-value="${period.activities}"><input type="number" class="activities" value="${period.activities}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'activities', this.value)"></td>
                     <td data-value="${period.weeklyPlans}"><input type="number" class="weeklyPlans" value="${period.weeklyPlans}" readonly></td>
-                    <td data-value="${period.completionRate}"><input type="text" class="completionRate" value="${period.completionRate}" readonly></td>
+                    <td data-value="${period.completionRate}"><input type="text" class="completionRate" value="${period.completionRate}" readonly style="color: ${getCompletionRateColor(period.completionRate)}"></td>
                 `;
             } else {
                 row.innerHTML = `
@@ -765,7 +1049,7 @@ function updateTeacherEmail(teacherIndex, newEmail) {
                     <td data-value="${period.enrichments}"><input type="number" class="enrichments" value="${period.enrichments}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'enrichments', this.value)"></td>
                     <td data-value="${period.activities}"><input type="number" class="activities" value="${period.activities}" onchange="updateTeacherData(${teacherIndex}, ${periodIndex}, 'activities', this.value)"></td>
                     <td data-value="${period.weeklyPlans}"><input type="number" class="weeklyPlans" value="${period.weeklyPlans}" readonly></td>
-                    <td data-value="${period.completionRate}"><input type="text" class="completionRate" value="${period.completionRate}" readonly></td>
+                    <td data-value="${period.completionRate}"><input type="text" class="completionRate" value="${period.completionRate}" readonly style="color: ${getCompletionRateColor(period.completionRate)}"></td>
                 `;
             }
             tableBody.appendChild(row);
@@ -786,32 +1070,48 @@ teacherTotalsRow.innerHTML = `
     <td>${teacherTotals.enrichments}</td>
     <td>${teacherTotals.activities}</td>
     <td>${teacherTotals.weeklyPlans}</td>
-    <td>${teacherTotals.completionRate}%</td>
+    <td style="color: ${getCompletionRateColor(teacherTotals.completionRate + '%')}">${teacherTotals.completionRate}%</td>
 `;
 tableBody.appendChild(teacherTotalsRow);
 
-// إضافة صف الملاحظات
+// تعديل جزء إضافة صف الملاحظات في دالة renderTable
 const notesRow = document.createElement('tr');
 notesRow.className = 'notes-row';
 notesRow.innerHTML = `
     <td colspan="11">
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px;">
-            <div style="font-weight: bold;">ملاحظات مدير المدرسة:</div>
+            <div style="font-weight: bold;">ملاحظات مدير المدرسة :محمد حسين منصور حوذان</div>
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox" name="excuse_${teacherIndex}" value="accepted"> عذره مقبول
+                    <input type="checkbox" name="excuse_${teacherIndex}" value="accepted">
+                    <span>عذره مقبول</span>
                 </label>
                 <label class="checkbox-label">
-                    <input type="checkbox" name="excuse_${teacherIndex}" value="not_accepted"> عذره غير مقبول
+                    <input type="checkbox" name="excuse_${teacherIndex}" value="not_accepted">
+                    <span>عذره غير مقبول</span>
                 </label>
                 <label class="checkbox-label">
-                    <input type="checkbox" name="accountability_${teacherIndex}"> يعطى مساءلة
+                    <input type="checkbox" name="accountability_${teacherIndex}">
+                    <span>يحتاج مساءلة</span>
                 </label>
-                <button class="print-notes" onclick="printTeacherNotes(${teacherIndex})">طباعة</button>
+                <button onclick="printTeacherNotes(${teacherIndex})" class="print-notes">طباعة</button>
             </div>
         </div>
     </td>
 `;
+
+// إضافة مستمع حدث لمنع اختيار أكثر من خيار في نفس الوقت
+const checkboxes = notesRow.querySelectorAll('input[type="checkbox"]');
+checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            checkboxes.forEach(cb => {
+                if (cb !== this) cb.checked = false;
+            });
+        }
+    });
+});
+
 tableBody.appendChild(notesRow);
 
     }
@@ -827,62 +1127,170 @@ function printTeacherNotes(teacherIndex) {
     const excuseNotAccepted = document.querySelector(`input[name="excuse_${teacherIndex}"][value="not_accepted"]`).checked;
     const needsAccountability = document.querySelector(`input[name="accountability_${teacherIndex}"]`).checked;
 
+    // تحديد معلومات المدرسة بناءً على نوع المدرسة
+    let schoolInfo = {
+        name: "",
+        fullName: "",
+        type: "",
+        secondSchool: null
+    };
+
+    switch(teacher.school) {
+        case "سعيد والقشيري":
+            schoolInfo = {
+                name: "مدرسة سعيد بن الحارث القرشي",
+                fullName: "ابتدائية سعيد بن الحارث القرشي",
+                type: "تعليم عام",
+                secondSchool: {
+                    name: "ابتدائية الإمام محمد علي القشيري",
+                    type: "تحفيظ القرآن الكريم"
+                }
+            };
+            break;
+        case "القشيري":
+            schoolInfo = {
+                name: "مدرسة الإمام محمد علي القشيري",
+                fullName: "ابتدائية الإمام محمد علي القشيري",
+                type: "تحفيظ القرآن الكريم"
+            };
+            break;
+        case "سعيد":
+            schoolInfo = {
+                name: "مدرسة سعيد بن الحارث القرشي",
+                fullName: "ابتدائية سعيد بن الحارث القرشي",
+                type: "تعليم عام"
+            };
+            break;
+        case "ورش":
+            schoolInfo = {
+                name: "مدرسة الإمام ورش",
+                fullName: "متوسطة الإمام ورش",
+                type: "تحفيظ القرآن الكريم"
+            };
+            break;
+        default:
+            schoolInfo = {
+                name: "مدرسة سعيد بن الحارث القرشي",
+                fullName: "ابتدائية سعيد بن الحارث القرشي",
+                type: "تعليم عام"
+            };
+    }
+
     // إنشاء محتوى الطباعة
     const printContent = `
-        <html dir="rtl">
-        <head>
-            <title>ملاحظات المعلم - ${teacher.name}</title>
-            <style>
-                @media print {
-                    @page {
-                        size: A4;
-                        margin: 2cm;
-                    }
-                }
-                body {
-                    font-family: Arial, sans-serif;
-                    line-height: 1.6;
-                    padding: 20px;
-                }
-                .header {
-                    text-align: center;
-                    margin-bottom: 30px;
-                }
-                .school-info {
-                    margin-bottom: 20px;
-                }
-                .teacher-info {
-                    margin-bottom: 30px;
-                }
-                .stats-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-bottom: 30px;
-                }
-                .stats-table th, .stats-table td {
-                    border: 1px solid #ddd;
-                    padding: 8px;
-                    text-align: center;
-                }
-                .stats-table th {
-                    background-color: #f5f5f5;
-                }
-                .notes-section {
-                    margin-bottom: 30px;
-                }
-                .signature-section {
-                    margin-top: 50px;
-                    display: flex;
-                    justify-content: space-between;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <h2>المملكة العربية السعودية</h2>
+    <html dir="rtl">
+    <head>
+        <title>ملاحظات المعلم - ${teacher.name}</title>
+        <style>
+    @media print {
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+    }
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding: 10px;
+    }
+    .ministry-info {
+        text-align: right;
+        flex: 1;
+    }
+    .logo-container {
+        text-align: center;
+        flex: 1;
+    }
+    .logo {
+        max-height: 80px;
+        width: auto;
+    }
+    .empty-space {
+        flex: 1;
+    }
+    .report-title {
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    
+    /* تنسيقات الجدول */
+    .stats-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    .stats-table th, .stats-table td {
+        border: 1px solid #000;
+        padding: 10px;
+        text-align: center;
+    }
+    .stats-table th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+    
+    /* تنسيقات قسم التوقيع */
+    .signature-section {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 50px;
+        padding: 20px;
+    }
+    .signature-section > div {
+        flex: 1;
+        margin: 0 20px;
+    }
+    .signature-section p {
+        margin: 10px 0;
+    }
+    
+    /* تنسيقات معلومات المدرسة والمعلم */
+    .school-info, .teacher-info {
+        margin: 20px 0;
+    }
+    .teacher-info p {
+        margin: 8px 0;
+    }
+    
+    /* تنسيقات قسم الملاحظات */
+    .notes-section {
+        margin: 30px 0;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .notes-section h3 {
+        margin-bottom: 15px;
+    }
+    .notes-section p {
+        margin: 5px 0;
+    }
+</style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="ministry-info">
+                <h3>المملكة العربية السعودية</h3>
                 <h3>وزارة التعليم</h3>
-                <h4>تقرير متابعة أداء المعلم</h4>
+                <h3>إدارة التعليم بمنطقة المدينة المنورة</h3>
             </div>
+            <div class="logo-container">
+                <img src="شعار_وزارة_التعليم.png" alt="شعار وزارة التعليم" class="logo">
+            </div>
+            <div class="empty-space"></div>
+        </div>
+        <div class="report-title">
+            <h4>تقرير متابعة أداء المعلم</h4>
+        </div>
 
             <div class="school-info">
                 <p>التاريخ: ${new Date().toLocaleDateString('ar-SA')}</p>
@@ -890,6 +1298,10 @@ function printTeacherNotes(teacherIndex) {
 
             <div class="teacher-info">
                 <p><strong>اسم المعلم:</strong> ${teacher.name}</p>
+                <p><strong>المدرسة:</strong> ${schoolInfo.fullName} - ${schoolInfo.type}</p>
+                ${schoolInfo.secondSchool ? 
+                    `<p class="second-school">${schoolInfo.secondSchool.name} - ${schoolInfo.secondSchool.type}</p>` 
+                    : ''}
                 <p><strong>البريد الإلكتروني:</strong> ${teacher.email || 'غير محدد'}</p>
                 <p><strong>رقم الجوال:</strong> ${teacher.phone || 'غير محدد'}</p>
             </div>
@@ -919,15 +1331,19 @@ function printTeacherNotes(teacherIndex) {
             </div>
 
             <div class="signature-section">
-                <div>
-                    <p>توقيع المعلم: .........................</p>
-                    <p>التاريخ: .........................</p>
-                </div>
-                <div>
-                    <p>توقيع مدير المدرسة: .........................</p>
-                    <p>التاريخ: .........................</p>
-                </div>
-            </div>
+    <div style="text-align: center;">
+        <p style="font-weight: bold;">توقيع المعلم</p>
+        <p>${teacher.name}</p>
+        <div style="margin: 30px 0;">.........................</div>
+        <p>التاريخ: .........................</p>
+    </div>
+    <div style="text-align: center;">
+        <p style="font-weight: bold;">مدير المدرسة</p>
+        <p>محمد حسين منصور حوذان</p>
+        <div style="margin: 30px 0;">.........................</div>
+        <p>التاريخ: .........................</p>
+    </div>
+</div>
         </body>
         </html>
     `;
@@ -940,11 +1356,30 @@ function printTeacherNotes(teacherIndex) {
     // انتظار تحميل المحتوى ثم طباعة
     printWindow.onload = function() {
         printWindow.print();
-        // إغلاق النافذة بعد الطباعة (اختياري)
-        // printWindow.close();
     };
 }
-
+function previewPrint() {
+    // تهيئة صفحة الطباعة
+    const printWindow = window.open('', '_blank');
+    
+    // إنشاء محتوى صفحة الطباعة
+    printWindow.document.write(`
+        <html dir="rtl">
+        <head>
+            <title>إحصائيات المعلمين</title>
+            <style>
+                /* نسخ كل تنسيقات CSS الخاصة بالطباعة هنا */
+            </style>
+        </head>
+        <body>
+            ${document.getElementById('tableBody').outerHTML}
+        </body>
+        </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.print();
+}
 
 
         function updateAllTotals() {
@@ -978,10 +1413,12 @@ function printTeacherNotes(teacherIndex) {
 
         function addTeacher() {
             const newTeacher = {
-                name: "معلم جديد",
-               email: "",
-               isNewlyAdded: true,
-                periods: [
+        name: "معلم جديد",
+        email: "",
+        phone: "",
+        school: "سعيد والقشيري", // القيمة الافتراضية عند إضافة معلم جديد
+        isNewlyAdded: true,
+        periods: [
                     {
                         periodName: "من 14-2 الى 28-4",
                         totalLessons: 0,
@@ -1962,8 +2399,6 @@ function showPhoneModal(teacher) {
     document.getElementById('phoneNumber').focus();
 }
 
-
-
 // إخفاء نافذة إدخال رقم الجوال
 function hidePhoneModal() {
     document.getElementById('phoneModal').style.display = 'none';
@@ -2679,6 +3114,7 @@ function sendEmailToTeacher(teacherIndex) {
     showPhoneModal(teacher);
 }
 
+
 // تعديل إنشاء أزرار الإرسال في renderTable
 function updateTeacherButtons() {
     document.querySelectorAll('.btn-action').forEach(button => {
@@ -2807,6 +3243,10 @@ function sendWhatsappToCurrentTeacher() {
     // التحقق مما إذا كان هناك حاجة للانتقال إلى المعلم التالي
     handleNextWhatsappTeacher();
 }
+function updateTeacherSchool(teacherIndex, schoolName) {
+    teachersData[teacherIndex].school = schoolName;
+    saveData();
+}
 
 // تعديل دالة showPhoneModal لعدم استبدال محتوى الرسالة
 function showPhoneModal(teacher) {
@@ -2845,6 +3285,20 @@ function showRemarksModal(teacher, phoneNumber) {
         hideRemarksModal();
     };
 }
+function initializeSchoolData() {
+    teachersData.forEach(teacher => {
+        if (!teacher.hasOwnProperty('school')) {
+            teacher.school = '';
+        }
+    });
+    saveData();
+}
+
+// استدعاء الدالة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    loadSavedData();
+    initializeSchoolData();
+});
 
 // تحسين دالة إرسال المساءلة مع الملاحظة المختارة
 function sendInquiryWithRemarks() {
@@ -2971,10 +3425,7 @@ function sendRegularStats(teacher, formattedNumber) {
         alert('حدث خطأ أثناء إرسال الإحصائية. يرجى المحاولة مرة أخرى.');
     }
 }
-function openAchievementFile(teacherIndex) {
-    // نقل المستخدم إلى صفحة Injaz.html مع تمرير معرف المعلم كمعلمة
-    window.location.href = 'Injaz.html?id=' + teacherIndex;
-}
+
 
 
 </script>
